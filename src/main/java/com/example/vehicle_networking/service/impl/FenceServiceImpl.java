@@ -3,6 +3,7 @@ package com.example.vehicle_networking.service.impl;
 import com.example.vehicle_networking.entity.ElectronicFence;
 import com.example.vehicle_networking.enums.ResultEnum;
 import com.example.vehicle_networking.form.AddFenceForm;
+import com.example.vehicle_networking.form.UpdateFenceForm;
 import com.example.vehicle_networking.mapper.ElectronicFenceMapper;
 import com.example.vehicle_networking.service.FenceService;
 import com.example.vehicle_networking.utils.ResultVOUtil;
@@ -48,5 +49,14 @@ public class FenceServiceImpl implements FenceService {
 			return ResultVOUtil.error(ResultEnum.DATABASE_OPTION_ERROR);
 		}
 		return ResultVOUtil.success("删除成功");
+	}
+
+	@Override
+	public ResultVO updateFence(UpdateFenceForm form) {
+		ElectronicFence electronicFence = electronicFenceMapper.selectByPrimaryKey(form.getFenceId());
+		BeanUtils.copyProperties(form,electronicFence);
+		electronicFence.setUpdateTime(new Date());
+		electronicFenceMapper.updateByPrimaryKey(electronicFence);
+		return ResultVOUtil.success("更新成功");
 	}
 }

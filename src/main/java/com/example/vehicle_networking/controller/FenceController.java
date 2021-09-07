@@ -1,6 +1,7 @@
 package com.example.vehicle_networking.controller;
 
 import com.example.vehicle_networking.form.AddFenceForm;
+import com.example.vehicle_networking.form.UpdateFenceForm;
 import com.example.vehicle_networking.service.FenceService;
 import com.example.vehicle_networking.vo.ResultVO;
 import io.swagger.annotations.Api;
@@ -36,5 +37,11 @@ public class FenceController {
 	@DeleteMapping("/delete")
 	public ResultVO deleteFence(Integer fenceId){
 		return fenceService.deleteFence(fenceId);
+	}
+
+	@ApiOperation("修改电子围栏")
+	@PutMapping("/update")
+	public ResultVO updateFence(@Valid UpdateFenceForm form){
+		return fenceService.updateFence(form);
 	}
 }
