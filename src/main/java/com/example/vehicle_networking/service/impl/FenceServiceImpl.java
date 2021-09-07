@@ -26,6 +26,10 @@ public class FenceServiceImpl implements FenceService {
 
 	@Override
 	public ResultVO addFence(AddFenceForm addFenceForm) {
+		ElectronicFence electronicFence1 = electronicFenceMapper.selectByConstructionId(addFenceForm.getConstructionSiteId());
+		if(electronicFence1 != null){
+			return ResultVOUtil.error(ResultEnum.ELECTRONIC_FENCE_EXIT_ERROR);
+		}
 		ElectronicFence electronicFence = new ElectronicFence();
 		BeanUtils.copyProperties(addFenceForm,electronicFence);
 		electronicFence.setCreateTime(new Date());

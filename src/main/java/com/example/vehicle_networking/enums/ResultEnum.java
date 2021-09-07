@@ -16,6 +16,7 @@ public enum  ResultEnum {
 
     PASSWORD_LENGTH_ERROR(1000,"密码长度错误"),
     USER_NAME_LENGTH_ERROR(1001,"用户名长度错误"),
+    ELECTRONIC_FENCE_EXIT_ERROR(1002,"该工地已存在电子围栏"),
 
 
 
