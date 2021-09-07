@@ -50,4 +50,10 @@ public class FenceController {
 	public ResultVO selectByUserId(){
 		return fenceService.selectByUserId();
 	}
+
+	@ApiOperation("查询所有用户的电子围栏")
+	@GetMapping("/select-all")
+	public ResultVO selectAll(){
+		return fenceService.selectAll();
+	}
 }

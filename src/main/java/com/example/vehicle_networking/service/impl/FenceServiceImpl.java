@@ -84,7 +84,22 @@ public class FenceServiceImpl implements FenceService {
 			electronicFenceList.add(electronicFence);
 		}
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-		for (ElectronicFence electronicFence:electronicFenceList){
+		for (ElectronicFence electronicFence : electronicFenceList) {
+			FenceVO fenceVO = new FenceVO();
+			BeanUtils.copyProperties(electronicFence, fenceVO);
+			fenceVO.setCreateTime(simpleDateFormat.format(electronicFence.getCreateTime()));
+			fenceVO.setUpdateTime(simpleDateFormat.format(electronicFence.getUpdateTime()));
+			fenceVOList.add(fenceVO);
+		}
+		return ResultVOUtil.success(fenceVOList);
+	}
+
+	@Override
+	public ResultVO selectAll() {
+		List<ElectronicFence> electronicFenceList = electronicFenceMapper.selectAll();
+		List<FenceVO> fenceVOList = new ArrayList<>();
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		for (ElectronicFence electronicFence : electronicFenceList) {
 			FenceVO fenceVO = new FenceVO();
 			BeanUtils.copyProperties(electronicFence,fenceVO);
 			fenceVO.setCreateTime(simpleDateFormat.format(electronicFence.getCreateTime()));

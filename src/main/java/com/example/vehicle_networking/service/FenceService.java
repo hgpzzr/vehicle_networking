@@ -37,4 +37,10 @@ public interface FenceService {
 	 * @return
 	 */
 	ResultVO selectByUserId();
+
+	/**
+	 * 查询所有人的电子围栏
+	 * @return
+	 */
+	ResultVO selectAll();
 }
