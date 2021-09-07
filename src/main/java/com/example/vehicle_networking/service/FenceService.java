@@ -10,4 +10,6 @@ import com.example.vehicle_networking.vo.ResultVO;
  */
 public interface FenceService {
 	ResultVO addFence(AddFenceForm addFenceForm);
+
+	ResultVO deleteFence(Integer fenceId);
 }

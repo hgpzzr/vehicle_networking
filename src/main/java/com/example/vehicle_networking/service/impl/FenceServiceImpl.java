@@ -36,4 +36,13 @@ public class FenceServiceImpl implements FenceService {
 		}
 		return ResultVOUtil.success("添加成功");
 	}
+
+	@Override
+	public ResultVO deleteFence(Integer fenceId) {
+		int delete = electronicFenceMapper.deleteByPrimaryKey(fenceId);
+		if(delete != 1){
+			return ResultVOUtil.error(ResultEnum.DATABASE_OPTION_ERROR);
+		}
+		return ResultVOUtil.success("删除成功");
+	}
 }
