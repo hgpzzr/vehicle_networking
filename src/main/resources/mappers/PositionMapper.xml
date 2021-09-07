@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.vehicle_networking.mapper.PositionMapper" >
+  <resultMap id="BaseResultMap" type="com.example.vehicle_networking.entity.Position" >
+    <id column="position_id" property="positionId" jdbcType="INTEGER" />
+    <result column="vehicle_id" property="vehicleId" jdbcType="INTEGER" />
+    <result column="longitude" property="longitude" jdbcType="VARCHAR" />
+    <result column="latitude" property="latitude" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from position
+    where position_id = #{positionId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.example.vehicle_networking.entity.Position" >
+    insert into position (position_id, vehicle_id, longitude, 
+      latitude, create_time)
+    values (#{positionId,jdbcType=INTEGER}, #{vehicleId,jdbcType=INTEGER}, #{longitude,jdbcType=VARCHAR}, 
+      #{latitude,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.example.vehicle_networking.entity.Position" >
+    update position
+    set vehicle_id = #{vehicleId,jdbcType=INTEGER},
+      longitude = #{longitude,jdbcType=VARCHAR},
+      latitude = #{latitude,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where position_id = #{positionId,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select position_id, vehicle_id, longitude, latitude, create_time
+    from position
+    where position_id = #{positionId,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select position_id, vehicle_id, longitude, latitude, create_time
+    from position
+  </select>
+</mapper>

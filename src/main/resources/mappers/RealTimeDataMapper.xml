@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.vehicle_networking.mapper.RealTimeDataMapper" >
+  <resultMap id="BaseResultMap" type="com.example.vehicle_networking.entity.RealTimeData" >
+    <id column="real_time_id" property="realTimeId" jdbcType="INTEGER" />
+    <result column="vehicle_id" property="vehicleId" jdbcType="INTEGER" />
+    <result column="engine_speed" property="engineSpeed" jdbcType="DOUBLE" />
+    <result column="fuel_margin" property="fuelMargin" jdbcType="DOUBLE" />
+    <result column="engine_temperature" property="engineTemperature" jdbcType="DOUBLE" />
+    <result column="speed" property="speed" jdbcType="DOUBLE" />
+    <result column="running_state" property="runningState" jdbcType="INTEGER" />
+    <result column="locked_state" property="lockedState" jdbcType="INTEGER" />
+    <result column="Inclination" property="inclination" jdbcType="INTEGER" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from real_time_data
+    where real_time_id = #{realTimeId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.example.vehicle_networking.entity.RealTimeData" >
+    insert into real_time_data (real_time_id, vehicle_id, engine_speed, 
+      fuel_margin, engine_temperature, speed, 
+      running_state, locked_state, Inclination
+      )
+    values (#{realTimeId,jdbcType=INTEGER}, #{vehicleId,jdbcType=INTEGER}, #{engineSpeed,jdbcType=DOUBLE}, 
+      #{fuelMargin,jdbcType=DOUBLE}, #{engineTemperature,jdbcType=DOUBLE}, #{speed,jdbcType=DOUBLE}, 
+      #{runningState,jdbcType=INTEGER}, #{lockedState,jdbcType=INTEGER}, #{inclination,jdbcType=INTEGER}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.example.vehicle_networking.entity.RealTimeData" >
+    update real_time_data
+    set vehicle_id = #{vehicleId,jdbcType=INTEGER},
+      engine_speed = #{engineSpeed,jdbcType=DOUBLE},
+      fuel_margin = #{fuelMargin,jdbcType=DOUBLE},
+      engine_temperature = #{engineTemperature,jdbcType=DOUBLE},
+      speed = #{speed,jdbcType=DOUBLE},
+      running_state = #{runningState,jdbcType=INTEGER},
+      locked_state = #{lockedState,jdbcType=INTEGER},
+      Inclination = #{inclination,jdbcType=INTEGER}
+    where real_time_id = #{realTimeId,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select real_time_id, vehicle_id, engine_speed, fuel_margin, engine_temperature, speed, 
+    running_state, locked_state, Inclination
+    from real_time_data
+    where real_time_id = #{realTimeId,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select real_time_id, vehicle_id, engine_speed, fuel_margin, engine_temperature, speed, 
+    running_state, locked_state, Inclination
+    from real_time_data
+  </select>
+</mapper>

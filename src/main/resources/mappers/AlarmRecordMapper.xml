@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.vehicle_networking.mapper.AlarmRecordMapper" >
+  <resultMap id="BaseResultMap" type="com.example.vehicle_networking.entity.AlarmRecord" >
+    <id column="alarm_id" property="alarmId" jdbcType="INTEGER" />
+    <result column="vehicle_id" property="vehicleId" jdbcType="INTEGER" />
+    <result column="alarm_reason" property="alarmReason" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from alarm_record
+    where alarm_id = #{alarmId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.example.vehicle_networking.entity.AlarmRecord" >
+    insert into alarm_record (alarm_id, vehicle_id, alarm_reason, 
+      create_time, `type`)
+    values (#{alarmId,jdbcType=INTEGER}, #{vehicleId,jdbcType=INTEGER}, #{alarmReason,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{type,jdbcType=INTEGER})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.example.vehicle_networking.entity.AlarmRecord" >
+    update alarm_record
+    set vehicle_id = #{vehicleId,jdbcType=INTEGER},
+      alarm_reason = #{alarmReason,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      `type` = #{type,jdbcType=INTEGER}
+    where alarm_id = #{alarmId,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select alarm_id, vehicle_id, alarm_reason, create_time, `type`
+    from alarm_record
+    where alarm_id = #{alarmId,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select alarm_id, vehicle_id, alarm_reason, create_time, `type`
+    from alarm_record
+  </select>
+</mapper>

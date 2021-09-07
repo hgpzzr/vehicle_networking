@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.vehicle_networking.mapper.MaintenanceRecordMapper" >
+  <resultMap id="BaseResultMap" type="com.example.vehicle_networking.entity.MaintenanceRecord" >
+    <id column="maintenance_id" property="maintenanceId" jdbcType="INTEGER" />
+    <result column="vehicle_id" property="vehicleId" jdbcType="INTEGER" />
+    <result column="describe" property="describe" jdbcType="VARCHAR" />
+    <result column="maintenance_costs" property="maintenanceCosts" jdbcType="DOUBLE" />
+    <result column="maintenance_begin_time" property="maintenanceBeginTime" jdbcType="TIMESTAMP" />
+    <result column="maintenance_end_time" property="maintenanceEndTime" jdbcType="TIMESTAMP" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from maintenance_record
+    where maintenance_id = #{maintenanceId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.example.vehicle_networking.entity.MaintenanceRecord" >
+    insert into maintenance_record (maintenance_id, vehicle_id, `describe`, 
+      maintenance_costs, maintenance_begin_time, 
+      maintenance_end_time, create_time, update_time
+      )
+    values (#{maintenanceId,jdbcType=INTEGER}, #{vehicleId,jdbcType=INTEGER}, #{describe,jdbcType=VARCHAR}, 
+      #{maintenanceCosts,jdbcType=DOUBLE}, #{maintenanceBeginTime,jdbcType=TIMESTAMP}, 
+      #{maintenanceEndTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.example.vehicle_networking.entity.MaintenanceRecord" >
+    update maintenance_record
+    set vehicle_id = #{vehicleId,jdbcType=INTEGER},
+      `describe` = #{describe,jdbcType=VARCHAR},
+      maintenance_costs = #{maintenanceCosts,jdbcType=DOUBLE},
+      maintenance_begin_time = #{maintenanceBeginTime,jdbcType=TIMESTAMP},
+      maintenance_end_time = #{maintenanceEndTime,jdbcType=TIMESTAMP},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where maintenance_id = #{maintenanceId,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select maintenance_id, vehicle_id, `describe`, maintenance_costs, maintenance_begin_time, 
+    maintenance_end_time, create_time, update_time
+    from maintenance_record
+    where maintenance_id = #{maintenanceId,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select maintenance_id, vehicle_id, `describe`, maintenance_costs, maintenance_begin_time, 
+    maintenance_end_time, create_time, update_time
+    from maintenance_record
+  </select>
+</mapper>

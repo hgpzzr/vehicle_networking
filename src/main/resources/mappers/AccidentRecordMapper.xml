@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.vehicle_networking.mapper.AccidentRecordMapper" >
+  <resultMap id="BaseResultMap" type="com.example.vehicle_networking.entity.AccidentRecord" >
+    <id column="accident_id" property="accidentId" jdbcType="INTEGER" />
+    <result column="vehicle_id" property="vehicleId" jdbcType="INTEGER" />
+    <result column="accident_reason" property="accidentReason" jdbcType="VARCHAR" />
+    <result column="occurrence_site" property="occurrenceSite" jdbcType="VARCHAR" />
+    <result column="damage_condition" property="damageCondition" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from accident_record
+    where accident_id = #{accidentId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.example.vehicle_networking.entity.AccidentRecord" >
+    insert into accident_record (accident_id, vehicle_id, accident_reason, 
+      occurrence_site, damage_condition, create_time
+      )
+    values (#{accidentId,jdbcType=INTEGER}, #{vehicleId,jdbcType=INTEGER}, #{accidentReason,jdbcType=VARCHAR}, 
+      #{occurrenceSite,jdbcType=VARCHAR}, #{damageCondition,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.example.vehicle_networking.entity.AccidentRecord" >
+    update accident_record
+    set vehicle_id = #{vehicleId,jdbcType=INTEGER},
+      accident_reason = #{accidentReason,jdbcType=VARCHAR},
+      occurrence_site = #{occurrenceSite,jdbcType=VARCHAR},
+      damage_condition = #{damageCondition,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where accident_id = #{accidentId,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select accident_id, vehicle_id, accident_reason, occurrence_site, damage_condition, 
+    create_time
+    from accident_record
+    where accident_id = #{accidentId,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select accident_id, vehicle_id, accident_reason, occurrence_site, damage_condition, 
+    create_time
+    from accident_record
+  </select>
+</mapper>

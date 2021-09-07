@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.vehicle_networking.mapper.ConstructionSiteMapper" >
+  <resultMap id="BaseResultMap" type="com.example.vehicle_networking.entity.ConstructionSite" >
+    <id column="construction_site_id" property="constructionSiteId" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="longitude" property="longitude" jdbcType="VARCHAR" />
+    <result column="latitude" property="latitude" jdbcType="VARCHAR" />
+    <result column="construction_site_name" property="constructionSiteName" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from construction_site
+    where construction_site_id = #{constructionSiteId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.example.vehicle_networking.entity.ConstructionSite" >
+    insert into construction_site (construction_site_id, user_id, longitude, 
+      latitude, construction_site_name, create_time, 
+      update_time)
+    values (#{constructionSiteId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{longitude,jdbcType=VARCHAR}, 
+      #{latitude,jdbcType=VARCHAR}, #{constructionSiteName,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.example.vehicle_networking.entity.ConstructionSite" >
+    update construction_site
+    set user_id = #{userId,jdbcType=INTEGER},
+      longitude = #{longitude,jdbcType=VARCHAR},
+      latitude = #{latitude,jdbcType=VARCHAR},
+      construction_site_name = #{constructionSiteName,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where construction_site_id = #{constructionSiteId,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select construction_site_id, user_id, longitude, latitude, construction_site_name, 
+    create_time, update_time
+    from construction_site
+    where construction_site_id = #{constructionSiteId,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select construction_site_id, user_id, longitude, latitude, construction_site_name, 
+    create_time, update_time
+    from construction_site
+  </select>
+</mapper>
