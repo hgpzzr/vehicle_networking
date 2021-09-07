@@ -41,4 +41,16 @@ public class ConstructionServiceImpl implements ConstructionService {
 		}
 		return ResultVOUtil.success("添加成功");
 	}
+
+	@Override
+	public ResultVO deleteConstruction(Integer constructionId) {
+		if(constructionId == null){
+			return ResultVOUtil.error(ResultEnum.PARAM_NULL_ERROR);
+		}
+		int delete = constructionSiteMapper.deleteByPrimaryKey(constructionId);
+		if(delete != 1){
+			return ResultVOUtil.error(ResultEnum.DATABASE_OPTION_ERROR);
+		}
+		return ResultVOUtil.success("删除成功");
+	}
 }

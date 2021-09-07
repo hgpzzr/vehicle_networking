@@ -57,6 +57,9 @@ public class FenceServiceImpl implements FenceService {
 
 	@Override
 	public ResultVO deleteFence(Integer fenceId) {
+		if(fenceId == null){
+			return ResultVOUtil.error(ResultEnum.PARAM_NULL_ERROR);
+		}
 		int delete = electronicFenceMapper.deleteByPrimaryKey(fenceId);
 		if (delete != 1) {
 			return ResultVOUtil.error(ResultEnum.DATABASE_OPTION_ERROR);
