@@ -5,13 +5,11 @@ import com.example.vehicle_networking.service.FenceService;
 import com.example.vehicle_networking.vo.ResultVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.models.auth.In;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -32,5 +30,11 @@ public class FenceController {
 	@PostMapping("/insert")
 	public ResultVO addFence(@Valid AddFenceForm addFenceForm){
 		return fenceService.addFence(addFenceForm);
+	}
+
+	@ApiOperation("删除电子围栏")
+	@DeleteMapping("/delete")
+	public ResultVO deleteFence(Integer fenceId){
+		return fenceService.deleteFence(fenceId);
 	}
 }
