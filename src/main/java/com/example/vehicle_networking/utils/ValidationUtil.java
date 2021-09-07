@@ -2,7 +2,7 @@ package com.example.vehicle_networking.utils;
 
 
 
-import com.example.dangerous_goods.VO.ResultVO;
+import com.example.vehicle_networking.vo.ResultVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;

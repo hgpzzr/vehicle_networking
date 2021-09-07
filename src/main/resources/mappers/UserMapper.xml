@@ -38,7 +38,7 @@
   <select id="getUserByUserName" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select user_id, user_name, `password`, `role`, real_name, create_time
     from vehicle_user
-    where user_name = #{userName,jdbcType=String}
+    where user_name = #{userName,jdbcType=VARCHAR}
   </select>
   <select id="selectAll" resultMap="BaseResultMap" >
     select user_id, user_name, `password`, `role`, real_name, create_time
