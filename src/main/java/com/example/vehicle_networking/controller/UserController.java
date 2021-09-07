@@ -1,6 +1,7 @@
 package com.example.vehicle_networking.controller;
 
 import com.example.vehicle_networking.form.LoginForm;
+import com.example.vehicle_networking.form.RegisterForm;
 import com.example.vehicle_networking.service.UserService;
 import com.example.vehicle_networking.vo.ResultVO;
 import io.swagger.annotations.Api;
@@ -33,5 +34,11 @@ public class UserController {
 	@ApiOperation("登录")
 	public ResultVO login(@Valid LoginForm loginForm, HttpServletResponse response) {
 		return userService.login(loginForm, response);
+	}
+
+	@PostMapping("/register")
+	@ApiOperation("注册")
+	public ResultVO register(@Valid RegisterForm registerForm) {
+		return userService.register(registerForm);
 	}
 }

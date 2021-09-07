@@ -3,6 +3,7 @@ package com.example.vehicle_networking.service.impl;
 import com.example.vehicle_networking.entity.User;
 import com.example.vehicle_networking.enums.ResultEnum;
 import com.example.vehicle_networking.form.LoginForm;
+import com.example.vehicle_networking.form.RegisterForm;
 import com.example.vehicle_networking.mapper.UserMapper;
 import com.example.vehicle_networking.security.JwtProperties;
 import com.example.vehicle_networking.security.JwtUserDetailServiceImpl;
@@ -11,6 +12,7 @@ import com.example.vehicle_networking.utils.JwtTokenUtil;
 import com.example.vehicle_networking.utils.ResultVOUtil;
 import com.example.vehicle_networking.vo.ResultVO;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -22,6 +24,7 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -87,5 +90,32 @@ public class UserServiceImpl implements UserService {
 		map.put("realName", user.getRealName());
 		map.put("token",realToken);
 		return ResultVOUtil.success(map);
+	}
+
+	@Override
+	public ResultVO register(RegisterForm form) {
+		boolean isHave = userMapper.getUserByUserName(form.getUserName()) != null;
+		if (isHave) {
+			return ResultVOUtil.error(ResultEnum.USER_EXIST_ERROR);
+		}
+		// 判断密码长度
+		if (form.getUserName().length() < 6 || form.getUserName().length() > 18) {
+			return ResultVOUtil.error(ResultEnum.USER_NAME_LENGTH_ERROR);
+		}
+		// 判断密码长度
+		if (form.getPassword().length() < 6 || form.getPassword().length() > 18) {
+			return ResultVOUtil.error(ResultEnum.PASSWORD_LENGTH_ERROR);
+		}
+		User user = new User();
+		// 赋值
+		BeanUtils.copyProperties(form,user);
+		user.setRole(0);
+		user.setCreateTime(new Date());
+		// 存入数据库
+		int insert = userMapper.insert(user);
+		if(insert != 1){
+			return ResultVOUtil.error(ResultEnum.DATABASE_OPTION_ERROR);
+		}
+		return ResultVOUtil.success("注册成功");
 	}
 }

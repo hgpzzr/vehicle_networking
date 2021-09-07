@@ -14,6 +14,9 @@ public enum  ResultEnum {
     USER_NOT_EXIST_ERROR(3,"用户不存在"),
     PASSWORD_ERROR(4,"密码错误"),
 
+    PASSWORD_LENGTH_ERROR(1000,"密码长度错误"),
+    USER_NAME_LENGTH_ERROR(1001,"用户名长度错误"),
+
 
 
 
