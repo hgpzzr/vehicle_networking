@@ -25,5 +25,16 @@ public interface FenceService {
 	 */
 	ResultVO deleteFence(Integer fenceId);
 
+	/**
+	 * 修改电子围栏
+	 * @param form
+	 * @return
+	 */
 	ResultVO updateFence(UpdateFenceForm form);
+
+	/**
+	 * 查询当前用户的电子围栏
+	 * @return
+	 */
+	ResultVO selectByUserId();
 }

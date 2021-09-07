@@ -44,4 +44,10 @@ public class FenceController {
 	public ResultVO updateFence(@Valid UpdateFenceForm form){
 		return fenceService.updateFence(form);
 	}
+
+	@ApiOperation("查询当前用户的电子围栏")
+	@GetMapping("/select-userId")
+	public ResultVO selectByUserId(){
+		return fenceService.selectByUserId();
+	}
 }
