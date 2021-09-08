@@ -64,12 +64,7 @@ public class DataCollectionServiceImpl implements DataCollectionService {
         realTimeData.setSpeed(Double.valueOf(speed.getValue()));
         realTimeData.setCreateTime(engineSpeed.getTimestamp());
         realTimeData.setVehicleId(vehicleId);
-        if (realTimeData.getSpeed() > 0){
-            realTimeData.setRunningState(OperatingStatusEnum.RUNNING.getValue());
-        }else{
-            realTimeData.setRunningState(OperatingStatusEnum.NOT_RUNNING.getValue());
-        }
-        realTimeData.setLockedState(LockStatusEnum.UNLOCKED.getValue());
+
 
         int insert = realTimeDataMapper.insert(realTimeData);
         if (insert != 1) {

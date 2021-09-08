@@ -37,7 +37,7 @@ public class AlarmRecord implements Serializable {
         return numericalValue;
     }
 
-    public void setVehicleId(Double numericalValue) {
+    public void setNumericalValue(Double numericalValue) {
         this.numericalValue = numericalValue;
     }
     public String getAlarmReason() {

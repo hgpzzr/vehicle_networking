@@ -16,4 +16,6 @@ public interface AlarmRecordMapper {
     List<AlarmRecord> selectAll();
 
     int updateByPrimaryKey(AlarmRecord record);
+
+    int batchInsert(List<AlarmRecord> alarmRecordList);
 }

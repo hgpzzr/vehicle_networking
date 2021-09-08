@@ -17,7 +17,16 @@
     insert into alarm_record (alarm_id, vehicle_id, alarm_reason, 
       create_time, `type`,numerical_value)
     values (#{alarmId,jdbcType=INTEGER}, #{vehicleId,jdbcType=INTEGER}, #{alarmReason,jdbcType=VARCHAR}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{type,jdbcType=INTEGER}),#{numericalValue,jdbcType=DOUBLE})
+      #{createTime,jdbcType=TIMESTAMP}, #{type,jdbcType=INTEGER},#{numericalValue,jdbcType=DOUBLE})
+  </insert>
+  <insert id="batchInsert" parameterType="java.util.List" >
+    insert into alarm_record (alarm_id, vehicle_id, alarm_reason,
+      create_time, `type`,numerical_value)
+    values
+    <foreach collection="list" item="item" separator=",">
+    (#{item.alarmId}, #{itemvehicleId}, #{item.alarmReason},
+      #{item.createTime}, #{item.type},#{item.numericalValue})
+    </foreach>
   </insert>
   <update id="updateByPrimaryKey" parameterType="com.example.vehicle_networking.entity.AlarmRecord" >
     update alarm_record
