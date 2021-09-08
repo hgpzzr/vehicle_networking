@@ -7,6 +7,8 @@
     <result column="license_plate_number" property="licensePlateNumber" jdbcType="VARCHAR" />
     <result column="mileage" property="mileage" jdbcType="DOUBLE" />
     <result column="category_id" property="categoryId" jdbcType="INTEGER" />
+    <result column="running_state" property="runningState" jdbcType="INTEGER" />
+    <result column="locked_state" property="lockedState" jdbcType="INTEGER" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
@@ -15,10 +17,11 @@
   </delete>
   <insert id="insert" parameterType="com.example.vehicle_networking.entity.Vehicle" >
     insert into vehicle (vehicle_id, user_id, license_plate_number, 
-      mileage, category_id, create_time
+      mileage, category_id, create_time,running_state,locked_state
       )
     values (#{vehicleId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{licensePlateNumber,jdbcType=VARCHAR}, 
-      #{mileage,jdbcType=DOUBLE}, #{categoryId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}
+      #{mileage,jdbcType=DOUBLE}, #{categoryId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP},#{runningState,jdbcType=INTEGER},
+      #{lockedState,jdbcType=INTEGER}
       )
   </insert>
   <update id="updateByPrimaryKey" parameterType="com.example.vehicle_networking.entity.Vehicle" >
@@ -27,16 +30,18 @@
       license_plate_number = #{licensePlateNumber,jdbcType=VARCHAR},
       mileage = #{mileage,jdbcType=DOUBLE},
       category_id = #{categoryId,jdbcType=INTEGER},
+      running_state = #{runningState,jdbcType=INTEGER},
+      locked_state = #{lockedState,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=TIMESTAMP}
     where vehicle_id = #{vehicleId,jdbcType=INTEGER}
   </update>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select vehicle_id, user_id, license_plate_number, mileage, category_id, create_time
+    select vehicle_id, user_id, license_plate_number, mileage, category_id, create_time, running_state, locked_state
     from vehicle
     where vehicle_id = #{vehicleId,jdbcType=INTEGER}
   </select>
   <select id="selectAll" resultMap="BaseResultMap" >
-    select vehicle_id, user_id, license_plate_number, mileage, category_id, create_time
+    select vehicle_id, user_id, license_plate_number, mileage, category_id, create_time, running_state, locked_state
     from vehicle
   </select>
 </mapper>

@@ -16,9 +16,7 @@ public class RealTimeData implements Serializable {
 
     private Double speed;
 
-    private Integer runningState;
 
-    private Integer lockedState;
 
     private Date createTime;
 
@@ -72,22 +70,6 @@ public class RealTimeData implements Serializable {
         this.speed = speed;
     }
 
-    public Integer getRunningState() {
-        return runningState;
-    }
-
-    public void setRunningState(Integer runningState) {
-        this.runningState = runningState;
-    }
-
-    public Integer getLockedState() {
-        return lockedState;
-    }
-
-    public void setLockedState(Integer lockedState) {
-        this.lockedState = lockedState;
-    }
-
 
     public Date getCreateTime() {
         return createTime;
@@ -109,8 +91,6 @@ public class RealTimeData implements Serializable {
         sb.append(", fuelMargin=").append(fuelMargin);
         sb.append(", engineTemperature=").append(engineTemperature);
         sb.append(", speed=").append(speed);
-        sb.append(", runningState=").append(runningState);
-        sb.append(", lockedState=").append(lockedState);
         sb.append(", speed=").append(speed);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
