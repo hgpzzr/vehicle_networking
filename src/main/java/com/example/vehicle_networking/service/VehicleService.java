@@ -16,4 +16,11 @@ public interface VehicleService {
 	 * @return
 	 */
 	ResultVO addVehicle(AddVehicleForm form);
+
+	/**
+	 * 删除车辆
+	 * @param vehicleId
+	 * @return
+	 */
+	ResultVO deleteVehicle(Integer vehicleId);
 }

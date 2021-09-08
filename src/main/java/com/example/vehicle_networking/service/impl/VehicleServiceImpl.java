@@ -43,4 +43,16 @@ public class VehicleServiceImpl implements VehicleService {
 		}
 		return ResultVOUtil.success("添加成功");
 	}
+
+	@Override
+	public ResultVO deleteVehicle(Integer vehicleId) {
+		if(vehicleId == null){
+			return ResultVOUtil.error(ResultEnum.PARAM_NULL_ERROR);
+		}
+		int delete = vehicleMapper.deleteByPrimaryKey(vehicleId);
+		if(delete != 1){
+			return ResultVOUtil.error(ResultEnum.DATABASE_OPTION_ERROR);
+		}
+		return ResultVOUtil.success("删除成功");
+	}
 }
