@@ -3,12 +3,14 @@ package com.example.vehicle_networking.service;
 import com.example.vehicle_networking.form.HistoricalPositionFrom;
 import com.example.vehicle_networking.form.ReadDataParaForm;
 import com.example.vehicle_networking.vo.ResultVO;
+import org.springframework.stereotype.Service;
 
 /**
  * @author ：GO FOR IT
  * @description：
  * @date ：2021/9/8 8:23
  */
+@Service
 public interface DataCollectionService {
     /**
      * 获取速度信息

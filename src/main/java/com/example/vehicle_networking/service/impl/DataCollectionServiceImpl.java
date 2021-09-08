@@ -11,6 +11,7 @@ import com.example.vehicle_networking.form.ReadDataParaForm;
 import com.example.vehicle_networking.mapper.PositionMapper;
 import com.example.vehicle_networking.mapper.RealTimeDataMapper;
 import com.example.vehicle_networking.service.DataCollectionService;
+import com.example.vehicle_networking.thread.ReadDataThread;
 import com.example.vehicle_networking.utils.ResultVOUtil;
 import com.example.vehicle_networking.vo.ResultVO;
 import com.example.vehicle_networking.vo.readData.DataInfoDetail;
@@ -36,6 +37,7 @@ public class DataCollectionServiceImpl implements DataCollectionService {
     static final String speedUrl = "https://iot-pre.diwork.com/reader/api/v1/realTimeDataByTag?tags=test@%E6%B8%A9%E5%BA%A6,test@%E6%B9%BF%E5%BA%A6";
 
     static ExecutorService threadPool;
+    private volatile ReadDataThread collectDataThread;
 
     @Autowired
     private RestTemplateTo restTemplateTo;
@@ -87,12 +89,7 @@ public class DataCollectionServiceImpl implements DataCollectionService {
 
     @Override
     public ResultVO getStatusDataRead() {
-        boolean shutdown = threadPool.isShutdown();
-        if (shutdown){
-            return ResultVOUtil.success(ResultEnum.DATA_READ_OPENED);
-        }else {
-            return ResultVOUtil.success(ResultEnum.DATA_READ_SHUT_DOWNED);
-        }
+        return ResultVOUtil.success(collectDataThread.getStatus());
     }
 
     @Override
@@ -108,34 +105,22 @@ public class DataCollectionServiceImpl implements DataCollectionService {
 
     @Override
     public ResultVO openOrDownRealDataCollect(ReadDataParaForm readDataParaForm) {
-        if (threadPool != null && !threadPool.isShutdown()){
-            threadPool.shutdownNow();
-            return ResultVOUtil.success(ResultEnum.DATA_READ_SHUT_DOWNED);
-        }
-
-        threadPool = new ThreadPoolExecutor(
-                1,
-                2,
-                3,
-                TimeUnit.SECONDS,
-                new LinkedBlockingDeque<>(3),
-                Executors.defaultThreadFactory(),
-                new ThreadPoolExecutor.DiscardOldestPolicy()
-        );
-
-        log.info("open");
-        threadPool.execute( () -> {
-            while (true){
-                getSpeedFromURL(readDataParaForm.getUrl(), readDataParaForm.getCookie(), readDataParaForm.getVehicleId());
-                log.info(" 线程 {} 保存数据成功",Thread.currentThread().getName());
-                try {
-                    Thread.sleep(3000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+        if (collectDataThread == null){
+            synchronized (this){
+                if (collectDataThread == null){
+                    collectDataThread = new ReadDataThread("collectDataThread", readDataParaForm);
                 }
             }
-        });
-
+        }
+        boolean collectDataThreadStatus = collectDataThread.getStatus();
+        if (collectDataThreadStatus){
+            log.info("关闭线程：{}",collectDataThread.getName());
+            collectDataThread.stopTask();
+            return ResultVOUtil.success(ResultEnum.DATA_READ_SHUT_DOWNED);
+        }
+        collectDataThread.startTask();
+        collectDataThread.start();
+        log.info("开启线程：{}",collectDataThread.getName());
         return ResultVOUtil.success(ResultEnum.DATA_READ_OPENED);
     }
 }
