@@ -15,9 +15,9 @@ public class FenceVO {
 
 	private Integer constructionSiteId;
 
-	private String longitude;
+	private Double longitude;
 
-	private String latitude;
+	private Double latitude;
 
 	private Double radius;
 

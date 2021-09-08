@@ -18,12 +18,12 @@ public class UpdateFenceForm {
 	private Integer fenceId;
 
 	@ApiModelProperty("中心经度")
-	@NotBlank(message = "中心经度不能为空")
-	private String longitude;
+	@NotNull(message = "中心经度不能为空")
+	private Double longitude;
 
 	@ApiModelProperty("中心纬度")
-	@NotBlank(message = "中心纬度不能为空")
-	private String latitude;
+	@NotNull(message = "中心纬度不能为空")
+	private Double latitude;
 
 	@ApiModelProperty("半径")
 	@NotNull(message = "半径不能为空")
