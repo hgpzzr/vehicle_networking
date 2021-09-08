@@ -1,6 +1,7 @@
 package com.example.vehicle_networking.controller;
 
 import com.example.vehicle_networking.form.AddConstructionForm;
+import com.example.vehicle_networking.form.UpdateConstructionForm;
 import com.example.vehicle_networking.service.ConstructionService;
 import com.example.vehicle_networking.vo.ResultVO;
 import io.swagger.annotations.Api;
@@ -32,5 +33,11 @@ public class ConstructionController {
 	@DeleteMapping("/delete")
 	public ResultVO deleteConstruction(Integer constructionId){
 		return constructionService.deleteConstruction(constructionId);
+	}
+
+	@ApiOperation("更新工地")
+	@PutMapping("/update")
+	public ResultVO updateConstruction(UpdateConstructionForm form){
+		return constructionService.updateConstruction(form);
 	}
 }

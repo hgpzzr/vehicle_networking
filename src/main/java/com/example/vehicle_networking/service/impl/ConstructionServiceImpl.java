@@ -4,6 +4,8 @@ import com.example.vehicle_networking.entity.ConstructionSite;
 import com.example.vehicle_networking.entity.User;
 import com.example.vehicle_networking.enums.ResultEnum;
 import com.example.vehicle_networking.form.AddConstructionForm;
+import com.example.vehicle_networking.form.UpdateConstructionForm;
+import com.example.vehicle_networking.form.UpdateFenceForm;
 import com.example.vehicle_networking.mapper.ConstructionSiteMapper;
 import com.example.vehicle_networking.service.ConstructionService;
 import com.example.vehicle_networking.service.UserService;
@@ -53,5 +55,22 @@ public class ConstructionServiceImpl implements ConstructionService {
 			return ResultVOUtil.error(ResultEnum.DATABASE_OPTION_ERROR);
 		}
 		return ResultVOUtil.success("删除成功");
+	}
+
+	@Override
+	public ResultVO updateConstruction(UpdateConstructionForm form) {
+		ConstructionSite constructionSite = constructionSiteMapper.selectByPrimaryKey(form.getConstructionId());
+		User currentUser = userService.getCurrentUser();
+		if(constructionSite.getUserId() != currentUser.getUserId() && currentUser.getRole() == 0){
+			return ResultVOUtil.error(ResultEnum.NOT_SELF_OPTION_ERROR);
+		}
+		constructionSite.setConstructionSiteName(form.getConstructionSiteName());
+		constructionSite.setLongitude(String.valueOf(form.getLongitude()));
+		constructionSite.setLatitude(String.valueOf(form.getLatitude()));
+		int update = constructionSiteMapper.updateByPrimaryKey(constructionSite);
+		if(update != 1){
+			return ResultVOUtil.error(ResultEnum.DATABASE_OPTION_ERROR);
+		}
+		return ResultVOUtil.success("更新成功");
 	}
 }

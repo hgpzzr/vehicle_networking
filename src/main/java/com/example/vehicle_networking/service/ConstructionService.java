@@ -1,6 +1,8 @@
 package com.example.vehicle_networking.service;
 
 import com.example.vehicle_networking.form.AddConstructionForm;
+import com.example.vehicle_networking.form.UpdateConstructionForm;
+import com.example.vehicle_networking.form.UpdateFenceForm;
 import com.example.vehicle_networking.vo.ResultVO;
 
 /**
@@ -23,4 +25,10 @@ public interface ConstructionService {
 	 */
 	ResultVO deleteConstruction(Integer constructionId);
 
+	/**
+	 * 更新工地
+	 * @param form
+	 * @return
+	 */
+	ResultVO updateConstruction(UpdateConstructionForm form);
 }
