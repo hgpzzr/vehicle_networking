@@ -2,6 +2,7 @@ package com.example.vehicle_networking.service;
 
 import com.example.vehicle_networking.entity.Vehicle;
 import com.example.vehicle_networking.form.AddVehicleForm;
+import com.example.vehicle_networking.form.UpdateVehicleForm;
 import com.example.vehicle_networking.vo.ResultVO;
 
 /**
@@ -23,4 +24,11 @@ public interface VehicleService {
 	 * @return
 	 */
 	ResultVO deleteVehicle(Integer vehicleId);
+
+	/**
+	 * 更新汽车基本信息
+	 * @param form
+	 * @return
+	 */
+	ResultVO updateVehicle(UpdateVehicleForm form);
 }

@@ -10,6 +10,8 @@ import org.apache.ibatis.annotations.Delete;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 /**
  * @author hgp
  * @version 1.0
@@ -25,7 +27,7 @@ public class ConstructionController {
 
 	@ApiOperation("添加工地")
 	@PostMapping("/insert")
-	public ResultVO addConstruction(AddConstructionForm addConstructionForm){
+	public ResultVO addConstruction(@Valid AddConstructionForm addConstructionForm){
 		return constructionService.addConstruction(addConstructionForm);
 	}
 
@@ -37,7 +39,7 @@ public class ConstructionController {
 
 	@ApiOperation("更新工地")
 	@PutMapping("/update")
-	public ResultVO updateConstruction(UpdateConstructionForm form){
+	public ResultVO updateConstruction(@Valid UpdateConstructionForm form){
 		return constructionService.updateConstruction(form);
 	}
 }

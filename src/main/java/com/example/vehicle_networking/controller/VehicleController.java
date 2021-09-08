@@ -1,14 +1,18 @@
 package com.example.vehicle_networking.controller;
 
 import com.example.vehicle_networking.form.AddVehicleForm;
+import com.example.vehicle_networking.form.UpdateVehicleForm;
 import com.example.vehicle_networking.service.VehicleService;
 import com.example.vehicle_networking.vo.ResultVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.annotations.Delete;
+import org.apache.ibatis.annotations.Update;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 /**
  * @author hgp
@@ -27,7 +31,7 @@ public class VehicleController {
 
 	@PostMapping("/insert")
 	@ApiOperation("添加车辆")
-	public ResultVO addVehicle(AddVehicleForm form){
+	public ResultVO addVehicle(@Valid AddVehicleForm form){
 		return vehicleService.addVehicle(form);
 	}
 
@@ -35,6 +39,12 @@ public class VehicleController {
 	@ApiOperation("删除车辆")
 	public ResultVO deleteVehicle(Integer vehicleId){
 		return vehicleService.deleteVehicle(vehicleId);
+	}
+
+	@PutMapping("/update")
+	@ApiOperation("更新车辆基本信息")
+	public ResultVO updateVehicle(@Valid UpdateVehicleForm form){
+		return vehicleService.updateVehicle(form);
 	}
 
 }

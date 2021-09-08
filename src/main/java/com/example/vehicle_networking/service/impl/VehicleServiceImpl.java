@@ -4,6 +4,7 @@ import com.example.vehicle_networking.entity.User;
 import com.example.vehicle_networking.entity.Vehicle;
 import com.example.vehicle_networking.enums.ResultEnum;
 import com.example.vehicle_networking.form.AddVehicleForm;
+import com.example.vehicle_networking.form.UpdateVehicleForm;
 import com.example.vehicle_networking.mapper.VehicleMapper;
 import com.example.vehicle_networking.service.UserService;
 import com.example.vehicle_networking.service.VehicleService;
@@ -54,5 +55,16 @@ public class VehicleServiceImpl implements VehicleService {
 			return ResultVOUtil.error(ResultEnum.DATABASE_OPTION_ERROR);
 		}
 		return ResultVOUtil.success("删除成功");
+	}
+
+	@Override
+	public ResultVO updateVehicle(UpdateVehicleForm form) {
+		Vehicle vehicle = vehicleMapper.selectByPrimaryKey(form.getVehicleId());
+		BeanUtils.copyProperties(form,vehicle);
+		int insert = vehicleMapper.insert(vehicle);
+		if(insert != 1){
+			return ResultVOUtil.error(ResultEnum.DATABASE_OPTION_ERROR);
+		}
+		return ResultVOUtil.success("更新成功");
 	}
 }
