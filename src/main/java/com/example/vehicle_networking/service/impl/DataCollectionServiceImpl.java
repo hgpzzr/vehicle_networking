@@ -3,6 +3,8 @@ package com.example.vehicle_networking.service.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.example.vehicle_networking.entity.Position;
 import com.example.vehicle_networking.entity.RealTimeData;
+import com.example.vehicle_networking.enums.LockStatusEnum;
+import com.example.vehicle_networking.enums.OperatingStatusEnum;
 import com.example.vehicle_networking.enums.ResultEnum;
 import com.example.vehicle_networking.form.HistoricalPositionFrom;
 import com.example.vehicle_networking.form.ReadDataParaForm;
@@ -16,8 +18,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.concurrent.*;
+import java.util.concurrent.locks.Lock;
 
 /**
  * @author ：GO FOR IT
@@ -41,29 +45,48 @@ public class DataCollectionServiceImpl implements DataCollectionService {
     private PositionMapper positionMapper;
 
     @Override
-    public ResultVO getSpeedFromURL(String url, String cookie) {
+    public ResultVO getSpeedFromURL(String url, String cookie, Integer vehicleId) {
         // 保存速度信息
-        JSONObject jsonObject = restTemplateTo.doGetWith(speedUrl, cookie);
+        JSONObject jsonObject = restTemplateTo.doGetWith(url, cookie);
         JSONObject data = jsonObject.getJSONObject("data");
-        DataInfoDetail engineSpeed = data.getObject("test@转速", DataInfoDetail.class);
-        DataInfoDetail fuelMargin = data.getObject("test@燃油余量", DataInfoDetail.class);
-        DataInfoDetail temp = data.getObject("test@温度", DataInfoDetail.class);
-        DataInfoDetail speed = data.getObject("test@速度", DataInfoDetail.class);
-        DataInfoDetail humidity = data.getObject("test@湿度", DataInfoDetail.class);
-
-
+        DataInfoDetail engineSpeed = data.getObject("car@转速", DataInfoDetail.class);
+        DataInfoDetail fuelMargin = data.getObject("car@燃油余量", DataInfoDetail.class);
+        DataInfoDetail temp = data.getObject("car@温度", DataInfoDetail.class);
+        DataInfoDetail speed = data.getObject("car@速度", DataInfoDetail.class);
+//        DataInfoDetail humidity = data.getObject("test@湿度", DataInfoDetail.class);
+//        DataInfoDetail longitude = data.getObject("test@经度", DataInfoDetail.class);
+//        DataInfoDetail latitude = data.getObject("test@纬度", DataInfoDetail.class);
 
         RealTimeData realTimeData = new RealTimeData();
-
         realTimeData.setEngineSpeed(Double.valueOf(engineSpeed.getValue()));
         realTimeData.setFuelMargin(Double.valueOf(fuelMargin.getValue()));
         realTimeData.setEngineTemperature(Double.valueOf(temp.getValue()));
         realTimeData.setSpeed(Double.valueOf(speed.getValue()));
         realTimeData.setCreateTime(engineSpeed.getTimestamp());
+        realTimeData.setVehicleId(vehicleId);
+        if (realTimeData.getSpeed() > 0){
+            realTimeData.setRunningState(OperatingStatusEnum.RUNNING.getValue());
+        }else{
+            realTimeData.setRunningState(OperatingStatusEnum.NOT_RUNNING.getValue());
+        }
+        realTimeData.setLockedState(LockStatusEnum.UNLOCKED.getValue());
+
         int insert = realTimeDataMapper.insert(realTimeData);
         if (insert != 1) {
             return ResultVOUtil.error(ResultEnum.DATABASE_OPTION_ERROR);
         }
+
+//        // 采集位置信息
+//        Position position = new Position();
+//        position.setLatitude(String.valueOf(latitude.getValue()));
+//        position.setLongitude(String.valueOf(longitude.getValue()));
+//        position.setCreateTime(engineSpeed.getTimestamp());
+//        position.setVehicleId(vehicleId);
+//        int positionInsert = positionMapper.insert(position);
+//        if (positionInsert != 1) {
+//            return ResultVOUtil.error(ResultEnum.DATABASE_OPTION_ERROR);
+//        }
+
         return ResultVOUtil.success();
     }
 
@@ -90,7 +113,6 @@ public class DataCollectionServiceImpl implements DataCollectionService {
 
     @Override
     public ResultVO openOrDownRealDataCollect(ReadDataParaForm readDataParaForm) {
-//        log.info(" isShutdown : {}", threadPool.isShutdown());
         if (threadPool != null && !threadPool.isShutdown()){
             threadPool.shutdownNow();
             return ResultVOUtil.success(ResultEnum.DATA_READ_SHUT_DOWNED);
@@ -106,14 +128,13 @@ public class DataCollectionServiceImpl implements DataCollectionService {
                 new ThreadPoolExecutor.DiscardOldestPolicy()
         );
 
-
         log.info("open");
         threadPool.execute( () -> {
             while (true){
-                getSpeedFromURL(readDataParaForm.getUrl(), readDataParaForm.getCookie());
+                getSpeedFromURL(readDataParaForm.getUrl(), readDataParaForm.getCookie(), readDataParaForm.getVehicleId());
                 log.info(" 线程 {} 保存数据成功",Thread.currentThread().getName());
                 try {
-                    Thread.sleep(1000);
+                    Thread.sleep(3000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
