@@ -48,6 +48,8 @@ public class FenceServiceImpl implements FenceService {
 		BeanUtils.copyProperties(addFenceForm, electronicFence);
 		electronicFence.setCreateTime(new Date());
 		electronicFence.setUpdateTime(new Date());
+		electronicFence.setLatitude(String.valueOf(addFenceForm.getLatitude()));
+		electronicFence.setLongitude(String.valueOf(addFenceForm.getLongitude()));
 		int insert = electronicFenceMapper.insert(electronicFence);
 		if (insert != 1) {
 			return ResultVOUtil.error(ResultEnum.DATABASE_OPTION_ERROR);
@@ -71,6 +73,8 @@ public class FenceServiceImpl implements FenceService {
 	public ResultVO updateFence(UpdateFenceForm form) {
 		ElectronicFence electronicFence = electronicFenceMapper.selectByPrimaryKey(form.getFenceId());
 		BeanUtils.copyProperties(form, electronicFence);
+		electronicFence.setLongitude(String.valueOf(form.getLongitude()));
+		electronicFence.setLatitude(String.valueOf(form.getLatitude()));
 		electronicFence.setUpdateTime(new Date());
 		electronicFenceMapper.updateByPrimaryKey(electronicFence);
 		return ResultVOUtil.success("更新成功");
@@ -92,6 +96,8 @@ public class FenceServiceImpl implements FenceService {
 			BeanUtils.copyProperties(electronicFence, fenceVO);
 			fenceVO.setCreateTime(simpleDateFormat.format(electronicFence.getCreateTime()));
 			fenceVO.setUpdateTime(simpleDateFormat.format(electronicFence.getUpdateTime()));
+			fenceVO.setLatitude(new Double(electronicFence.getLatitude()));
+			fenceVO.setLongitude(new Double(electronicFence.getLongitude()));
 			fenceVOList.add(fenceVO);
 		}
 		return ResultVOUtil.success(fenceVOList);
@@ -107,6 +113,8 @@ public class FenceServiceImpl implements FenceService {
 			BeanUtils.copyProperties(electronicFence,fenceVO);
 			fenceVO.setCreateTime(simpleDateFormat.format(electronicFence.getCreateTime()));
 			fenceVO.setUpdateTime(simpleDateFormat.format(electronicFence.getUpdateTime()));
+			fenceVO.setLatitude(new Double(electronicFence.getLatitude()));
+			fenceVO.setLongitude(new Double(electronicFence.getLongitude()));
 			fenceVOList.add(fenceVO);
 		}
 		return ResultVOUtil.success(fenceVOList);

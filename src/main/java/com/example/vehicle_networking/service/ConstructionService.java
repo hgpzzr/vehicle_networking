@@ -22,4 +22,5 @@ public interface ConstructionService {
 	 * @return
 	 */
 	ResultVO deleteConstruction(Integer constructionId);
+
 }

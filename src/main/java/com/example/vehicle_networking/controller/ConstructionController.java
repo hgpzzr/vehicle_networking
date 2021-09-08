@@ -5,11 +5,9 @@ import com.example.vehicle_networking.service.ConstructionService;
 import com.example.vehicle_networking.vo.ResultVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.ibatis.annotations.Delete;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author hgp
@@ -28,5 +26,11 @@ public class ConstructionController {
 	@PostMapping("/insert")
 	public ResultVO addConstruction(AddConstructionForm addConstructionForm){
 		return constructionService.addConstruction(addConstructionForm);
+	}
+
+	@ApiOperation("删除工地")
+	@DeleteMapping("/delete")
+	public ResultVO deleteConstruction(Integer constructionId){
+		return constructionService.deleteConstruction(constructionId);
 	}
 }

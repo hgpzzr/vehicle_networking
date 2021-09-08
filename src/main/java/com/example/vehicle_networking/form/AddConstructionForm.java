@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 /**
  * @author hgp
@@ -14,12 +15,12 @@ import javax.validation.constraints.NotBlank;
 @Data
 public class AddConstructionForm {
 	@ApiModelProperty("经度")
-	@NotBlank(message = "经度不能为空")
-	private String longitude;
+	@NotNull(message = "经度不能为空")
+	private Double longitude;
 
 	@ApiModelProperty("纬度")
-	@NotBlank(message = "纬度不能为空")
-	private String latitude;
+	@NotNull(message = "纬度不能为空")
+	private Double latitude;
 
 	@ApiModelProperty("工地名称")
 	@NotBlank(message = "工地名称不能为空")
