@@ -1,5 +1,6 @@
 package com.example.vehicle_networking.controller;
 
+import com.example.vehicle_networking.entity.User;
 import com.example.vehicle_networking.form.LoginForm;
 import com.example.vehicle_networking.form.RegisterForm;
 import com.example.vehicle_networking.service.UserService;
@@ -8,10 +9,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -27,6 +25,7 @@ import javax.validation.Valid;
 @RequestMapping("/user")
 @Api(tags = "用户接口")
 public class UserController {
+
 	@Autowired
 	private UserService userService;
 
@@ -40,5 +39,9 @@ public class UserController {
 	@ApiOperation("注册")
 	public ResultVO register(@Valid RegisterForm registerForm) {
 		return userService.register(registerForm);
+	}
+	@GetMapping("/getUserByName")
+	public User getUserByName(@RequestParam String name){
+		return userService.getUserByUserName(name);
 	}
 }

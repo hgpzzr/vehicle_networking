@@ -16,4 +16,12 @@ public interface RealTimeDataMapper {
     List<RealTimeData> selectAll();
 
     int updateByPrimaryKey(RealTimeData record);
+
+    /**
+     * 获取最新数据
+     * @return
+     */
+    RealTimeData getRealTimeDataOneByVehicleId(Integer vehicleId);
+
+
 }

@@ -1,8 +1,6 @@
 package com.example.vehicle_networking.config;
 
 
-
-
 import com.example.vehicle_networking.security.AuthRoleInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
