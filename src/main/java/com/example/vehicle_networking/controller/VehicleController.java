@@ -1,6 +1,7 @@
 package com.example.vehicle_networking.controller;
 
 import com.example.vehicle_networking.form.AddVehicleForm;
+import com.example.vehicle_networking.form.ChangeRunningState;
 import com.example.vehicle_networking.form.UpdateVehicleForm;
 import com.example.vehicle_networking.service.VehicleService;
 import com.example.vehicle_networking.vo.ResultVO;
@@ -45,6 +46,12 @@ public class VehicleController {
 	@ApiOperation("更新车辆基本信息")
 	public ResultVO updateVehicle(@Valid UpdateVehicleForm form){
 		return vehicleService.updateVehicle(form);
+	}
+
+	@PutMapping("/update_runningState")
+	@ApiOperation("改变汽车运行状态")
+	public ResultVO updateRunningState(@Valid ChangeRunningState form){
+		return vehicleService.updateRunningState(form);
 	}
 
 }
