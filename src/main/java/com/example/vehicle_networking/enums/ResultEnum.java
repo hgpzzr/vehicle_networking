@@ -9,6 +9,7 @@ import lombok.Getter;
  */
 @Getter
 public enum  ResultEnum {
+
     USER_EXIST_ERROR(1,"用户已存在"),
     DATABASE_OPTION_ERROR(2,"数据库操作失败"),
     USER_NOT_EXIST_ERROR(3,"用户不存在"),

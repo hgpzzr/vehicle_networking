@@ -35,4 +35,22 @@
     select position_id, vehicle_id, longitude, latitude, create_time
     from position
   </select>
+  <select id="getHistoricalDataByVehicleId" resultMap="BaseResultMap">
+    select position_id, vehicle_id, longitude, latitude, create_time
+    from position
+    where vehicle_id = #{vehicleId,jdbcType=INTEGER}
+    order by create_time
+  </select>
+  <select id="getHistoricalDataByDate" resultMap="BaseResultMap" parameterType="com.example.vehicle_networking.form.HistoricalPositionFrom">
+    select position_id, vehicle_id, longitude, latitude, create_time
+    from position
+    where vehicle_id = #{vehicleId,jdbcType=INTEGER}
+    <if test="beginDate!=null">
+      and create_time >= #{beginDate,jdbcType=DATE}
+    </if>
+    <if test="endDate!=null">
+      and create_time &lt;= #{endDate,jdbcType=DATE}
+    </if>
+    order by create_time
+  </select>
 </mapper>

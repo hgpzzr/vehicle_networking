@@ -28,9 +28,7 @@ public class ResultVOUtil {
     }
 
     /***
-     *
      * 无参成功结果
-     *
      * @author zty
      */
     public static ResultVO success() {

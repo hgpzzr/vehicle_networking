@@ -19,8 +19,6 @@ public class RealTimeData implements Serializable {
 
     private Integer lockedState;
 
-    private Integer inclination;
-
     private static final long serialVersionUID = 1L;
 
     public Integer getRealTimeId() {
@@ -87,13 +85,6 @@ public class RealTimeData implements Serializable {
         this.lockedState = lockedState;
     }
 
-    public Integer getInclination() {
-        return inclination;
-    }
-
-    public void setInclination(Integer inclination) {
-        this.inclination = inclination;
-    }
 
     @Override
     public String toString() {
@@ -109,7 +100,6 @@ public class RealTimeData implements Serializable {
         sb.append(", speed=").append(speed);
         sb.append(", runningState=").append(runningState);
         sb.append(", lockedState=").append(lockedState);
-        sb.append(", inclination=").append(inclination);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();
