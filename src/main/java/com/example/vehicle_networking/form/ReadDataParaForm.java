@@ -2,6 +2,9 @@ package com.example.vehicle_networking.form;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * @author ：GO FOR IT
@@ -15,4 +18,8 @@ public class ReadDataParaForm {
 
     @ApiModelProperty("请求携带的地址")
     private String cookie;
+
+    @ApiModelProperty("车辆ID")
+    @NotNull
+    private Integer vehicleId;
 }

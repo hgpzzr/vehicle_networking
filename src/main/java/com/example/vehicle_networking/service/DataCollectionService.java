@@ -14,7 +14,7 @@ public interface DataCollectionService {
      * 获取速度信息
      * @return
      */
-    ResultVO getSpeedFromURL(String url, String cookie);
+    ResultVO getSpeedFromURL(String url, String cookie, Integer vehicleId);
 
     /**
      * 获取读取数据的状态
@@ -40,4 +40,6 @@ public interface DataCollectionService {
      * @return
      */
     ResultVO getHistoricalPosition(HistoricalPositionFrom historicalPositionFrom);
+
+
 }
