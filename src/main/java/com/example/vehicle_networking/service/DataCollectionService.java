@@ -1,6 +1,7 @@
 package com.example.vehicle_networking.service;
 
 import com.example.vehicle_networking.form.HistoricalPositionFrom;
+import com.example.vehicle_networking.form.ReadDataParaForm;
 import com.example.vehicle_networking.vo.ResultVO;
 
 /**
@@ -13,7 +14,19 @@ public interface DataCollectionService {
      * 获取速度信息
      * @return
      */
-    ResultVO getSpeedFromURL();
+    ResultVO getSpeedFromURL(String url, String cookie);
+
+    /**
+     * 获取读取数据的状态
+     * @return
+     */
+    ResultVO getStatusDataRead();
+
+    /**
+     * 开启或关闭实时数据读取
+     * @return
+     */
+    ResultVO openOrDownRealDataCollect(ReadDataParaForm readDataParaForm);
 
     /**
      * 获取实时速度数据

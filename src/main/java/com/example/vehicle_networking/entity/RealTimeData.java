@@ -1,6 +1,7 @@
 package com.example.vehicle_networking.entity;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class RealTimeData implements Serializable {
     private Integer realTimeId;
@@ -18,6 +19,8 @@ public class RealTimeData implements Serializable {
     private Integer runningState;
 
     private Integer lockedState;
+
+    private Date createTime;
 
     private static final long serialVersionUID = 1L;
 
@@ -86,6 +89,14 @@ public class RealTimeData implements Serializable {
     }
 
 
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -100,6 +111,7 @@ public class RealTimeData implements Serializable {
         sb.append(", speed=").append(speed);
         sb.append(", runningState=").append(runningState);
         sb.append(", lockedState=").append(lockedState);
+        sb.append(", speed=").append(speed);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

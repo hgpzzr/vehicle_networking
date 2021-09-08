@@ -1,6 +1,7 @@
 package com.example.vehicle_networking.controller;
 
 import com.example.vehicle_networking.form.HistoricalPositionFrom;
+import com.example.vehicle_networking.form.ReadDataParaForm;
 import com.example.vehicle_networking.service.DataCollectionService;
 import com.example.vehicle_networking.service.impl.DataCollectionServiceImpl;
 import com.example.vehicle_networking.vo.ResultVO;
@@ -22,6 +23,17 @@ import org.springframework.web.bind.annotation.*;
 public class DataCollectionController {
     @Autowired
     private DataCollectionService dataCollectionService;
+
+    @PostMapping("/openOrRealDataRead")
+    @ApiOperation("开启或关闭获取实时数据")
+    public ResultVO openOrRealDataRead(@RequestBody ReadDataParaForm readDataParaForm){
+        return dataCollectionService.openOrDownRealDataCollect(readDataParaForm);
+    }
+    @GetMapping("/getStatusDataRead")
+    @ApiOperation("获取读取数据状态（关闭或开启）")
+    public ResultVO getStatusDataRead(){
+        return dataCollectionService.getStatusDataRead();
+    }
 
     /**
      * 获取实时速度数据

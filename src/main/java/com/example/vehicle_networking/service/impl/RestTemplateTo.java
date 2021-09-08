@@ -1,12 +1,24 @@
 package com.example.vehicle_networking.service.impl;
 
-import com.example.vehicle_networking.entity.RealTimeData;
 import com.example.vehicle_networking.entity.User;
 import com.alibaba.fastjson.JSONObject;
+import com.example.vehicle_networking.vo.readData.DataInfoDetail;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
+import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RequestCallback;
+import org.springframework.web.client.ResponseExtractor;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
+import sun.rmi.runtime.Log;
+
+import java.net.URI;
+import java.nio.charset.Charset;
+import java.util.Collections;
 
 /**
  * @author ：GO FOR IT
@@ -14,6 +26,7 @@ import org.springframework.web.client.RestTemplate;
  * @date ：2021/9/8 8:15
  */
 @Service
+@Slf4j
 public class RestTemplateTo {
 
     @Autowired
@@ -24,10 +37,21 @@ public class RestTemplateTo {
      * @param url
      * @return
      */
-    public RealTimeData doGetWith1(String url){
-        ResponseEntity<RealTimeData> responseEntity = restTemplate.getForEntity(url, RealTimeData.class);
-        RealTimeData realTimeData = responseEntity.getBody();
-        return realTimeData;
+    public JSONObject doGetWith(String url, String cookie){
+
+        // 需要转义
+        URI uri = UriComponentsBuilder.fromUriString(url).build(true).toUri();
+
+        LinkedMultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
+        headers.put("Cookie", Collections.singletonList(cookie));
+        HttpEntity request = new HttpEntity(headers);
+        // 构造execute()执行所需要的参数。
+        RequestCallback requestCallback = restTemplate.httpEntityCallback(request, JSONObject.class);
+        ResponseExtractor<ResponseEntity<JSONObject>> responseExtractor = restTemplate.responseEntityExtractor(JSONObject.class);
+        // 执行execute()，发送请求
+        ResponseEntity<JSONObject> response = restTemplate.execute(uri, HttpMethod.GET, requestCallback, responseExtractor);
+        log.info(" 返回数据 = {}",response.getBody());
+        return response.getBody();
     }
 
     /**
