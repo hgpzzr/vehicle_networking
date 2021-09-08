@@ -2,6 +2,7 @@ package com.example.vehicle_networking.service;
 
 import com.example.vehicle_networking.entity.Vehicle;
 import com.example.vehicle_networking.form.AddVehicleForm;
+import com.example.vehicle_networking.form.ChangeLockedState;
 import com.example.vehicle_networking.form.ChangeRunningState;
 import com.example.vehicle_networking.form.UpdateVehicleForm;
 import com.example.vehicle_networking.vo.ResultVO;
@@ -33,5 +34,17 @@ public interface VehicleService {
 	 */
 	ResultVO updateVehicle(UpdateVehicleForm form);
 
+	/**
+	 * 改变汽车运行状态
+	 * @param form
+	 * @return
+	 */
 	ResultVO updateRunningState(ChangeRunningState form);
+
+	/**
+	 * 改变车辆锁机状态
+	 * @param form
+	 * @return
+	 */
+	ResultVO updateLockedState(ChangeLockedState form);
 }

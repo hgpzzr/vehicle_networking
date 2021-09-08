@@ -4,6 +4,7 @@ import com.example.vehicle_networking.entity.User;
 import com.example.vehicle_networking.entity.Vehicle;
 import com.example.vehicle_networking.enums.ResultEnum;
 import com.example.vehicle_networking.form.AddVehicleForm;
+import com.example.vehicle_networking.form.ChangeLockedState;
 import com.example.vehicle_networking.form.ChangeRunningState;
 import com.example.vehicle_networking.form.UpdateVehicleForm;
 import com.example.vehicle_networking.mapper.VehicleMapper;
@@ -73,6 +74,17 @@ public class VehicleServiceImpl implements VehicleService {
 	public ResultVO updateRunningState(ChangeRunningState form) {
 		Vehicle vehicle = vehicleMapper.selectByPrimaryKey(form.getVehicleId());
 		vehicle.setRunningState(form.getRunningState());
+		int update = vehicleMapper.updateByPrimaryKey(vehicle);
+		if(update != 1){
+			return ResultVOUtil.error(ResultEnum.DATABASE_OPTION_ERROR);
+		}
+		return ResultVOUtil.success("更新成功");
+	}
+
+	@Override
+	public ResultVO updateLockedState(ChangeLockedState form) {
+		Vehicle vehicle = vehicleMapper.selectByPrimaryKey(form.getVehicleId());
+		vehicle.setLockedState(form.getLockedState());
 		int update = vehicleMapper.updateByPrimaryKey(vehicle);
 		if(update != 1){
 			return ResultVOUtil.error(ResultEnum.DATABASE_OPTION_ERROR);
