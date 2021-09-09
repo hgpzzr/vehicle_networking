@@ -18,6 +18,8 @@ public class RealTimeData implements Serializable {
 
     private Date createTime;
 
+    private Double inclination;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getRealTimeId() {
@@ -77,6 +79,14 @@ public class RealTimeData implements Serializable {
         this.createTime = createTime;
     }
 
+    public Double getInclination() {
+        return inclination;
+    }
+
+    public void setInclination(Double inclination) {
+        this.inclination = inclination;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -89,7 +99,7 @@ public class RealTimeData implements Serializable {
         sb.append(", fuelMargin=").append(fuelMargin);
         sb.append(", engineTemperature=").append(engineTemperature);
         sb.append(", speed=").append(speed);
-        sb.append(", speed=").append(speed);
+        sb.append(", inclination=").append(inclination);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

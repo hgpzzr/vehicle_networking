@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.*;
 import java.util.concurrent.locks.Lock;
 
@@ -94,6 +95,7 @@ public class DataCollectionServiceImpl implements DataCollectionService {
         position.setVehicleId(vehicleId);
         if (vehicle.getRunningState().equals(OperatingStatusEnum.RUNNING.getValue())){
             Position latestPosition = positionMapper.getLatestPosition(vehicleId);
+            Optional.ofNullable(latestPosition);
             double distance = GetDistanceUtil.getDistance(
                     Double.valueOf(latitude.getValue()),
                     Double.valueOf(longitude.getValue()),
