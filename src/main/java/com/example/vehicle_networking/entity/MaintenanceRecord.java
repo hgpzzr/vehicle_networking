@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * hgp
+ * @author zty
  */
 public class MaintenanceRecord implements Serializable {
     private Integer maintenanceId;
