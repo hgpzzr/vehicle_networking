@@ -32,18 +32,41 @@ public class AlarmServiceImpl implements AlarmService {
 	private AlarmRecordMapper alarmRecordMapper;
 
 	@Override
-	public ResultVO temperatureAlarm() {
+	public ResultVO alarm() {
 		List<Vehicle> vehicleList = vehicleMapper.selectAll();
 		List<AlarmRecord> alarmRecordList = new ArrayList<>();
-		String reason = "发动机温度过高";
+		String temperatureReason = "发动机温度过高";
+		String speedReason = "车速过快";
+		String inclinationReason = "车辆过于倾斜";
 		for (Vehicle vehicle : vehicleList) {
 			RealTimeData realTimeData = realTimeDataMapper.getRealTimeDataOneByVehicleId(vehicle.getVehicleId());
+			// 高温报警
 			if(realTimeData.getEngineTemperature() > 100){
 				AlarmRecord alarmRecord = new AlarmRecord();
-				alarmRecord.setAlarmReason(reason);
+				alarmRecord.setAlarmReason(temperatureReason);
 				alarmRecord.setCreateTime(new Date());
 				alarmRecord.setType(0);
 				alarmRecord.setNumericalValue(realTimeData.getEngineTemperature());
+				alarmRecord.setVehicleId(realTimeData.getVehicleId());
+				alarmRecordList.add(alarmRecord);
+			}
+			// 超速报警
+			if(realTimeData.getEngineTemperature() > 95){
+				AlarmRecord alarmRecord = new AlarmRecord();
+				alarmRecord.setAlarmReason(speedReason);
+				alarmRecord.setCreateTime(new Date());
+				alarmRecord.setType(0);
+				alarmRecord.setNumericalValue(realTimeData.getSpeed());
+				alarmRecord.setVehicleId(realTimeData.getVehicleId());
+				alarmRecordList.add(alarmRecord);
+			}
+			// 倾斜度报警
+			if(realTimeData.getInclination() > 15){
+				AlarmRecord alarmRecord = new AlarmRecord();
+				alarmRecord.setAlarmReason(inclinationReason);
+				alarmRecord.setCreateTime(new Date());
+				alarmRecord.setType(0);
+				alarmRecord.setNumericalValue(realTimeData.getInclination());
 				alarmRecord.setVehicleId(realTimeData.getVehicleId());
 				alarmRecordList.add(alarmRecord);
 			}
@@ -51,4 +74,5 @@ public class AlarmServiceImpl implements AlarmService {
 		alarmRecordMapper.batchInsert(alarmRecordList);
 		return ResultVOUtil.success();
 	}
+
 }
