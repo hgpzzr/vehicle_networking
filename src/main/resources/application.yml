@@ -6,7 +6,7 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
-    password: 123456
+    password: root
     url: jdbc:mysql://127.0.0.1:3306/vehicle_networking?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Shanghai&zeroDateTimeBehavior=CONVERT_TO_NULL&allowPublicKeyRetrieval=true
     type: com.alibaba.druid.pool.DruidDataSource
     druid:
@@ -42,3 +42,5 @@ jwt:
 
 server:
   port: 8888
+base-config:
+  collect-interval: 3000

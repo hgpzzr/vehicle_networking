@@ -21,6 +21,7 @@ import java.io.Serializable;
  * @version 1.0
  * @date 2021/3/29 19:48
  */
+
 @Component
 @Slf4j
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint, Serializable {

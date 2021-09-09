@@ -13,6 +13,8 @@ public interface ElectronicFenceMapper {
 
     ElectronicFence selectByPrimaryKey(Integer fenceId);
 
+    ElectronicFence selectByConstructionId(Integer constructionId);
+
     List<ElectronicFence> selectAll();
 
     int updateByPrimaryKey(ElectronicFence record);
