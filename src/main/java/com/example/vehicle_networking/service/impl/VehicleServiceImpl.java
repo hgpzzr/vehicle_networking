@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author hgp
@@ -90,5 +91,17 @@ public class VehicleServiceImpl implements VehicleService {
 			return ResultVOUtil.error(ResultEnum.DATABASE_OPTION_ERROR);
 		}
 		return ResultVOUtil.success("更新成功");
+	}
+
+	@Override
+	public ResultVO selectVehicles(Integer categoryId,String licenseNumber) {
+		User currentUser = userService.getCurrentUser();
+		if(currentUser.getRole() == 0){
+			List<Vehicle> vehicleList = vehicleMapper.fuzzyQuery(categoryId,licenseNumber,currentUser.getUserId());
+			return ResultVOUtil.success(vehicleList);
+		}
+		else {
+			return ResultVOUtil.success(vehicleMapper.fuzzyQuery(categoryId,licenseNumber,null));
+		}
 	}
 }

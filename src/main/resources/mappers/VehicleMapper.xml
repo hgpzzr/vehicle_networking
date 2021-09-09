@@ -11,6 +11,9 @@
     <result column="locked_state" property="lockedState" jdbcType="INTEGER" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
   </resultMap>
+  <sql id="Base_Column_List">
+    vehicle_id, user_id, license_plate_number, mileage, category_id, create_time,running_state,locked_state
+  </sql>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from vehicle
     where vehicle_id = #{vehicleId,jdbcType=INTEGER}
@@ -43,5 +46,20 @@
   <select id="selectAll" resultMap="BaseResultMap" >
     select vehicle_id, user_id, license_plate_number, mileage, category_id, create_time, running_state, locked_state
     from vehicle
+  </select>
+  <select id="selectByUserId" resultMap="BaseResultMap" >
+    select vehicle_id, user_id, license_plate_number, mileage, category_id, create_time, running_state, locked_state
+    from vehicle
+    where user_id = #{userId,jdbcType=INTEGER}
+  </select>
+  <select id="fuzzyQuery" parameterType="java.lang.Integer" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from vehicle
+    <where>
+      <if test="categoryId != null"> and category_id = #{categoryId,jdbcType=INTEGER}</if>
+      <if test="userId != null"> and user_id = #{userId,jdbcType=INTEGER}</if>
+      <if test="licenseNumber != null"> and license_plate_number like ('%' #{licenseNumber,jdbcType=VARCHAR} '%')</if>
+    </where>
   </select>
 </mapper>

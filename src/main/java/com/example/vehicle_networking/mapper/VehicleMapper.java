@@ -15,5 +15,9 @@ public interface VehicleMapper {
 
     List<Vehicle> selectAll();
 
+    List<Vehicle> selectByUserId(Integer userId);
+
+    List<Vehicle> fuzzyQuery(Integer categoryId,String licenseNumber,Integer userId);
+
     int updateByPrimaryKey(Vehicle record);
 }
