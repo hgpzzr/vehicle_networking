@@ -24,6 +24,7 @@ public enum  ResultEnum {
 
     DATA_READ_OPENED(2000,"读取实时数据线程已开启"),
     DATA_READ_SHUT_DOWNED(2001,"读取实时数据线程已关闭"),
+    LOCKED_NOT_RUNNING(2002,"车辆锁定或未运行"),
 
 
 

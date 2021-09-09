@@ -32,28 +32,18 @@ public class AlarmServiceImpl implements AlarmService {
 	private AlarmRecordMapper alarmRecordMapper;
 
 	@Override
-	public ResultVO alarm() {
+	public ResultVO temperatureAlarm() {
 		List<Vehicle> vehicleList = vehicleMapper.selectAll();
 		List<AlarmRecord> alarmRecordList = new ArrayList<>();
-		String temperatureReason = "发动机温度过高";
-		String speedReason = "车速过快";
+		String reason = "发动机温度过高";
 		for (Vehicle vehicle : vehicleList) {
 			RealTimeData realTimeData = realTimeDataMapper.getRealTimeDataOneByVehicleId(vehicle.getVehicleId());
 			if(realTimeData.getEngineTemperature() > 100){
 				AlarmRecord alarmRecord = new AlarmRecord();
-				alarmRecord.setAlarmReason(temperatureReason);
+				alarmRecord.setAlarmReason(reason);
 				alarmRecord.setCreateTime(new Date());
 				alarmRecord.setType(0);
 				alarmRecord.setNumericalValue(realTimeData.getEngineTemperature());
-				alarmRecord.setVehicleId(realTimeData.getVehicleId());
-				alarmRecordList.add(alarmRecord);
-			}
-			if(realTimeData.getEngineTemperature() > 95){
-				AlarmRecord alarmRecord = new AlarmRecord();
-				alarmRecord.setAlarmReason(speedReason);
-				alarmRecord.setCreateTime(new Date());
-				alarmRecord.setType(0);
-				alarmRecord.setNumericalValue(realTimeData.getSpeed());
 				alarmRecord.setVehicleId(realTimeData.getVehicleId());
 				alarmRecordList.add(alarmRecord);
 			}
@@ -61,5 +51,4 @@ public class AlarmServiceImpl implements AlarmService {
 		alarmRecordMapper.batchInsert(alarmRecordList);
 		return ResultVOUtil.success();
 	}
-
 }

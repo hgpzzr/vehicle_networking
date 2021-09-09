@@ -4,7 +4,6 @@ import com.example.vehicle_networking.entity.User;
 import com.example.vehicle_networking.entity.Vehicle;
 import com.example.vehicle_networking.enums.ResultEnum;
 import com.example.vehicle_networking.form.AddVehicleForm;
-import com.example.vehicle_networking.form.ChangeLockedState;
 import com.example.vehicle_networking.form.ChangeRunningState;
 import com.example.vehicle_networking.form.UpdateVehicleForm;
 import com.example.vehicle_networking.mapper.VehicleMapper;
@@ -17,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
-import java.util.List;
 
 /**
  * @author hgp
@@ -80,28 +78,5 @@ public class VehicleServiceImpl implements VehicleService {
 			return ResultVOUtil.error(ResultEnum.DATABASE_OPTION_ERROR);
 		}
 		return ResultVOUtil.success("更新成功");
-	}
-
-	@Override
-	public ResultVO updateLockedState(ChangeLockedState form) {
-		Vehicle vehicle = vehicleMapper.selectByPrimaryKey(form.getVehicleId());
-		vehicle.setLockedState(form.getLockedState());
-		int update = vehicleMapper.updateByPrimaryKey(vehicle);
-		if(update != 1){
-			return ResultVOUtil.error(ResultEnum.DATABASE_OPTION_ERROR);
-		}
-		return ResultVOUtil.success("更新成功");
-	}
-
-	@Override
-	public ResultVO selectVehicles(Integer categoryId,String licenseNumber) {
-		User currentUser = userService.getCurrentUser();
-		if(currentUser.getRole() == 0){
-			List<Vehicle> vehicleList = vehicleMapper.fuzzyQuery(categoryId,licenseNumber,currentUser.getUserId());
-			return ResultVOUtil.success(vehicleList);
-		}
-		else {
-			return ResultVOUtil.success(vehicleMapper.fuzzyQuery(categoryId,licenseNumber,null));
-		}
 	}
 }

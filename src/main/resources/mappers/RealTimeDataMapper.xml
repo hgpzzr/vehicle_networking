@@ -8,7 +8,6 @@
     <result column="fuel_margin" property="fuelMargin" jdbcType="DOUBLE" />
     <result column="engine_temperature" property="engineTemperature" jdbcType="DOUBLE" />
     <result column="speed" property="speed" jdbcType="DOUBLE" />
-    <result column="inclination" property="inclination" jdbcType="DOUBLE" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
@@ -17,11 +16,11 @@
   </delete>
   <insert id="insert" parameterType="com.example.vehicle_networking.entity.RealTimeData" >
     insert into real_time_data (real_time_id, vehicle_id, engine_speed, 
-      fuel_margin, engine_temperature, speed,create_time,inclination
+      fuel_margin, engine_temperature, speed,create_time
       )
     values (#{realTimeId,jdbcType=INTEGER}, #{vehicleId,jdbcType=INTEGER}, #{engineSpeed,jdbcType=DOUBLE}, 
       #{fuelMargin,jdbcType=DOUBLE}, #{engineTemperature,jdbcType=DOUBLE}, #{speed,jdbcType=DOUBLE},
-      #{createTime,jdbcType=TIMESTAMP},#{inclination,jdbcType=DOUBLE}
+      #{createTime,jdbcType=TIMESTAMP}
       )
   </insert>
   <update id="updateByPrimaryKey" parameterType="com.example.vehicle_networking.entity.RealTimeData" >
@@ -31,24 +30,23 @@
       fuel_margin = #{fuelMargin,jdbcType=DOUBLE},
       engine_temperature = #{engineTemperature,jdbcType=DOUBLE},
       speed = #{speed,jdbcType=DOUBLE},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
-      inclination = #{inclination,jdbcType=DOUBLE}
+      create_time = #{createTime,jdbcType=TIMESTAMP}
     where real_time_id = #{realTimeId,jdbcType=INTEGER}
   </update>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select real_time_id, vehicle_id, engine_speed, fuel_margin, engine_temperature, speed, 
-    create_time, inclination
+    create_time
     from real_time_data
     where real_time_id = #{realTimeId,jdbcType=INTEGER}
   </select>
   <select id="selectAll" resultMap="BaseResultMap" >
     select real_time_id, vehicle_id, engine_speed, fuel_margin, engine_temperature, speed, 
-    create_time, inclination
+    create_time
     from real_time_data
   </select>
   <select id="getRealTimeDataOneByVehicleId" resultMap="BaseResultMap">
     select real_time_id, vehicle_id, engine_speed, fuel_margin, engine_temperature, speed,
-    create_time, inclination
+    create_time
     from real_time_data
     where real_time_id = (select max(real_time_id) from real_time_data where vehicle_id = #{vehicleId,jdbcType=INTEGER})
   </select>

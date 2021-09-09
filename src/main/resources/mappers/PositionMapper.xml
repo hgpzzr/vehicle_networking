@@ -53,4 +53,10 @@
     </if>
     order by create_time
   </select>
+  <select id="getLatestPosition" resultMap="BaseResultMap">
+    select position_id, vehicle_id, longitude, latitude, create_time
+    from position
+    where vehicle_id = #{vehicleId,jdbcType=INTEGER}
+    order by create_time desc limit 1
+  </select>
 </mapper>
