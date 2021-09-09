@@ -3,6 +3,7 @@ package com.example.vehicle_networking.controller;
 import com.example.vehicle_networking.form.AddConstructionForm;
 import com.example.vehicle_networking.form.UpdateConstructionForm;
 import com.example.vehicle_networking.service.ConstructionService;
+import com.example.vehicle_networking.utils.ResultVOUtil;
 import com.example.vehicle_networking.vo.ResultVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -42,4 +43,10 @@ public class ConstructionController {
 	public ResultVO updateConstruction(@Valid UpdateConstructionForm form){
 		return constructionService.updateConstruction(form);
 	}
+
+	@GetMapping("/test")
+	public ResultVO test(){
+		return ResultVOUtil.success();
+	}
+
 }
