@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.vehicle_networking.mapper.OilConsumptionRecordMapper" >
+  <resultMap id="BaseResultMap" type="com.example.vehicle_networking.entity.OilConsumptionRecord" >
+    <id column="oil_consumption_id" property="oilConsumptionId" jdbcType="INTEGER" />
+    <result column="vehicle_id" property="vehicleId" jdbcType="INTEGER" />
+    <result column="date" property="date" jdbcType="TIMESTAMP" />
+    <result column="oil_consumption" property="oilConsumption" jdbcType="DOUBLE" />
+    <result column="work_time" property="workTime" jdbcType="DOUBLE" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from oil_consumption_record
+    where oil_consumption_id = #{oilConsumptionId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.example.vehicle_networking.entity.OilConsumptionRecord" >
+    insert into oil_consumption_record (oil_consumption_id, vehicle_id, `date`, 
+      oil_consumption, work_time, create_time
+      )
+    values (#{oilConsumptionId,jdbcType=INTEGER}, #{vehicleId,jdbcType=INTEGER}, #{date,jdbcType=TIMESTAMP}, 
+      #{oilConsumption,jdbcType=DOUBLE}, #{workTime,jdbcType=DOUBLE}, #{createTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.example.vehicle_networking.entity.OilConsumptionRecord" >
+    update oil_consumption_record
+    set vehicle_id = #{vehicleId,jdbcType=INTEGER},
+      `date` = #{date,jdbcType=TIMESTAMP},
+      oil_consumption = #{oilConsumption,jdbcType=DOUBLE},
+      work_time = #{workTime,jdbcType=DOUBLE},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where oil_consumption_id = #{oilConsumptionId,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select oil_consumption_id, vehicle_id, `date`, oil_consumption, work_time, create_time
+    from oil_consumption_record
+    where oil_consumption_id = #{oilConsumptionId,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select oil_consumption_id, vehicle_id, `date`, oil_consumption, work_time, create_time
+    from oil_consumption_record
+  </select>
+</mapper>

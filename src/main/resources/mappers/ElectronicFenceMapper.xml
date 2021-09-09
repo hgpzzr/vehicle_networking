@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.vehicle_networking.mapper.ElectronicFenceMapper" >
+  <resultMap id="BaseResultMap" type="com.example.vehicle_networking.entity.ElectronicFence" >
+    <id column="fence_id" property="fenceId" jdbcType="INTEGER" />
+    <result column="construction_site_id" property="constructionSiteId" jdbcType="INTEGER" />
+    <result column="longitude" property="longitude" jdbcType="VARCHAR" />
+    <result column="latitude" property="latitude" jdbcType="VARCHAR" />
+    <result column="radius" property="radius" jdbcType="DOUBLE" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from electronic_fence
+    where fence_id = #{fenceId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.example.vehicle_networking.entity.ElectronicFence" >
+    insert into electronic_fence (fence_id, construction_site_id, longitude, 
+      latitude, radius, create_time, 
+      update_time)
+    values (#{fenceId,jdbcType=INTEGER}, #{constructionSiteId,jdbcType=INTEGER}, #{longitude,jdbcType=VARCHAR}, 
+      #{latitude,jdbcType=VARCHAR}, #{radius,jdbcType=DOUBLE}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.example.vehicle_networking.entity.ElectronicFence" >
+    update electronic_fence
+    set construction_site_id = #{constructionSiteId,jdbcType=INTEGER},
+      longitude = #{longitude,jdbcType=VARCHAR},
+      latitude = #{latitude,jdbcType=VARCHAR},
+      radius = #{radius,jdbcType=DOUBLE},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where fence_id = #{fenceId,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select fence_id, construction_site_id, longitude, latitude, radius, create_time, 
+    update_time
+    from electronic_fence
+    where fence_id = #{fenceId,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select fence_id, construction_site_id, longitude, latitude, radius, create_time, 
+    update_time
+    from electronic_fence
+  </select>
+</mapper>

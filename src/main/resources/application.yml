@@ -1,0 +1,44 @@
+spring:
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 30MB
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: 123456
+    url: jdbc:mysql://127.0.0.1:3306/vehicle_networking?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Shanghai&zeroDateTimeBehavior=CONVERT_TO_NULL&allowPublicKeyRetrieval=true
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      # 初始化大小，最小，最大
+      initial-size: 5
+      min-idle: 5
+      max-active: 50
+      # 获取连接等待超时的时间
+      max-wait: 60000
+      # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+      time-between-eviction-runs-millis: 60000
+      # 配置一个连接在池中最小生存的时间，单位是毫秒
+      min-evictable-idle-time-millis: 300000
+swagger:
+  enable: true
+  application-name: 车联网
+  application-version: 1.0
+  application-description: 车联网接口调试
+  try-host: http://localhost:${server.port}
+
+mybatis:
+  mapper-locations: classpath:mappers/*.xml
+  type-aliases-package: com.example.dangerous_goods.entity
+  configuration:
+    map-underscore-to-camel-case: true
+    use-generated-keys: true
+jwt:
+  secret: Uchainshequ
+  expiration: 1296000
+  tokenStart: "Bearer "
+  tokenName: Authorization
+  defaultPassword: "123456"
+
+server:
+  port: 8888
