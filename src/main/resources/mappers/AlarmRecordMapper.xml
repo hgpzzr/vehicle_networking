@@ -7,6 +7,10 @@
     <result column="alarm_reason" property="alarmReason" jdbcType="VARCHAR" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="type" property="type" jdbcType="INTEGER" />
+<<<<<<< HEAD
+=======
+    <result column="numerical_value" property="numericalValue" jdbcType="DOUBLE" />
+>>>>>>> 78b66a4be95d69bb9e701abb2f76166ee67eeea8
   </resultMap>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from alarm_record
@@ -14,25 +18,53 @@
   </delete>
   <insert id="insert" parameterType="com.example.vehicle_networking.entity.AlarmRecord" >
     insert into alarm_record (alarm_id, vehicle_id, alarm_reason, 
+<<<<<<< HEAD
       create_time, `type`)
     values (#{alarmId,jdbcType=INTEGER}, #{vehicleId,jdbcType=INTEGER}, #{alarmReason,jdbcType=VARCHAR}, 
       #{createTime,jdbcType=TIMESTAMP}, #{type,jdbcType=INTEGER})
+=======
+      create_time, `type`,numerical_value)
+    values (#{alarmId,jdbcType=INTEGER}, #{vehicleId,jdbcType=INTEGER}, #{alarmReason,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{type,jdbcType=INTEGER},#{numericalValue,jdbcType=DOUBLE})
+  </insert>
+  <insert id="batchInsert" parameterType="java.util.List" >
+    insert into alarm_record (alarm_id, vehicle_id, alarm_reason,
+      create_time, `type`,numerical_value)
+    values
+    <foreach collection="list" item="item" separator=",">
+    (#{item.alarmId}, #{itemvehicleId}, #{item.alarmReason},
+      #{item.createTime}, #{item.type},#{item.numericalValue})
+    </foreach>
+>>>>>>> 78b66a4be95d69bb9e701abb2f76166ee67eeea8
   </insert>
   <update id="updateByPrimaryKey" parameterType="com.example.vehicle_networking.entity.AlarmRecord" >
     update alarm_record
     set vehicle_id = #{vehicleId,jdbcType=INTEGER},
       alarm_reason = #{alarmReason,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
+<<<<<<< HEAD
       `type` = #{type,jdbcType=INTEGER}
     where alarm_id = #{alarmId,jdbcType=INTEGER}
   </update>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select alarm_id, vehicle_id, alarm_reason, create_time, `type`
+=======
+      `type` = #{type,jdbcType=INTEGER},
+      numerical_value = #{numericalValue,jdbcType=DOUBLE})
+    where alarm_id = #{alarmId,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select alarm_id, vehicle_id, alarm_reason, create_time, `type`,numerical_value
+>>>>>>> 78b66a4be95d69bb9e701abb2f76166ee67eeea8
     from alarm_record
     where alarm_id = #{alarmId,jdbcType=INTEGER}
   </select>
   <select id="selectAll" resultMap="BaseResultMap" >
+<<<<<<< HEAD
     select alarm_id, vehicle_id, alarm_reason, create_time, `type`
+=======
+    select alarm_id, vehicle_id, alarm_reason, create_time, `type`,numerical_value
+>>>>>>> 78b66a4be95d69bb9e701abb2f76166ee67eeea8
     from alarm_record
   </select>
 </mapper>

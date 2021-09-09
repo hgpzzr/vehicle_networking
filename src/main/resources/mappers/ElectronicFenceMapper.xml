@@ -38,6 +38,15 @@
     from electronic_fence
     where fence_id = #{fenceId,jdbcType=INTEGER}
   </select>
+<<<<<<< HEAD
+=======
+  <select id="selectByConstructionId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select fence_id, construction_site_id, longitude, latitude, radius, create_time,
+    update_time
+    from electronic_fence
+    where construction_site_id = #{constructionId,jdbcType=INTEGER}
+  </select>
+>>>>>>> 78b66a4be95d69bb9e701abb2f76166ee67eeea8
   <select id="selectAll" resultMap="BaseResultMap" >
     select fence_id, construction_site_id, longitude, latitude, radius, create_time, 
     update_time

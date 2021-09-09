@@ -38,6 +38,15 @@
     from construction_site
     where construction_site_id = #{constructionSiteId,jdbcType=INTEGER}
   </select>
+<<<<<<< HEAD
+=======
+  <select id="selectByUserId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select construction_site_id, user_id, longitude, latitude, construction_site_name,
+    create_time, update_time
+    from construction_site
+    where user_id = #{userId,jdbcType=INTEGER}
+  </select>
+>>>>>>> 78b66a4be95d69bb9e701abb2f76166ee67eeea8
   <select id="selectAll" resultMap="BaseResultMap" >
     select construction_site_id, user_id, longitude, latitude, construction_site_name, 
     create_time, update_time

@@ -1,7 +1,5 @@
 package com.example.vehicle_networking.vo;
 
-import com.example.vehicle_networking.enums.ResultEnum;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 /**
@@ -17,8 +15,5 @@ public class ResultVO<T> {
     private String msg;
 
     private T data;
-
-
-
 }
 
