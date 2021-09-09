@@ -1,5 +1,6 @@
 package com.example.vehicle_networking.thread;
 
+import com.example.vehicle_networking.config.BaseConfig;
 import com.example.vehicle_networking.form.ReadDataParaForm;
 import com.example.vehicle_networking.service.DataCollectionService;
 import com.example.vehicle_networking.utils.GetBeanUtil;
@@ -16,9 +17,9 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class ReadDataThread extends Thread{
 
-    private volatile boolean flag = false;
+    private static volatile boolean flag = false;
 
-    public void stopTask() {
+    public static void stopTask() {
         flag = false;
     }
     public void startTask() {
@@ -45,6 +46,7 @@ public class ReadDataThread extends Thread{
                     log.info(" 线程 {} 保存数据成功", Thread.currentThread().getName());
                     Thread.sleep(3000);
                 }
+                log.info("线程 {} 停止", Thread.currentThread().getName());
             }catch (InterruptedException ie) {
                 System.out.println(Thread.currentThread().getName() +" ("+this.getState()+") catch InterruptedException.");
             }

@@ -2,6 +2,7 @@ package com.example.vehicle_networking.service.impl;
 
 import com.example.vehicle_networking.entity.User;
 import com.example.vehicle_networking.entity.Vehicle;
+import com.example.vehicle_networking.enums.OperatingStatusEnum;
 import com.example.vehicle_networking.enums.ResultEnum;
 import com.example.vehicle_networking.form.AddVehicleForm;
 import com.example.vehicle_networking.form.ChangeRunningState;
@@ -9,6 +10,7 @@ import com.example.vehicle_networking.form.UpdateVehicleForm;
 import com.example.vehicle_networking.mapper.VehicleMapper;
 import com.example.vehicle_networking.service.UserService;
 import com.example.vehicle_networking.service.VehicleService;
+import com.example.vehicle_networking.thread.ReadDataThread;
 import com.example.vehicle_networking.utils.ResultVOUtil;
 import com.example.vehicle_networking.vo.ResultVO;
 import org.springframework.beans.BeanUtils;
@@ -73,6 +75,10 @@ public class VehicleServiceImpl implements VehicleService {
 	public ResultVO updateRunningState(ChangeRunningState form) {
 		Vehicle vehicle = vehicleMapper.selectByPrimaryKey(form.getVehicleId());
 		vehicle.setRunningState(form.getRunningState());
+		if (form.getRunningState().equals(OperatingStatusEnum.NOT_RUNNING.getValue())
+				|| form.getRunningState().equals(OperatingStatusEnum.FLAMEOUT.getValue())){
+			ReadDataThread.stopTask();
+		}
 		int update = vehicleMapper.updateByPrimaryKey(vehicle);
 		if(update != 1){
 			return ResultVOUtil.error(ResultEnum.DATABASE_OPTION_ERROR);

@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 @Service
 public interface DataCollectionService {
     /**
-     * 获取速度信息
+     * 通过URL和Cookie获取所动态信息
      * @return
      */
     ResultVO getSpeedFromURL(String url, String cookie, Integer vehicleId);

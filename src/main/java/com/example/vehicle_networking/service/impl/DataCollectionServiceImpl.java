@@ -76,6 +76,7 @@ public class DataCollectionServiceImpl implements DataCollectionService {
         realTimeData.setSpeed(Double.valueOf(speed.getValue()));
         realTimeData.setCreateTime(engineSpeed.getTimestamp());
         realTimeData.setVehicleId(vehicleId);
+        realTimeData.setInclination(Double.valueOf(inclination.getValue()));
 
 
         int insert = realTimeDataMapper.insert(realTimeData);
@@ -85,8 +86,8 @@ public class DataCollectionServiceImpl implements DataCollectionService {
 
 
         // 采集位置信息
-        DataInfoDetail longitude = data.getObject("test@经度", DataInfoDetail.class);
-        DataInfoDetail latitude = data.getObject("test@纬度", DataInfoDetail.class);
+        DataInfoDetail longitude = data.getObject("car@经度", DataInfoDetail.class);
+        DataInfoDetail latitude = data.getObject("car@纬度", DataInfoDetail.class);
 
         Position position = new Position();
         position.setLatitude(String.valueOf(latitude.getValue()));
@@ -131,6 +132,12 @@ public class DataCollectionServiceImpl implements DataCollectionService {
 
     @Override
     public ResultVO openOrDownRealDataCollect(ReadDataParaForm readDataParaForm) {
+        Vehicle vehicle = vehicleMapper.selectByPrimaryKey(readDataParaForm.getVehicleId());
+        if (vehicle.getRunningState().equals(OperatingStatusEnum.NOT_RUNNING.getValue())
+                || vehicle.getLockedState().equals(LockStatusEnum.LOCKED.getRole())
+        ){
+            return ResultVOUtil.error(ResultEnum.LOCKED_NOT_RUNNING);
+        }
         if (collectDataThread == null){
             synchronized (this){
                 if (collectDataThread == null){
@@ -140,8 +147,8 @@ public class DataCollectionServiceImpl implements DataCollectionService {
         }
         boolean collectDataThreadStatus = collectDataThread.getStatus();
         if (collectDataThreadStatus){
+            ReadDataThread.stopTask();
             log.info("关闭线程：{}",collectDataThread.getName());
-            collectDataThread.stopTask();
             return ResultVOUtil.success(ResultEnum.DATA_READ_SHUT_DOWNED);
         }
         collectDataThread.startTask();
