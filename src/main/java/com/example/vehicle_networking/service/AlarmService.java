@@ -8,5 +8,6 @@ import com.example.vehicle_networking.vo.ResultVO;
  * @date 2021/9/8 19:25
  */
 public interface AlarmService {
-	ResultVO temperatureAlarm();
+	ResultVO alarm();
+
 }

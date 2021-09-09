@@ -16,7 +16,7 @@ public class RealTimeData implements Serializable {
 
     private Double speed;
 
-
+    private Double inclination;
 
     private Date createTime;
 
@@ -44,6 +44,14 @@ public class RealTimeData implements Serializable {
 
     public void setEngineSpeed(Double engineSpeed) {
         this.engineSpeed = engineSpeed;
+    }
+
+    public Double getInclination() {
+        return inclination;
+    }
+
+    public void setInclination(Double inclination) {
+        this.inclination = inclination;
     }
 
     public Double getFuelMargin() {
@@ -91,7 +99,7 @@ public class RealTimeData implements Serializable {
         sb.append(", fuelMargin=").append(fuelMargin);
         sb.append(", engineTemperature=").append(engineTemperature);
         sb.append(", speed=").append(speed);
-        sb.append(", speed=").append(speed);
+        sb.append(", inclination=").append(inclination);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();
