@@ -3,6 +3,7 @@ package com.example.vehicle_networking.controller;
 import com.example.vehicle_networking.form.AddConstructionForm;
 import com.example.vehicle_networking.form.UpdateConstructionForm;
 import com.example.vehicle_networking.service.ConstructionService;
+import com.example.vehicle_networking.utils.ResultVOUtil;
 import com.example.vehicle_networking.vo.ResultVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 /**
- * @author hgp
+ * @author hgpn  zyu zzuzyuzgjakdsah
  * @version 1.0
  * @date 2021/9/7 21:23
  */
@@ -42,4 +43,10 @@ public class ConstructionController {
 	public ResultVO updateConstruction(@Valid UpdateConstructionForm form){
 		return constructionService.updateConstruction(form);
 	}
+
+	@GetMapping("/test11111")
+	public ResultVO test(){
+		return ResultVOUtil.success();
+	}
+
 }
