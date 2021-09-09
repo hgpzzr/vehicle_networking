@@ -111,6 +111,7 @@ public class DataCollectionServiceImpl implements DataCollectionService {
         }
 
 
+        // git
 //        DataInfoDetail oilConsumption = data.getObject("car@油耗", DataInfoDetail.class);
 //        OilConsumptionRecord oilConsumptionRecord = new OilConsumptionRecord();
 
