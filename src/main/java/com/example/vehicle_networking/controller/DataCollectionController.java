@@ -8,6 +8,7 @@ import com.example.vehicle_networking.vo.ResultVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -52,6 +53,17 @@ public class DataCollectionController {
     @ApiOperation("获取车辆的历史位置数据")
     public ResultVO getHistoricalPositionByDate(@RequestBody HistoricalPositionFrom historicalPositionFrom){
         return dataCollectionService.getHistoricalPosition(historicalPositionFrom);
+    }
+
+    /**
+     * 获取最新位置信息
+     * @param vehicleId
+     * @return
+     */
+    @GetMapping("getLatestPosition")
+    @ApiOperation("获取最新位置信息")
+    public ResultVO getLatestPosition(@Param("vehicleId") Integer vehicleId){
+        return dataCollectionService.getLatestPosition(vehicleId);
     }
 
 }
