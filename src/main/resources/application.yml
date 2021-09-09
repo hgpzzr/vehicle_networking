@@ -42,3 +42,5 @@ jwt:
 
 server:
   port: 8888
+base-config:
+  collect-interval: 3000

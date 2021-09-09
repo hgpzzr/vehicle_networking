@@ -2,14 +2,15 @@ package com.example.vehicle_networking.service.impl;
 
 import com.example.vehicle_networking.entity.User;
 import com.example.vehicle_networking.entity.Vehicle;
+import com.example.vehicle_networking.enums.OperatingStatusEnum;
 import com.example.vehicle_networking.enums.ResultEnum;
 import com.example.vehicle_networking.form.AddVehicleForm;
-import com.example.vehicle_networking.form.ChangeLockedState;
 import com.example.vehicle_networking.form.ChangeRunningState;
 import com.example.vehicle_networking.form.UpdateVehicleForm;
 import com.example.vehicle_networking.mapper.VehicleMapper;
 import com.example.vehicle_networking.service.UserService;
 import com.example.vehicle_networking.service.VehicleService;
+import com.example.vehicle_networking.thread.ReadDataThread;
 import com.example.vehicle_networking.utils.ResultVOUtil;
 import com.example.vehicle_networking.vo.ResultVO;
 import org.springframework.beans.BeanUtils;
@@ -17,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
-import java.util.List;
 
 /**
  * @author hgp
@@ -75,33 +75,14 @@ public class VehicleServiceImpl implements VehicleService {
 	public ResultVO updateRunningState(ChangeRunningState form) {
 		Vehicle vehicle = vehicleMapper.selectByPrimaryKey(form.getVehicleId());
 		vehicle.setRunningState(form.getRunningState());
+		if (form.getRunningState().equals(OperatingStatusEnum.NOT_RUNNING.getValue())
+				|| form.getRunningState().equals(OperatingStatusEnum.FLAMEOUT.getValue())){
+			ReadDataThread.stopTask();
+		}
 		int update = vehicleMapper.updateByPrimaryKey(vehicle);
 		if(update != 1){
 			return ResultVOUtil.error(ResultEnum.DATABASE_OPTION_ERROR);
 		}
 		return ResultVOUtil.success("更新成功");
-	}
-
-	@Override
-	public ResultVO updateLockedState(ChangeLockedState form) {
-		Vehicle vehicle = vehicleMapper.selectByPrimaryKey(form.getVehicleId());
-		vehicle.setLockedState(form.getLockedState());
-		int update = vehicleMapper.updateByPrimaryKey(vehicle);
-		if(update != 1){
-			return ResultVOUtil.error(ResultEnum.DATABASE_OPTION_ERROR);
-		}
-		return ResultVOUtil.success("更新成功");
-	}
-
-	@Override
-	public ResultVO selectVehicles(Integer categoryId,String licenseNumber) {
-		User currentUser = userService.getCurrentUser();
-		if(currentUser.getRole() == 0){
-			List<Vehicle> vehicleList = vehicleMapper.fuzzyQuery(categoryId,licenseNumber,currentUser.getUserId());
-			return ResultVOUtil.success(vehicleList);
-		}
-		else {
-			return ResultVOUtil.success(vehicleMapper.fuzzyQuery(categoryId,licenseNumber,null));
-		}
 	}
 }

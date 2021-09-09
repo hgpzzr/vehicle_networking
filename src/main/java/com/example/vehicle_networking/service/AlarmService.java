@@ -9,5 +9,5 @@ import com.example.vehicle_networking.vo.ResultVO;
  */
 public interface AlarmService {
 	ResultVO alarm();
-
+	ResultVO temperatureAlarm();
 }

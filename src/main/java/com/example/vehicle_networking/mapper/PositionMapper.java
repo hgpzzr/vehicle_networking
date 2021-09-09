@@ -24,4 +24,11 @@ public interface PositionMapper {
     List<Position> getHistoricalDataByVehicleId(Integer vehicleId);
 
     List<Position> getHistoricalDataByDate(HistoricalPositionFrom historicalPositionFrom);
+
+    /**
+     * 获取最新的
+     * @param vehicleId
+     * @return
+     */
+    Position getLatestPosition(Integer vehicleId);
 }

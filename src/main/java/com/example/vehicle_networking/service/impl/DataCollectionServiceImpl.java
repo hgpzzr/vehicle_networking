@@ -3,6 +3,7 @@ package com.example.vehicle_networking.service.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.example.vehicle_networking.entity.Position;
 import com.example.vehicle_networking.entity.RealTimeData;
+import com.example.vehicle_networking.entity.Vehicle;
 import com.example.vehicle_networking.enums.LockStatusEnum;
 import com.example.vehicle_networking.enums.OperatingStatusEnum;
 import com.example.vehicle_networking.enums.ResultEnum;
@@ -10,8 +11,11 @@ import com.example.vehicle_networking.form.HistoricalPositionFrom;
 import com.example.vehicle_networking.form.ReadDataParaForm;
 import com.example.vehicle_networking.mapper.PositionMapper;
 import com.example.vehicle_networking.mapper.RealTimeDataMapper;
+import com.example.vehicle_networking.mapper.VehicleMapper;
 import com.example.vehicle_networking.service.DataCollectionService;
+import com.example.vehicle_networking.service.VehicleService;
 import com.example.vehicle_networking.thread.ReadDataThread;
+import com.example.vehicle_networking.utils.GetDistanceUtil;
 import com.example.vehicle_networking.utils.ResultVOUtil;
 import com.example.vehicle_networking.vo.ResultVO;
 import com.example.vehicle_networking.vo.readData.DataInfoDetail;
@@ -21,6 +25,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.*;
 import java.util.concurrent.locks.Lock;
 
@@ -33,10 +38,6 @@ import java.util.concurrent.locks.Lock;
 @Slf4j
 public class DataCollectionServiceImpl implements DataCollectionService {
 
-//    static final String speedUrl = "http://localhost:8888/user/getUserByName?name=Eic";
-    static final String speedUrl = "https://iot-pre.diwork.com/reader/api/v1/realTimeDataByTag?tags=test@%E6%B8%A9%E5%BA%A6,test@%E6%B9%BF%E5%BA%A6";
-
-    static ExecutorService threadPool;
     private volatile ReadDataThread collectDataThread;
 
     @Autowired
@@ -45,9 +46,19 @@ public class DataCollectionServiceImpl implements DataCollectionService {
     private RealTimeDataMapper realTimeDataMapper;
     @Autowired
     private PositionMapper positionMapper;
+    @Autowired
+    private VehicleService vehicleService;
+    @Autowired
+    private VehicleMapper vehicleMapper;
 
     @Override
     public ResultVO getSpeedFromURL(String url, String cookie, Integer vehicleId) {
+        Vehicle vehicle = vehicleMapper.selectByPrimaryKey(vehicleId);
+        if (vehicle.getRunningState().equals(OperatingStatusEnum.NOT_RUNNING.getValue())
+                || vehicle.getLockedState().equals(LockStatusEnum.LOCKED.getRole())
+        ){
+            return ResultVOUtil.error(ResultEnum.LOCKED_NOT_RUNNING);
+        }
         // 保存速度信息
         JSONObject jsonObject = restTemplateTo.doGetWith(url, cookie);
         JSONObject data = jsonObject.getJSONObject("data");
@@ -55,9 +66,8 @@ public class DataCollectionServiceImpl implements DataCollectionService {
         DataInfoDetail fuelMargin = data.getObject("car@燃油余量", DataInfoDetail.class);
         DataInfoDetail temp = data.getObject("car@温度", DataInfoDetail.class);
         DataInfoDetail speed = data.getObject("car@速度", DataInfoDetail.class);
-//        DataInfoDetail humidity = data.getObject("test@湿度", DataInfoDetail.class);
-//        DataInfoDetail longitude = data.getObject("test@经度", DataInfoDetail.class);
-//        DataInfoDetail latitude = data.getObject("test@纬度", DataInfoDetail.class);
+        DataInfoDetail inclination = data.getObject("car@倾斜度", DataInfoDetail.class);
+
 
         RealTimeData realTimeData = new RealTimeData();
         realTimeData.setEngineSpeed(Double.valueOf(engineSpeed.getValue()));
@@ -66,6 +76,7 @@ public class DataCollectionServiceImpl implements DataCollectionService {
         realTimeData.setSpeed(Double.valueOf(speed.getValue()));
         realTimeData.setCreateTime(engineSpeed.getTimestamp());
         realTimeData.setVehicleId(vehicleId);
+        realTimeData.setInclination(Double.valueOf(inclination.getValue()));
 
 
         int insert = realTimeDataMapper.insert(realTimeData);
@@ -73,16 +84,32 @@ public class DataCollectionServiceImpl implements DataCollectionService {
             return ResultVOUtil.error(ResultEnum.DATABASE_OPTION_ERROR);
         }
 
-//        // 采集位置信息
-//        Position position = new Position();
-//        position.setLatitude(String.valueOf(latitude.getValue()));
-//        position.setLongitude(String.valueOf(longitude.getValue()));
-//        position.setCreateTime(engineSpeed.getTimestamp());
-//        position.setVehicleId(vehicleId);
-//        int positionInsert = positionMapper.insert(position);
-//        if (positionInsert != 1) {
-//            return ResultVOUtil.error(ResultEnum.DATABASE_OPTION_ERROR);
-//        }
+
+        // 采集位置信息
+        DataInfoDetail longitude = data.getObject("car@经度", DataInfoDetail.class);
+        DataInfoDetail latitude = data.getObject("car@纬度", DataInfoDetail.class);
+
+        Position position = new Position();
+        position.setLatitude(String.valueOf(latitude.getValue()));
+        position.setLongitude(String.valueOf(longitude.getValue()));
+        position.setCreateTime(engineSpeed.getTimestamp());
+        position.setVehicleId(vehicleId);
+        if (vehicle.getRunningState().equals(OperatingStatusEnum.RUNNING.getValue())){
+            Position latestPosition = positionMapper.getLatestPosition(vehicleId);
+            Optional.ofNullable(latestPosition);
+            double distance = GetDistanceUtil.getDistance(
+                    Double.valueOf(latitude.getValue()),
+                    Double.valueOf(longitude.getValue()),
+                    Double.valueOf(latestPosition.getLatitude()),
+                    Double.valueOf(latestPosition.getLongitude())
+            );
+            vehicle.setMileage(vehicle.getMileage() + distance);
+            vehicleMapper.updateByPrimaryKey(vehicle);
+        }
+        int positionInsert = positionMapper.insert(position);
+        if (positionInsert != 1) {
+            return ResultVOUtil.error(ResultEnum.DATABASE_OPTION_ERROR);
+        }
 
         return ResultVOUtil.success();
     }
@@ -105,6 +132,12 @@ public class DataCollectionServiceImpl implements DataCollectionService {
 
     @Override
     public ResultVO openOrDownRealDataCollect(ReadDataParaForm readDataParaForm) {
+        Vehicle vehicle = vehicleMapper.selectByPrimaryKey(readDataParaForm.getVehicleId());
+        if (vehicle.getRunningState().equals(OperatingStatusEnum.NOT_RUNNING.getValue())
+                || vehicle.getLockedState().equals(LockStatusEnum.LOCKED.getRole())
+        ){
+            return ResultVOUtil.error(ResultEnum.LOCKED_NOT_RUNNING);
+        }
         if (collectDataThread == null){
             synchronized (this){
                 if (collectDataThread == null){
@@ -114,8 +147,8 @@ public class DataCollectionServiceImpl implements DataCollectionService {
         }
         boolean collectDataThreadStatus = collectDataThread.getStatus();
         if (collectDataThreadStatus){
+            ReadDataThread.stopTask();
             log.info("关闭线程：{}",collectDataThread.getName());
-            collectDataThread.stopTask();
             return ResultVOUtil.success(ResultEnum.DATA_READ_SHUT_DOWNED);
         }
         collectDataThread.startTask();

@@ -75,4 +75,8 @@ public class AlarmServiceImpl implements AlarmService {
 		return ResultVOUtil.success();
 	}
 
+	@Override
+	public ResultVO temperatureAlarm() {
+		return null;
+	}
 }
