@@ -3,6 +3,9 @@ package com.example.vehicle_networking.entity;
 import java.io.Serializable;
 import java.util.Date;
 
+/**
+ * hgp
+ */
 public class MaintenanceRecord implements Serializable {
     private Integer maintenanceId;
 
