@@ -85,4 +85,10 @@ public class VehicleServiceImpl implements VehicleService {
 		}
 		return ResultVOUtil.success("更新成功");
 	}
+
+	@Override
+	public ResultVO getVehicleHisOilUsed(Integer vehicleId) {
+
+		return null;
+	}
 }

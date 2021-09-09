@@ -43,5 +43,14 @@ public interface DataCollectionService {
      */
     ResultVO getHistoricalPosition(HistoricalPositionFrom historicalPositionFrom);
 
+    /**
+     * 获取车辆历史最新速度数据
+     * @param vehicleId
+     * @return
+     */
+    ResultVO getLatestPosition(Integer vehicleId);
+
+
+
 
 }

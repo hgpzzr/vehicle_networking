@@ -34,4 +34,6 @@ public interface VehicleService {
 	ResultVO updateVehicle(UpdateVehicleForm form);
 
 	ResultVO updateRunningState(ChangeRunningState form);
+
+	ResultVO getVehicleHisOilUsed(Integer vehicleId);
 }

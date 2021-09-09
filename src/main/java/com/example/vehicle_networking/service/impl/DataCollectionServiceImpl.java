@@ -1,6 +1,7 @@
 package com.example.vehicle_networking.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.example.vehicle_networking.entity.OilConsumptionRecord;
 import com.example.vehicle_networking.entity.Position;
 import com.example.vehicle_networking.entity.RealTimeData;
 import com.example.vehicle_networking.entity.Vehicle;
@@ -54,9 +55,7 @@ public class DataCollectionServiceImpl implements DataCollectionService {
     @Override
     public ResultVO getSpeedFromURL(String url, String cookie, Integer vehicleId) {
         Vehicle vehicle = vehicleMapper.selectByPrimaryKey(vehicleId);
-        if (vehicle.getRunningState().equals(OperatingStatusEnum.NOT_RUNNING.getValue())
-                || vehicle.getLockedState().equals(LockStatusEnum.LOCKED.getRole())
-        ){
+        if (!checkDataThreadStatus(vehicleId)) {
             return ResultVOUtil.error(ResultEnum.LOCKED_NOT_RUNNING);
         }
         // 保存速度信息
@@ -111,6 +110,11 @@ public class DataCollectionServiceImpl implements DataCollectionService {
             return ResultVOUtil.error(ResultEnum.DATABASE_OPTION_ERROR);
         }
 
+
+//        DataInfoDetail oilConsumption = data.getObject("car@油耗", DataInfoDetail.class);
+//        OilConsumptionRecord oilConsumptionRecord = new OilConsumptionRecord();
+
+
         return ResultVOUtil.success();
     }
 
@@ -132,10 +136,7 @@ public class DataCollectionServiceImpl implements DataCollectionService {
 
     @Override
     public ResultVO openOrDownRealDataCollect(ReadDataParaForm readDataParaForm) {
-        Vehicle vehicle = vehicleMapper.selectByPrimaryKey(readDataParaForm.getVehicleId());
-        if (vehicle.getRunningState().equals(OperatingStatusEnum.NOT_RUNNING.getValue())
-                || vehicle.getLockedState().equals(LockStatusEnum.LOCKED.getRole())
-        ){
+        if (!checkDataThreadStatus(readDataParaForm.getVehicleId())) {
             return ResultVOUtil.error(ResultEnum.LOCKED_NOT_RUNNING);
         }
         if (collectDataThread == null){
@@ -145,15 +146,36 @@ public class DataCollectionServiceImpl implements DataCollectionService {
                 }
             }
         }
+        log.info(" 创建线程 {}",collectDataThread.getName());
         boolean collectDataThreadStatus = collectDataThread.getStatus();
         if (collectDataThreadStatus){
             ReadDataThread.stopTask();
             log.info("关闭线程：{}",collectDataThread.getName());
+            collectDataThread = null;
             return ResultVOUtil.success(ResultEnum.DATA_READ_SHUT_DOWNED);
         }
         collectDataThread.startTask();
         collectDataThread.start();
         log.info("开启线程：{}",collectDataThread.getName());
         return ResultVOUtil.success(ResultEnum.DATA_READ_OPENED);
+    }
+
+    @Override
+    public ResultVO getLatestPosition(Integer vehicleId) {
+        if (!checkDataThreadStatus(vehicleId)){
+            return ResultVOUtil.error(ResultEnum.LOCKED_NOT_RUNNING);
+        }
+        Position latestPosition = positionMapper.getLatestPosition(vehicleId);
+        return ResultVOUtil.success(latestPosition);
+    }
+
+    public boolean checkDataThreadStatus(Integer vehicleId){
+        Vehicle vehicle = vehicleMapper.selectByPrimaryKey(vehicleId);
+        if (vehicle.getRunningState().equals(OperatingStatusEnum.NOT_RUNNING.getValue())
+                || vehicle.getLockedState().equals(LockStatusEnum.LOCKED.getRole())
+        ){
+            return false;
+        }
+        return true;
     }
 }
