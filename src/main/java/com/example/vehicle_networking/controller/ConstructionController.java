@@ -44,7 +44,7 @@ public class ConstructionController {
 		return constructionService.updateConstruction(form);
 	}
 
-	@GetMapping("/test11111")
+	@GetMapping("/test111111231231232131312312312")
 	public ResultVO test(){
 		return ResultVOUtil.success();
 	}
