@@ -2,7 +2,9 @@ package com.example.vehicle_networking.thread;
 
 import com.example.vehicle_networking.config.BaseConfig;
 import com.example.vehicle_networking.form.ReadDataParaForm;
+import com.example.vehicle_networking.service.AlarmService;
 import com.example.vehicle_networking.service.DataCollectionService;
+import com.example.vehicle_networking.service.impl.AlarmServiceImpl;
 import com.example.vehicle_networking.utils.GetBeanUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,11 +33,19 @@ public class ReadDataThread extends Thread{
 
     private ReadDataParaForm readDataParaForm;
 
-    public ReadDataThread(){
-
+    public ReadDataThread(String name){
+        super(name);
     }
 
-    public ReadDataThread(String name,ReadDataParaForm readDataParaForm){
+    public static void setFlag(boolean flag) {
+        ReadDataThread.flag = flag;
+    }
+
+    public void setReadDataParaForm(ReadDataParaForm readDataParaForm) {
+        this.readDataParaForm = readDataParaForm;
+    }
+
+    public ReadDataThread(String name, ReadDataParaForm readDataParaForm){
         super(name);
         this.readDataParaForm = readDataParaForm;
     }
@@ -48,6 +58,7 @@ public class ReadDataThread extends Thread{
                     DataCollectionService dataCollectionService = (DataCollectionService) GetBeanUtil.getBean("dataCollectionServiceImpl");
                     dataCollectionService.getSpeedFromURL(readDataParaForm.getUrl(), readDataParaForm.getCookie(), readDataParaForm.getVehicleId());
                     log.info(" 线程 {} 保存数据成功", Thread.currentThread().getName());
+
                     Thread.sleep(3000);
                 }
                 log.info("线程 {} 停止", Thread.currentThread().getName());

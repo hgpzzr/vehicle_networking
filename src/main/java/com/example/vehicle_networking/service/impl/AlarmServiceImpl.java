@@ -1,5 +1,6 @@
 package com.example.vehicle_networking.service.impl;
 
+import com.example.vehicle_networking.config.AlarmConfig;
 import com.example.vehicle_networking.entity.*;
 import com.example.vehicle_networking.enums.LockStatusEnum;
 import com.example.vehicle_networking.enums.OperatingStatusEnum;
@@ -56,12 +57,13 @@ public class AlarmServiceImpl implements AlarmService {
 	private String outFence;
 	@Value("${alarm.reason.in}")
 	private String inFence;
+	@Autowired
+	private AlarmConfig alarmConfig;
 
 	@Override
-	@Scheduled(cron = "*/5 * * * * ?")
 	public ResultVO alarm() {
 		List<Vehicle> vehicleList = vehicleMapper.selectAll();
-		List<AlarmRecord> alarmRecordList = new ArrayList<>();
+
 		for (Vehicle vehicle : vehicleList) {
 			if (!vehicle.getRunningState().equals(OperatingStatusEnum.RUNNING.getValue()) || vehicle.getLockedState().equals(LockStatusEnum.LOCKED.getValue())) {
 				continue;
@@ -70,42 +72,49 @@ public class AlarmServiceImpl implements AlarmService {
 			if (realTimeData == null) {
 				continue;
 			}
-			// 高温报警
-			if (realTimeData.getEngineTemperature() > 100) {
-				AlarmRecord alarmRecord = new AlarmRecord();
-				alarmRecord.setAlarmReason(temperatureReason);
-				alarmRecord.setCreateTime(new Date());
-				alarmRecord.setType(0);
-				alarmRecord.setNumericalValue(realTimeData.getEngineTemperature());
-				alarmRecord.setVehicleId(realTimeData.getVehicleId());
-				alarmRecordList.add(alarmRecord);
-			}
-			// 超速报警
-			if (realTimeData.getSpeed() > 95) {
-				AlarmRecord alarmRecord = new AlarmRecord();
-				alarmRecord.setAlarmReason(speedReason);
-				alarmRecord.setCreateTime(new Date());
-				alarmRecord.setType(0);
-				alarmRecord.setNumericalValue(realTimeData.getSpeed());
-				alarmRecord.setVehicleId(realTimeData.getVehicleId());
-				alarmRecordList.add(alarmRecord);
-			}
-			// 倾斜度报警
-			if (realTimeData.getInclination() > 15) {
-				AlarmRecord alarmRecord = new AlarmRecord();
-				alarmRecord.setAlarmReason(inclinationReason);
-				alarmRecord.setCreateTime(new Date());
-				alarmRecord.setType(0);
-				alarmRecord.setNumericalValue(realTimeData.getInclination());
-				alarmRecord.setVehicleId(realTimeData.getVehicleId());
-				alarmRecordList.add(alarmRecord);
-			}
+			alarmInfo(realTimeData);
+		}
+
+		return ResultVOUtil.success();
+	}
+
+	@Override
+	public void alarmInfo(RealTimeData realTimeData){
+		List<AlarmRecord> alarmRecordList = new ArrayList<>();
+		// 高温报警
+		if (realTimeData.getEngineTemperature() > alarmConfig.getTemperatureMax()) {
+			AlarmRecord alarmRecord = new AlarmRecord();
+			alarmRecord.setAlarmReason(temperatureReason);
+			alarmRecord.setCreateTime(new Date());
+			alarmRecord.setType(0);
+			alarmRecord.setNumericalValue(realTimeData.getEngineTemperature());
+			alarmRecord.setVehicleId(realTimeData.getVehicleId());
+			alarmRecordList.add(alarmRecord);
+		}
+		// 超速报警
+		if (realTimeData.getSpeed() > alarmConfig.getSpeedMax()) {
+			AlarmRecord alarmRecord = new AlarmRecord();
+			alarmRecord.setAlarmReason(speedReason);
+			alarmRecord.setCreateTime(new Date());
+			alarmRecord.setType(0);
+			alarmRecord.setNumericalValue(realTimeData.getSpeed());
+			alarmRecord.setVehicleId(realTimeData.getVehicleId());
+			alarmRecordList.add(alarmRecord);
+		}
+		// 倾斜度报警
+		if (realTimeData.getInclination() > alarmConfig.getInclinationMax()) {
+			AlarmRecord alarmRecord = new AlarmRecord();
+			alarmRecord.setAlarmReason(inclinationReason);
+			alarmRecord.setCreateTime(new Date());
+			alarmRecord.setType(0);
+			alarmRecord.setNumericalValue(realTimeData.getInclination());
+			alarmRecord.setVehicleId(realTimeData.getVehicleId());
+			alarmRecordList.add(alarmRecord);
 		}
 		log.info("alarmRecordList:{}", alarmRecordList.toString());
 		if (alarmRecordList.size() != 0) {
 			alarmRecordMapper.batchInsert(alarmRecordList);
 		}
-		return ResultVOUtil.success();
 	}
 
 	@Override

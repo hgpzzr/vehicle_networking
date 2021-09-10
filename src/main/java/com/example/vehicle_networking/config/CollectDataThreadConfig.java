@@ -14,6 +14,6 @@ public class CollectDataThreadConfig {
 
     @Bean
     public ReadDataThread getReadDataThread(){
-        return new ReadDataThread();
+        return new ReadDataThread("collectDataThread");
     }
 }

@@ -14,6 +14,7 @@ import com.example.vehicle_networking.form.ReadDataParaForm;
 import com.example.vehicle_networking.mapper.PositionMapper;
 import com.example.vehicle_networking.mapper.RealTimeDataMapper;
 import com.example.vehicle_networking.mapper.VehicleMapper;
+import com.example.vehicle_networking.service.AlarmService;
 import com.example.vehicle_networking.service.DataCollectionService;
 import com.example.vehicle_networking.service.VehicleService;
 import com.example.vehicle_networking.thread.ReadDataThread;
@@ -40,7 +41,7 @@ import java.util.concurrent.locks.Lock;
 @Slf4j
 public class DataCollectionServiceImpl implements DataCollectionService {
 
-    private volatile ReadDataThread collectDataThread;
+//    private volatile ReadDataThread collectDataThread;
 
     @Autowired
     private RestTemplateTo restTemplateTo;
@@ -55,7 +56,9 @@ public class DataCollectionServiceImpl implements DataCollectionService {
     @Autowired
     private BaseConfig baseConfig;
     @Autowired
-    private ReadDataThread readDataThread;
+    private ReadDataThread collectDataThread;
+    @Autowired
+    private AlarmService alarmService;
 
     @Override
     public ResultVO getSpeedFromURL(String url, String cookie, Integer vehicleId) {
@@ -115,12 +118,15 @@ public class DataCollectionServiceImpl implements DataCollectionService {
             return ResultVOUtil.error(ResultEnum.DATABASE_OPTION_ERROR);
         }
 
+        // 报警
+        alarmService.alarmInfo(realTimeData);
+
         return ResultVOUtil.success();
     }
 
     @Override
     public ResultVO getStatusDataRead() {
-        return ResultVOUtil.success(readDataThread.getStatus());
+        return ResultVOUtil.success(collectDataThread == null ? false : collectDataThread.getStatus());
     }
 
     @Override
@@ -146,7 +152,9 @@ public class DataCollectionServiceImpl implements DataCollectionService {
                 }
             }
         }
+
         log.info(" 创建线程 {}",collectDataThread.getName());
+        collectDataThread.setReadDataParaForm(readDataParaForm);
         boolean collectDataThreadStatus = collectDataThread.getStatus();
         if (collectDataThreadStatus){
             ReadDataThread.stopTask();

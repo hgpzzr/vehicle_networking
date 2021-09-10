@@ -1,5 +1,6 @@
 package com.example.vehicle_networking.service;
 
+import com.example.vehicle_networking.entity.RealTimeData;
 import com.example.vehicle_networking.vo.ResultVO;
 import org.springframework.stereotype.Service;
 
@@ -27,4 +28,7 @@ public interface AlarmService {
 	 * @return
 	 */
 	ResultVO accessRecord();
+
+
+	void alarmInfo(RealTimeData realTimeData);
 }
