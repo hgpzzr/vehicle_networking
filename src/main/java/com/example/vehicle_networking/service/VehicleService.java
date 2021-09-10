@@ -2,7 +2,6 @@ package com.example.vehicle_networking.service;
 
 import com.example.vehicle_networking.entity.Vehicle;
 import com.example.vehicle_networking.form.AddVehicleForm;
-import com.example.vehicle_networking.form.ChangeLockedState;
 import com.example.vehicle_networking.form.ChangeRunningState;
 import com.example.vehicle_networking.form.UpdateVehicleForm;
 import com.example.vehicle_networking.vo.ResultVO;
@@ -35,6 +34,8 @@ public interface VehicleService {
 	ResultVO updateVehicle(UpdateVehicleForm form);
 
 	ResultVO updateRunningState(ChangeRunningState form);
+
+	ResultVO getVehicleHisOilUsed(Integer vehicleId);
 
 	/**
 	 * 改变车辆锁机状态
