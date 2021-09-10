@@ -52,4 +52,12 @@
     from real_time_data
     where real_time_id = (select max(real_time_id) from real_time_data where vehicle_id = #{vehicleId,jdbcType=INTEGER})
   </select>
+  <select id="getSecondRealTimeDataByVehicleId" resultMap="BaseResultMap">
+    select real_time_id, vehicle_id, engine_speed, fuel_margin, engine_temperature, speed,
+    create_time, inclination
+    from real_time_data
+    where vehicle_id = #{vehicleId.jdbcType=INTEGER}
+    order by create_time desc
+    limit 1,1
+  </select>
 </mapper>
