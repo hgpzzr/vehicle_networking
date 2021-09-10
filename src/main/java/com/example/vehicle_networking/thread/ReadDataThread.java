@@ -31,6 +31,10 @@ public class ReadDataThread extends Thread{
 
     private ReadDataParaForm readDataParaForm;
 
+    public ReadDataThread(){
+
+    }
+
     public ReadDataThread(String name,ReadDataParaForm readDataParaForm){
         super(name);
         this.readDataParaForm = readDataParaForm;

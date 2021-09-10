@@ -54,6 +54,8 @@ public class DataCollectionServiceImpl implements DataCollectionService {
     private VehicleMapper vehicleMapper;
     @Autowired
     private BaseConfig baseConfig;
+    @Autowired
+    private ReadDataThread readDataThread;
 
     @Override
     public ResultVO getSpeedFromURL(String url, String cookie, Integer vehicleId) {
@@ -118,7 +120,7 @@ public class DataCollectionServiceImpl implements DataCollectionService {
 
     @Override
     public ResultVO getStatusDataRead() {
-        return ResultVOUtil.success(collectDataThread.getStatus());
+        return ResultVOUtil.success(readDataThread.getStatus());
     }
 
     @Override

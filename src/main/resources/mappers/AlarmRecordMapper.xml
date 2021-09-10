@@ -24,7 +24,7 @@
       create_time, `type`,numerical_value)
     values
     <foreach collection="list" item="item" separator=",">
-    (#{item.alarmId}, #{itemvehicleId}, #{item.alarmReason},
+    (#{item.alarmId}, #{item.vehicleId}, #{item.alarmReason},
       #{item.createTime}, #{item.type},#{item.numericalValue})
     </foreach>
   </insert>
