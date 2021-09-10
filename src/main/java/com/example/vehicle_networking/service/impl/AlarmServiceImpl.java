@@ -63,7 +63,7 @@ public class AlarmServiceImpl implements AlarmService {
 		List<Vehicle> vehicleList = vehicleMapper.selectAll();
 		List<AlarmRecord> alarmRecordList = new ArrayList<>();
 		for (Vehicle vehicle : vehicleList) {
-			if (vehicle.getRunningState() != OperatingStatusEnum.RUNNING.getValue() || vehicle.getLockedState() == LockStatusEnum.LOCKED.getValue()) {
+			if (!vehicle.getRunningState().equals(OperatingStatusEnum.RUNNING.getValue()) || vehicle.getLockedState().equals(LockStatusEnum.LOCKED.getValue())) {
 				continue;
 			}
 			RealTimeData realTimeData = realTimeDataMapper.getRealTimeDataOneByVehicleId(vehicle.getVehicleId());
@@ -116,7 +116,7 @@ public class AlarmServiceImpl implements AlarmService {
 		if (currentUser.getRole() == 0) {
 			Vehicle vehicle = vehicleMapper.selectByPrimaryKey(vehicleId);
 			if (vehicle != null) {
-				if (vehicle.getUserId() != currentUser.getUserId()) {
+				if (!vehicle.getUserId().equals(currentUser.getUserId())) {
 					return ResultVOUtil.success();
 				}
 				List<AlarmRecord> alarmRecordList = alarmRecordMapper.selectByVehicleId(vehicleId);
