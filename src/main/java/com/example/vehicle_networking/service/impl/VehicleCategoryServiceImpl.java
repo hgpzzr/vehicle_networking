@@ -56,4 +56,9 @@ public class VehicleCategoryServiceImpl implements VehicleCategoryService {
 		}
 		return ResultVOUtil.success("更新成功");
 	}
+
+	@Override
+	public ResultVO selectAll() {
+		return ResultVOUtil.success(vehicleCategoryMapper.selectAll());
+	}
 }

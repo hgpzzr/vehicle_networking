@@ -40,4 +40,10 @@ public class VehicleCategoryController {
 	public ResultVO update(Integer categoryId,String categoryName){
 		return vehicleCategoryService.update(categoryId,categoryName);
 	}
+
+	@GetMapping("/select")
+	@ApiOperation("查询分类")
+	public ResultVO selectAll(){
+		return vehicleCategoryService.selectAll();
+	}
 }

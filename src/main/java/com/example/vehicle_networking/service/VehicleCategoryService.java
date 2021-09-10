@@ -23,5 +23,17 @@ public interface VehicleCategoryService {
 	 */
 	ResultVO delete(Integer categoryId);
 
+	/**
+	 * 更新分类
+	 * @param categoryId
+	 * @param categoryName
+	 * @return
+	 */
 	ResultVO update(Integer categoryId,String categoryName);
+
+	/**
+	 * 查询所有分类
+	 * @return
+	 */
+	ResultVO selectAll();
 }
