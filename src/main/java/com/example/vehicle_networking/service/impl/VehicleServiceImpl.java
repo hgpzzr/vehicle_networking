@@ -4,9 +4,7 @@ import com.example.vehicle_networking.entity.User;
 import com.example.vehicle_networking.entity.Vehicle;
 import com.example.vehicle_networking.enums.OperatingStatusEnum;
 import com.example.vehicle_networking.enums.ResultEnum;
-import com.example.vehicle_networking.form.AddVehicleForm;
-import com.example.vehicle_networking.form.ChangeRunningState;
-import com.example.vehicle_networking.form.UpdateVehicleForm;
+import com.example.vehicle_networking.form.*;
 import com.example.vehicle_networking.mapper.VehicleMapper;
 import com.example.vehicle_networking.service.UserService;
 import com.example.vehicle_networking.service.VehicleService;
@@ -18,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author hgp
@@ -85,10 +84,20 @@ public class VehicleServiceImpl implements VehicleService {
 		}
 		return ResultVOUtil.success("更新成功");
 	}
+	@Override
+	public ResultVO getVehicleHisOilUsed(HistoricalPositionFrom historicalPositionFrom) {
+		return null;
+	}
 
 	@Override
-	public ResultVO getVehicleHisOilUsed(Integer vehicleId) {
-
-		return null;
+	public ResultVO selectVehicles(Integer categoryId,String licenseNumber) {
+		User currentUser = userService.getCurrentUser();
+		if(currentUser.getRole() == 0){
+			List<Vehicle> vehicleList = vehicleMapper.fuzzyQuery(categoryId,licenseNumber,currentUser.getUserId());
+			return ResultVOUtil.success(vehicleList);
+		}
+		else {
+			return ResultVOUtil.success(vehicleMapper.fuzzyQuery(categoryId,licenseNumber,null));
+		}
 	}
 }

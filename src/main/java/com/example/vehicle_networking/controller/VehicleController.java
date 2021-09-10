@@ -1,6 +1,7 @@
 package com.example.vehicle_networking.controller;
 
 import com.example.vehicle_networking.form.AddVehicleForm;
+import com.example.vehicle_networking.form.ChangeLockedState;
 import com.example.vehicle_networking.form.ChangeRunningState;
 import com.example.vehicle_networking.form.HistoricalPositionFrom;
 import com.example.vehicle_networking.form.UpdateVehicleForm;
@@ -60,5 +61,12 @@ public class VehicleController {
 	public ResultVO getOilConsume(@RequestBody @Valid HistoricalPositionFrom historicalPositionFrom){
 		return vehicleService.getVehicleHisOilUsed(historicalPositionFrom);
 	}
+
+	@GetMapping("/select")
+	@ApiOperation("根据分类编号和车牌号的模糊查询进行车辆查询，不传值则查询全部，并根据权限查询车辆，普通用户查询自己的车辆，管理员查询所有车辆")
+	public ResultVO selectVehicles(Integer categoryId,String licenseNumber){
+		return vehicleService.selectVehicles(categoryId,licenseNumber);
+	}
+
 
 }

@@ -1,9 +1,7 @@
 package com.example.vehicle_networking.service;
 
 import com.example.vehicle_networking.entity.Vehicle;
-import com.example.vehicle_networking.form.AddVehicleForm;
-import com.example.vehicle_networking.form.ChangeRunningState;
-import com.example.vehicle_networking.form.UpdateVehicleForm;
+import com.example.vehicle_networking.form.*;
 import com.example.vehicle_networking.vo.ResultVO;
 
 /**
@@ -35,5 +33,7 @@ public interface VehicleService {
 
 	ResultVO updateRunningState(ChangeRunningState form);
 
-	ResultVO getVehicleHisOilUsed(Integer vehicleId);
+	ResultVO getVehicleHisOilUsed(HistoricalPositionFrom historicalPositionFrom);
+
+	ResultVO selectVehicles(Integer categoryId,String licenseNumber);
 }
