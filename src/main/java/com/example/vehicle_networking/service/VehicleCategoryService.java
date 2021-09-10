@@ -1,6 +1,7 @@
 package com.example.vehicle_networking.service;
 
 import com.example.vehicle_networking.vo.ResultVO;
+import io.swagger.models.auth.In;
 
 /**
  * @author hgp
@@ -21,4 +22,6 @@ public interface VehicleCategoryService {
 	 * @return
 	 */
 	ResultVO delete(Integer categoryId);
+
+	ResultVO update(Integer categoryId,String categoryName);
 }

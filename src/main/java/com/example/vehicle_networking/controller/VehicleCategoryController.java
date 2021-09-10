@@ -34,4 +34,10 @@ public class VehicleCategoryController {
 	public ResultVO delete(Integer categoryId){
 		return vehicleCategoryService.delete(categoryId);
 	}
+
+	@PutMapping("/update")
+	@ApiOperation("更新分类")
+	public ResultVO update(Integer categoryId,String categoryName){
+		return vehicleCategoryService.update(categoryId,categoryName);
+	}
 }
