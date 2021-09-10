@@ -10,6 +10,7 @@ import com.example.vehicle_networking.form.ChangeLockedState;
 import com.example.vehicle_networking.form.ChangeRunningState;
 import com.example.vehicle_networking.form.HistoricalPositionFrom;
 import com.example.vehicle_networking.form.UpdateVehicleForm;
+import com.example.vehicle_networking.mapper.OilConsumptionRecordMapper;
 import com.example.vehicle_networking.mapper.VehicleMapper;
 import com.example.vehicle_networking.service.UserService;
 import com.example.vehicle_networking.service.VehicleService;
@@ -21,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author hgp
@@ -33,6 +35,8 @@ public class VehicleServiceImpl implements VehicleService {
 	private VehicleMapper vehicleMapper;
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private OilConsumptionRecordMapper oilConsumptionRecordMapper;
 
 
 	@Override
