@@ -5,6 +5,8 @@ import com.example.vehicle_networking.form.ChangeLockedState;
 import com.example.vehicle_networking.form.ChangeRunningState;
 import com.example.vehicle_networking.form.HistoricalPositionFrom;
 import com.example.vehicle_networking.form.UpdateVehicleForm;
+import com.example.vehicle_networking.entity.Vehicle;
+import com.example.vehicle_networking.form.*;
 import com.example.vehicle_networking.vo.ResultVO;
 
 /**

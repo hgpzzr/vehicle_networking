@@ -1,8 +1,6 @@
 package com.example.vehicle_networking.service.impl;
 
-import com.example.vehicle_networking.config.BaseConfig;
 import com.example.vehicle_networking.entity.OilConsumptionRecord;
-import com.example.vehicle_networking.entity.Position;
 import com.example.vehicle_networking.entity.User;
 import com.example.vehicle_networking.entity.Vehicle;
 import com.example.vehicle_networking.enums.OperatingStatusEnum;
@@ -12,8 +10,6 @@ import com.example.vehicle_networking.form.ChangeLockedState;
 import com.example.vehicle_networking.form.ChangeRunningState;
 import com.example.vehicle_networking.form.HistoricalPositionFrom;
 import com.example.vehicle_networking.form.UpdateVehicleForm;
-import com.example.vehicle_networking.mapper.OilConsumptionRecordMapper;
-import com.example.vehicle_networking.mapper.PositionMapper;
 import com.example.vehicle_networking.mapper.VehicleMapper;
 import com.example.vehicle_networking.service.UserService;
 import com.example.vehicle_networking.service.VehicleService;
@@ -24,9 +20,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.security.acl.LastOwnerException;
 import java.util.Date;
-import java.util.List;
 
 /**
  * @author hgp
@@ -39,12 +33,6 @@ public class VehicleServiceImpl implements VehicleService {
 	private VehicleMapper vehicleMapper;
 	@Autowired
 	private UserService userService;
-	@Autowired
-	private OilConsumptionRecordMapper oilConsumptionRecordMapper;
-	@Autowired
-	private PositionMapper positionMapper;
-	@Autowired
-	private BaseConfig baseConfig;
 
 
 	@Override
@@ -127,4 +115,5 @@ public class VehicleServiceImpl implements VehicleService {
 			return ResultVOUtil.success(vehicleMapper.fuzzyQuery(categoryId,licenseNumber,null));
 		}
 	}
+
 }

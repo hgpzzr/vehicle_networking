@@ -33,4 +33,13 @@ public class VehicleCategoryServiceImpl implements VehicleCategoryService {
 		}
 		return ResultVOUtil.success("插入成功");
 	}
+
+	@Override
+	public ResultVO delete(Integer categoryId) {
+		int delete = vehicleCategoryMapper.deleteByPrimaryKey(categoryId);
+		if(delete != 1){
+			return ResultVOUtil.error(ResultEnum.DATABASE_OPTION_ERROR);
+		}
+		return ResultVOUtil.success("删除成功");
+	}
 }

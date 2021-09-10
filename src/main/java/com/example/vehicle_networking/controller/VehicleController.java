@@ -56,6 +56,12 @@ public class VehicleController {
 		return vehicleService.updateRunningState(form);
 	}
 
+<<<<<<<<< Temporary merge branch 1
+	@PostMapping("/getOilConsume")
+	@ApiOperation("获取车辆的油耗")
+	public ResultVO getOilConsume(@RequestBody @Valid HistoricalPositionFrom historicalPositionFrom){
+		return vehicleService.getVehicleHisOilUsed(historicalPositionFrom);
+=========
 	@PutMapping("/update_lockedState")
 	@ApiOperation("改变车辆锁机状态")
 	public ResultVO updateLockedState(@Valid ChangeLockedState form){
@@ -66,5 +72,7 @@ public class VehicleController {
 	@ApiOperation("根据分类编号和车牌号的模糊查询进行车辆查询，不传值则查询全部，并根据权限查询车辆，普通用户查询自己的车辆，管理员查询所有车辆")
 	public ResultVO selectVehicles(Integer categoryId,String licenseNumber){
 		return vehicleService.selectVehicles(categoryId,licenseNumber);
+>>>>>>>>> Temporary merge branch 2
 	}
+
 }

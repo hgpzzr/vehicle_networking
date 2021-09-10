@@ -5,6 +5,7 @@ import com.example.vehicle_networking.vo.ResultVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.annotations.Delete;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,5 +27,11 @@ public class VehicleCategoryController {
 	@ApiOperation("添加分类")
 	public ResultVO insert(String categoryName){
 		return vehicleCategoryService.insert(categoryName);
+	}
+
+	@DeleteMapping("/delete")
+	@ApiOperation("删除分类")
+	public ResultVO delete(Integer categoryId){
+		return vehicleCategoryService.delete(categoryId);
 	}
 }
