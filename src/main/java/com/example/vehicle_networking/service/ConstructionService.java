@@ -31,4 +31,11 @@ public interface ConstructionService {
 	 * @return
 	 */
 	ResultVO updateConstruction(UpdateConstructionForm form);
+
+	/**
+	 * 查询工地
+	 * @param constructionId
+	 * @return
+	 */
+	ResultVO selectConstructions(Integer constructionId);
 }
