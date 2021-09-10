@@ -44,4 +44,9 @@
     select vehicle_id, user_id, license_plate_number, mileage, category_id, create_time, running_state, locked_state
     from vehicle
   </select>
+  <select id="selectByUserId" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+    select vehicle_id, user_id, license_plate_number, mileage, category_id, create_time, running_state, locked_state
+    from vehicle
+    where user_id = #{userId,jdbcType=INTEGER}
+  </select>
 </mapper>

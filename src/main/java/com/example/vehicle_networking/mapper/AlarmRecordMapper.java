@@ -15,6 +15,8 @@ public interface AlarmRecordMapper {
 
     List<AlarmRecord> selectAll();
 
+    List<AlarmRecord> selectByVehicleId(Integer vehicleId);
+
     int updateByPrimaryKey(AlarmRecord record);
 
     int batchInsert(List<AlarmRecord> alarmRecordList);

@@ -15,5 +15,7 @@ public interface VehicleMapper {
 
     List<Vehicle> selectAll();
 
+    List<Vehicle> selectByUserId(Integer userId);
+
     int updateByPrimaryKey(Vehicle record);
 }
