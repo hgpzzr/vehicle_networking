@@ -1,8 +1,12 @@
 package com.example.vehicle_networking.mapper;
 
 import com.example.vehicle_networking.entity.Position;
+import com.example.vehicle_networking.form.HistoricalPositionFrom;
+import javafx.geometry.Pos;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -16,4 +20,15 @@ public interface PositionMapper {
     List<Position> selectAll();
 
     int updateByPrimaryKey(Position record);
+
+    List<Position> getHistoricalDataByVehicleId(Integer vehicleId);
+
+    List<Position> getHistoricalDataByDate(HistoricalPositionFrom historicalPositionFrom);
+
+    /**
+     * 获取最新的
+     * @param vehicleId
+     * @return
+     */
+    Position getLatestPosition(Integer vehicleId);
 }

@@ -16,6 +16,10 @@ public class Vehicle implements Serializable {
 
     private Date createTime;
 
+    private Integer runningState;
+
+    private Integer lockedState;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getVehicleId() {
@@ -32,6 +36,20 @@ public class Vehicle implements Serializable {
 
     public void setUserId(Integer userId) {
         this.userId = userId;
+    }
+    public Integer getRunningState() {
+        return runningState;
+    }
+
+    public void setRunningState(Integer runningState) {
+        this.runningState = runningState;
+    }
+    public Integer getLockedState() {
+        return lockedState;
+    }
+
+    public void setLockedState(Integer lockedState) {
+        this.lockedState = lockedState;
     }
 
     public String getLicensePlateNumber() {
@@ -77,7 +95,9 @@ public class Vehicle implements Serializable {
         sb.append(", licensePlateNumber=").append(licensePlateNumber);
         sb.append(", mileage=").append(mileage);
         sb.append(", categoryId=").append(categoryId);
-        sb.append(", createTime=").append(createTime);
+        sb.append(", runningState=").append(runningState);
+        sb.append(", categoryId=").append(categoryId);
+        sb.append(", lockedState=").append(lockedState);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

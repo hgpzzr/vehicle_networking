@@ -8,9 +8,8 @@
     <result column="fuel_margin" property="fuelMargin" jdbcType="DOUBLE" />
     <result column="engine_temperature" property="engineTemperature" jdbcType="DOUBLE" />
     <result column="speed" property="speed" jdbcType="DOUBLE" />
-    <result column="running_state" property="runningState" jdbcType="INTEGER" />
-    <result column="locked_state" property="lockedState" jdbcType="INTEGER" />
-    <result column="Inclination" property="inclination" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="inclination" property="inclination" jdbcType="DOUBLE" />
   </resultMap>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from real_time_data
@@ -18,12 +17,11 @@
   </delete>
   <insert id="insert" parameterType="com.example.vehicle_networking.entity.RealTimeData" >
     insert into real_time_data (real_time_id, vehicle_id, engine_speed, 
-      fuel_margin, engine_temperature, speed, 
-      running_state, locked_state, Inclination
+      fuel_margin, engine_temperature, speed, create_time, inclination
       )
     values (#{realTimeId,jdbcType=INTEGER}, #{vehicleId,jdbcType=INTEGER}, #{engineSpeed,jdbcType=DOUBLE}, 
-      #{fuelMargin,jdbcType=DOUBLE}, #{engineTemperature,jdbcType=DOUBLE}, #{speed,jdbcType=DOUBLE}, 
-      #{runningState,jdbcType=INTEGER}, #{lockedState,jdbcType=INTEGER}, #{inclination,jdbcType=INTEGER}
+      #{fuelMargin,jdbcType=DOUBLE}, #{engineTemperature,jdbcType=DOUBLE}, #{speed,jdbcType=DOUBLE},
+      #{createTime,jdbcType=TIMESTAMP}, #{inclination,jdbcType=DOUBLE}
       )
   </insert>
   <update id="updateByPrimaryKey" parameterType="com.example.vehicle_networking.entity.RealTimeData" >
@@ -33,20 +31,25 @@
       fuel_margin = #{fuelMargin,jdbcType=DOUBLE},
       engine_temperature = #{engineTemperature,jdbcType=DOUBLE},
       speed = #{speed,jdbcType=DOUBLE},
-      running_state = #{runningState,jdbcType=INTEGER},
-      locked_state = #{lockedState,jdbcType=INTEGER},
-      Inclination = #{inclination,jdbcType=INTEGER}
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      inclination =  #{inclination,jdbcType=DOUBLE}
     where real_time_id = #{realTimeId,jdbcType=INTEGER}
   </update>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select real_time_id, vehicle_id, engine_speed, fuel_margin, engine_temperature, speed, 
-    running_state, locked_state, Inclination
+    create_time, inclination
     from real_time_data
     where real_time_id = #{realTimeId,jdbcType=INTEGER}
   </select>
   <select id="selectAll" resultMap="BaseResultMap" >
     select real_time_id, vehicle_id, engine_speed, fuel_margin, engine_temperature, speed, 
-    running_state, locked_state, Inclination
+    create_time, inclination
     from real_time_data
+  </select>
+  <select id="getRealTimeDataOneByVehicleId" resultMap="BaseResultMap">
+    select real_time_id, vehicle_id, engine_speed, fuel_margin, engine_temperature, speed,
+    create_time, inclination
+    from real_time_data
+    where real_time_id = (select max(real_time_id) from real_time_data where vehicle_id = #{vehicleId,jdbcType=INTEGER})
   </select>
 </mapper>

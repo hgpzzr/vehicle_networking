@@ -1,6 +1,7 @@
 package com.example.vehicle_networking.entity;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class RealTimeData implements Serializable {
     private Integer realTimeId;
@@ -15,11 +16,9 @@ public class RealTimeData implements Serializable {
 
     private Double speed;
 
-    private Integer runningState;
+    private Date createTime;
 
-    private Integer lockedState;
-
-    private Integer inclination;
+    private Double inclination;
 
     private static final long serialVersionUID = 1L;
 
@@ -71,27 +70,20 @@ public class RealTimeData implements Serializable {
         this.speed = speed;
     }
 
-    public Integer getRunningState() {
-        return runningState;
+
+    public Date getCreateTime() {
+        return createTime;
     }
 
-    public void setRunningState(Integer runningState) {
-        this.runningState = runningState;
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 
-    public Integer getLockedState() {
-        return lockedState;
-    }
-
-    public void setLockedState(Integer lockedState) {
-        this.lockedState = lockedState;
-    }
-
-    public Integer getInclination() {
+    public Double getInclination() {
         return inclination;
     }
 
-    public void setInclination(Integer inclination) {
+    public void setInclination(Double inclination) {
         this.inclination = inclination;
     }
 
@@ -107,8 +99,6 @@ public class RealTimeData implements Serializable {
         sb.append(", fuelMargin=").append(fuelMargin);
         sb.append(", engineTemperature=").append(engineTemperature);
         sb.append(", speed=").append(speed);
-        sb.append(", runningState=").append(runningState);
-        sb.append(", lockedState=").append(lockedState);
         sb.append(", inclination=").append(inclination);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");

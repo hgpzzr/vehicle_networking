@@ -14,6 +14,8 @@ public class AlarmRecord implements Serializable {
 
     private Integer type;
 
+    private Double numericalValue;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getAlarmId() {
@@ -31,7 +33,13 @@ public class AlarmRecord implements Serializable {
     public void setVehicleId(Integer vehicleId) {
         this.vehicleId = vehicleId;
     }
+    public Double getNumericalValue() {
+        return numericalValue;
+    }
 
+    public void setNumericalValue(Double numericalValue) {
+        this.numericalValue = numericalValue;
+    }
     public String getAlarmReason() {
         return alarmReason;
     }
@@ -67,6 +75,7 @@ public class AlarmRecord implements Serializable {
         sb.append(", alarmReason=").append(alarmReason);
         sb.append(", createTime=").append(createTime);
         sb.append(", type=").append(type);
+        sb.append(", numericalValue=").append(numericalValue);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

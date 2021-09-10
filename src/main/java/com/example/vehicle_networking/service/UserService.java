@@ -1,6 +1,11 @@
 package com.example.vehicle_networking.service;
 
 import com.example.vehicle_networking.entity.User;
+import com.example.vehicle_networking.form.LoginForm;
+import com.example.vehicle_networking.form.RegisterForm;
+import com.example.vehicle_networking.vo.ResultVO;
+
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author hgp
@@ -14,5 +19,20 @@ public interface UserService {
 	 */
 	User getCurrentUser();
 
+	/**
+	 * 根据用户名获得用户
+	 * @param userName
+	 * @return
+	 */
 	User getUserByUserName(String userName);
+
+	/**
+	 * 登录
+	 * @param loginForm
+	 * @param response
+	 * @return
+	 */
+	ResultVO login(LoginForm loginForm,HttpServletResponse response);
+
+	ResultVO register(RegisterForm form);
 }
