@@ -101,8 +101,8 @@ public class DataCollectionServiceImpl implements DataCollectionService {
         position.setLongitude(String.valueOf(longitude.getValue()));
         position.setCreateTime(engineSpeed.getTimestamp());
         position.setVehicleId(vehicleId);
-        if (vehicle.getRunningState().equals(OperatingStatusEnum.RUNNING.getValue())){
-            Position latestPosition = positionMapper.getLatestPosition(vehicleId);
+        Position latestPosition = positionMapper.getLatestPosition(vehicleId);
+        if (vehicle.getRunningState().equals(OperatingStatusEnum.RUNNING.getValue()) && latestPosition != null){
             Optional.ofNullable(latestPosition);
             double distance = GetDistanceUtil.getDistance(
                     Double.valueOf(latitude.getValue()),
