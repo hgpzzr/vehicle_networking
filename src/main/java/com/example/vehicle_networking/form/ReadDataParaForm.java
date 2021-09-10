@@ -22,4 +22,8 @@ public class ReadDataParaForm {
     @ApiModelProperty("车辆ID")
     @NotNull
     private Integer vehicleId;
+
+    @ApiModelProperty("读取间隔（s）")
+
+    private Integer interval;
 }

@@ -1,8 +1,8 @@
 package com.example.vehicle_networking.service;
 
-import com.example.vehicle_networking.entity.Vehicle;
 import com.example.vehicle_networking.form.AddVehicleForm;
 import com.example.vehicle_networking.form.ChangeRunningState;
+import com.example.vehicle_networking.form.HistoricalPositionFrom;
 import com.example.vehicle_networking.form.UpdateVehicleForm;
 import com.example.vehicle_networking.vo.ResultVO;
 
@@ -33,7 +33,17 @@ public interface VehicleService {
 	 */
 	ResultVO updateVehicle(UpdateVehicleForm form);
 
+	/**
+	 * 更新汽车状态，同时更新汽车的油耗和里程数
+	 * @param form
+	 * @return
+	 */
 	ResultVO updateRunningState(ChangeRunningState form);
 
-	ResultVO getVehicleHisOilUsed(Integer vehicleId);
+	/**
+	 * 可以根据时间范围获取油耗记录
+	 * @param historicalFrom
+	 * @return
+	 */
+	ResultVO getVehicleHisOilUsed(HistoricalPositionFrom historicalFrom);
 }

@@ -1,6 +1,7 @@
 package com.example.vehicle_networking.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.example.vehicle_networking.config.BaseConfig;
 import com.example.vehicle_networking.entity.OilConsumptionRecord;
 import com.example.vehicle_networking.entity.Position;
 import com.example.vehicle_networking.entity.RealTimeData;
@@ -51,6 +52,8 @@ public class DataCollectionServiceImpl implements DataCollectionService {
     private VehicleService vehicleService;
     @Autowired
     private VehicleMapper vehicleMapper;
+    @Autowired
+    private BaseConfig baseConfig;
 
     @Override
     public ResultVO getSpeedFromURL(String url, String cookie, Integer vehicleId) {

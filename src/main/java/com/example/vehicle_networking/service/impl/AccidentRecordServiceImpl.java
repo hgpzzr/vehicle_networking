@@ -43,7 +43,7 @@ public class AccidentRecordServiceImpl implements AccidentRecordService {
         accidentRecord.setCreateTime(getCurrentTime());
         int result = accidentRecordMapper.insert(accidentRecord);
         if(result == 0){
-            return ResultVOUtil.error(ResultEnum.ACCIDENT_RECORD_ADD_ERROR);
+//            return ResultVOUtil.error(ResultEnum.ACCIDENT_RECORD_ADD_ERROR);
         }
         return ResultVOUtil.success();
     }
@@ -53,7 +53,7 @@ public class AccidentRecordServiceImpl implements AccidentRecordService {
     public ResultVO deleteRecord(Integer accidentId) {
         int result = accidentRecordMapper.deleteByPrimaryKey(accidentId);
         if(result == 0){
-            ResultVOUtil.error(ResultEnum.ACCIDENT_RECORD_DELETE_ERROR);
+//            ResultVOUtil.error(ResultEnum.ACCIDENT_RECORD_DELETE_ERROR);
         }
         return ResultVOUtil.success();
     }
@@ -66,7 +66,7 @@ public class AccidentRecordServiceImpl implements AccidentRecordService {
         accidentRecord.setCreateTime(getCurrentTime());
         int result = accidentRecordMapper.updateByPrimaryKey(accidentRecord);
         if(result == 0){
-            return ResultVOUtil.error(ResultEnum.ACCIDENT_RECORD_UPDATE_ERROR);
+//            return ResultVOUtil.error(ResultEnum.ACCIDENT_RECORD_UPDATE_ERROR);
         }
         return ResultVOUtil.success();
     }
@@ -79,7 +79,7 @@ public class AccidentRecordServiceImpl implements AccidentRecordService {
         BeanUtils.copyProperties(accidentRecord,recordVo);
         recordVo.setCreateTime(dateFormat(accidentRecord.getCreateTime()));
         if(accidentRecord == null){
-            return ResultVOUtil.error(ResultEnum.ACCIDENT_RECORD_IS_EMPTY);
+//            return ResultVOUtil.error(ResultEnum.ACCIDENT_RECORD_IS_EMPTY);
         }
         return ResultVOUtil.success(recordVo);
     }
@@ -98,7 +98,8 @@ public class AccidentRecordServiceImpl implements AccidentRecordService {
             }
             return ResultVOUtil.success(recordVoList);
         }
-        return ResultVOUtil.error(ResultEnum.ACCIDENT_RECORD_IS_EMPTY);
+//        return ResultVOUtil.error(ResultEnum.ACCIDENT_RECORD_IS_EMPTY);
+        return null;
     }
 
 
@@ -106,7 +107,7 @@ public class AccidentRecordServiceImpl implements AccidentRecordService {
     public ResultVO getRecordsByVehicleId(Integer vehicleId) {
         List<AccidentRecord> accidentRecords = accidentRecordMapper.selectAll();
         if(accidentRecords.isEmpty()){
-            return ResultVOUtil.error(ResultEnum.ACCIDENT_RECORD_IS_EMPTY);
+//            return ResultVOUtil.error(ResultEnum.ACCIDENT_RECORD_IS_EMPTY);
         }
         List<AccidentRecordVo> voList = new ArrayList<>();
         for(AccidentRecord record : accidentRecords){

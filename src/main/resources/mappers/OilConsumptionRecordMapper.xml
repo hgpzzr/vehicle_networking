@@ -39,4 +39,21 @@
     select oil_consumption_id, vehicle_id, `date`, oil_consumption, work_time, create_time
     from oil_consumption_record
   </select>
+  <select id="getLatestConsumption" resultMap="BaseResultMap">
+    select oil_consumption_id, vehicle_id, `date`, oil_consumption, work_time, create_time
+    from oil_consumption_record
+    where vehicl_id = #{vehicleId,jdbcType=INTEGER} and work_time = 0.0 limit 1
+  </select>
+  <select id="getHistoricalOilConsumptionRecord"  resultMap="BaseResultMap">
+    select oil_consumption_id, vehicle_id, `date`, oil_consumption, work_time, create_time
+    from oil_consumption_record
+    where vehicle_id = #{vehicleId,jdbcType=INTEGER}
+    <if test="beginDate!=null">
+      and create_time >= #{beginDate,jdbcType=DATE}
+    </if>
+    <if test="endDate!=null">
+      and create_time &lt;= #{endDate,jdbcType=DATE}
+    </if>
+    order by create_time
+  </select>
 </mapper>
