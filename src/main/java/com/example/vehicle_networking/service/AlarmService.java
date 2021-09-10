@@ -1,6 +1,7 @@
 package com.example.vehicle_networking.service;
 
 import com.example.vehicle_networking.vo.ResultVO;
+import org.springframework.stereotype.Service;
 
 /**
  * @author hgp
