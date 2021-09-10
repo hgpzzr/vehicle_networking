@@ -20,6 +20,7 @@ public enum  ResultEnum {
     ELECTRONIC_FENCE_EXIT_ERROR(1002,"该工地已存在电子围栏"),
     PARAM_NULL_ERROR(1003,"参数不能为空"),
     NOT_SELF_OPTION_ERROR(1004,"不是本人操作"),
+    RUNNING_CAR_LOCK_ERROR(1005,"运行中得车辆不能锁机"),
 
 
     DATA_READ_OPENED(2000,"读取实时数据线程已开启"),
