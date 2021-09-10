@@ -113,12 +113,6 @@ public class DataCollectionServiceImpl implements DataCollectionService {
             return ResultVOUtil.error(ResultEnum.DATABASE_OPTION_ERROR);
         }
 
-
-        // git
-//        DataInfoDetail oilConsumption = data.getObject("car@油耗", DataInfoDetail.class);
-//        OilConsumptionRecord oilConsumptionRecord = new OilConsumptionRecord();
-
-
         return ResultVOUtil.success();
     }
 
