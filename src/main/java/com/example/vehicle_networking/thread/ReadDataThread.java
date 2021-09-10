@@ -1,16 +1,9 @@
 package com.example.vehicle_networking.thread;
 
-import com.example.vehicle_networking.config.BaseConfig;
 import com.example.vehicle_networking.form.ReadDataParaForm;
-import com.example.vehicle_networking.service.AlarmService;
 import com.example.vehicle_networking.service.DataCollectionService;
-import com.example.vehicle_networking.service.impl.AlarmServiceImpl;
 import com.example.vehicle_networking.utils.GetBeanUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jca.context.SpringContextResourceAdapter;
-import org.springframework.stereotype.Service;
-
 /**
  * @author ：GO FOR IT
  * @description：
@@ -58,8 +51,8 @@ public class ReadDataThread extends Thread{
                     DataCollectionService dataCollectionService = (DataCollectionService) GetBeanUtil.getBean("dataCollectionServiceImpl");
                     dataCollectionService.getSpeedFromURL(readDataParaForm.getUrl(), readDataParaForm.getCookie(), readDataParaForm.getVehicleId());
                     log.info(" 线程 {} 保存数据成功", Thread.currentThread().getName());
-
-                    Thread.sleep(3000);
+                    int interval = readDataParaForm.getInterval();
+                    Thread.sleep( interval > 0 ? interval * 1000 : 3000);
                 }
                 log.info("线程 {} 停止", Thread.currentThread().getName());
             }catch (InterruptedException ie) {
