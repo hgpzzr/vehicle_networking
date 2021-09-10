@@ -68,10 +68,5 @@ public class VehicleController {
 		return vehicleService.selectVehicles(categoryId,licenseNumber);
 	}
 
-	@PostMapping("/getOilConsume")
-	@ApiOperation("获取车辆的油耗")
-	public ResultVO getOilConsume(@RequestBody @Valid HistoricalPositionFrom historicalPositionFrom){
-		return vehicleService.getVehicleHisOilUsed(historicalPositionFrom);
-	}
 
 }

@@ -5,6 +5,7 @@ import com.example.vehicle_networking.entity.Vehicle;
 import com.example.vehicle_networking.enums.OperatingStatusEnum;
 import com.example.vehicle_networking.enums.ResultEnum;
 import com.example.vehicle_networking.form.AddVehicleForm;
+import com.example.vehicle_networking.form.ChangeLockedState;
 import com.example.vehicle_networking.form.ChangeRunningState;
 import com.example.vehicle_networking.form.UpdateVehicleForm;
 import com.example.vehicle_networking.mapper.VehicleMapper;
@@ -18,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author hgp
@@ -106,11 +108,5 @@ public class VehicleServiceImpl implements VehicleService {
 		else {
 			return ResultVOUtil.success(vehicleMapper.fuzzyQuery(categoryId,licenseNumber,null));
 		}
-	}
-
-	@Override
-	public ResultVO getVehicleHisOilUsed(Integer vehicleId) {
-
-		return null;
 	}
 }
