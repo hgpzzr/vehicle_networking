@@ -67,6 +67,4 @@ public class VehicleController {
 	public ResultVO selectVehicles(Integer categoryId,String licenseNumber){
 		return vehicleService.selectVehicles(categoryId,licenseNumber);
 	}
-
-
 }

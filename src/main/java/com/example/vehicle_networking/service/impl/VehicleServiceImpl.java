@@ -104,6 +104,8 @@ public class VehicleServiceImpl implements VehicleService {
 	public ResultVO getVehicleHisOilUsed(HistoricalPositionFrom historicalFrom) {
 		List<OilConsumptionRecord> historicalOilConsumptionRecord = oilConsumptionRecordMapper.getHistoricalOilConsumptionRecord(historicalFrom);
 		return ResultVOUtil.success(historicalOilConsumptionRecord);
+	}
+	@Override
 	public ResultVO updateLockedState(ChangeLockedState form) {
 		Vehicle vehicle = vehicleMapper.selectByPrimaryKey(form.getVehicleId());
 		vehicle.setLockedState(form.getLockedState());
