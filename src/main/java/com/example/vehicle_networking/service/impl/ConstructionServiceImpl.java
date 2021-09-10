@@ -38,6 +38,7 @@ public class ConstructionServiceImpl implements ConstructionService {
 		constructionSite.setUpdateTime(new Date());
 		constructionSite.setLatitude(String.valueOf(form.getLatitude()));
 		constructionSite.setLongitude(String.valueOf(form.getLongitude()));
+		constructionSite.setConstructionSiteName(form.getConstructionSiteName());
 		int insert = constructionSiteMapper.insert(constructionSite);
 		if (insert != 1) {
 			return ResultVOUtil.error(ResultEnum.DATABASE_OPTION_ERROR);

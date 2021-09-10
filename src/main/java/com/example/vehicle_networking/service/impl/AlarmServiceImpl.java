@@ -1,6 +1,8 @@
 package com.example.vehicle_networking.service.impl;
 
 import com.example.vehicle_networking.entity.*;
+import com.example.vehicle_networking.enums.LockStatusEnum;
+import com.example.vehicle_networking.enums.OperatingStatusEnum;
 import com.example.vehicle_networking.mapper.*;
 import com.example.vehicle_networking.service.AlarmService;
 import com.example.vehicle_networking.service.UserService;
@@ -56,12 +58,12 @@ public class AlarmServiceImpl implements AlarmService {
 	private String inFence;
 
 	@Override
-	@Scheduled(cron = "0 */1 * * * ?")
+	@Scheduled(cron = "*/5 * * * * ?")
 	public ResultVO alarm() {
 		List<Vehicle> vehicleList = vehicleMapper.selectAll();
 		List<AlarmRecord> alarmRecordList = new ArrayList<>();
 		for (Vehicle vehicle : vehicleList) {
-			if (vehicle.getRunningState() != 2 || vehicle.getLockedState() == 1) {
+			if (vehicle.getRunningState() != OperatingStatusEnum.RUNNING.getValue() || vehicle.getLockedState() == LockStatusEnum.LOCKED.getValue()) {
 				continue;
 			}
 			RealTimeData realTimeData = realTimeDataMapper.getRealTimeDataOneByVehicleId(vehicle.getVehicleId());
@@ -118,11 +120,12 @@ public class AlarmServiceImpl implements AlarmService {
 					return ResultVOUtil.success();
 				}
 				List<AlarmRecord> alarmRecordList = alarmRecordMapper.selectByVehicleId(vehicleId);
+				log.info("alarmRecordList:{}",alarmRecordList);
 				for (AlarmRecord alarmRecord : alarmRecordList) {
 					AlarmRecordVO alarmRecordVO = new AlarmRecordVO();
 					BeanUtils.copyProperties(alarmRecord, alarmRecordVO);
 					alarmRecordVO.setCreateTime(simpleDateFormat.format(alarmRecord.getCreateTime()));
-					alarmRecordList.add(alarmRecord);
+					alarmRecordVOList.add(alarmRecordVO);
 				}
 			} else {
 				List<Vehicle> vehicleList = vehicleMapper.selectByUserId(currentUser.getUserId());
@@ -175,7 +178,12 @@ public class AlarmServiceImpl implements AlarmService {
 			// 查出对应用户的所有电子围栏
 			for (ConstructionSite constructionSite : constructionSiteList) {
 				ElectronicFence electronicFence = electronicFenceMapper.selectByConstructionId(constructionSite.getConstructionSiteId());
+				if(electronicFence == null){
+					continue;
+				}
 				// 开始对比数据，记录进出围栏数据
+				log.info("latestPosition:{}",latestPosition.toString());
+				log.info("electronicFence:{}",electronicFence.toString());
 				double newDistance = GetDistanceUtil.getDistance(new Double(latestPosition.getLatitude()),new Double(latestPosition.getLongitude()),new Double(electronicFence.getLatitude()),new Double(electronicFence.getLongitude()));
 				double oldDistance = GetDistanceUtil.getDistance(new Double(secondPosition.getLatitude()),new Double(secondPosition.getLongitude()),new Double(electronicFence.getLatitude()),new Double(electronicFence.getLongitude()));
 				if((newDistance - electronicFence.getRadius()) > 0 && (oldDistance-electronicFence.getRadius()) < 0){

@@ -95,11 +95,11 @@ public class VehicleServiceImpl implements VehicleService {
 			Vehicle latestVehicle = vehicleMapper.selectByPrimaryKey(vehicle.getVehicleId());
 
 			Double meal =  latestVehicle.getMileage() - vehicle.getMileage();
-			// 每公里耗油 10
+			// 每公里耗油
 			Double oilConsume = meal * baseConfig.getPerMealOilConsume();
 
 			latestConsumption.setOilConsumption(oilConsume);
-			long l = (System.currentTimeMillis() - latestConsumption.getCreateTime().getTime())/ 1000 * 60 * 60;
+			long l = (System.currentTimeMillis() - latestConsumption.getCreateTime().getTime())/ ( 1000 * 60 * 60 );
 			latestConsumption.setWorkTime(Double.valueOf(l));
 			oilConsumptionRecordMapper.updateByPrimaryKey(latestConsumption);
 		}
@@ -113,6 +113,7 @@ public class VehicleServiceImpl implements VehicleService {
 			oilConsumptionRecord.setWorkTime(0.0);
 			oilConsumptionRecord.setCreateTime(new Date());
 			oilConsumptionRecordMapper.insert(oilConsumptionRecord);
+
 		}
 		int update = vehicleMapper.updateByPrimaryKey(vehicle);
 		if(update != 1){
@@ -128,6 +129,9 @@ public class VehicleServiceImpl implements VehicleService {
 	@Override
 	public ResultVO updateLockedState(ChangeLockedState form) {
 		Vehicle vehicle = vehicleMapper.selectByPrimaryKey(form.getVehicleId());
+		if(vehicle.getRunningState() == 2){
+			return ResultVOUtil.error(ResultEnum.RUNNING_CAR_LOCK_ERROR);
+		}
 		vehicle.setLockedState(form.getLockedState());
 		int update = vehicleMapper.updateByPrimaryKey(vehicle);
 		if(update != 1){
