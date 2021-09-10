@@ -34,4 +34,16 @@ public class VehicleCategoryController {
 	public ResultVO delete(Integer categoryId){
 		return vehicleCategoryService.delete(categoryId);
 	}
+
+	@PutMapping("/update")
+	@ApiOperation("更新分类")
+	public ResultVO update(Integer categoryId,String categoryName){
+		return vehicleCategoryService.update(categoryId,categoryName);
+	}
+
+	@GetMapping("/select")
+	@ApiOperation("查询分类")
+	public ResultVO selectAll(){
+		return vehicleCategoryService.selectAll();
+	}
 }

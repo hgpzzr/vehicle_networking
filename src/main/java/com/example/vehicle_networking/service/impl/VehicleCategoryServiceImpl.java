@@ -42,4 +42,23 @@ public class VehicleCategoryServiceImpl implements VehicleCategoryService {
 		}
 		return ResultVOUtil.success("删除成功");
 	}
+
+	@Override
+	public ResultVO update(Integer categoryId, String categoryName) {
+		if(categoryId == null || categoryName == null){
+			return ResultVOUtil.error(ResultEnum.PARAM_NULL_ERROR);
+		}
+		VehicleCategory vehicleCategory = vehicleCategoryMapper.selectByPrimaryKey(categoryId);
+		vehicleCategory.setCategoryName(categoryName);
+		int update = vehicleCategoryMapper.updateByPrimaryKey(vehicleCategory);
+		if(update != 1){
+			return ResultVOUtil.error(ResultEnum.DATABASE_OPTION_ERROR);
+		}
+		return ResultVOUtil.success("更新成功");
+	}
+
+	@Override
+	public ResultVO selectAll() {
+		return ResultVOUtil.success(vehicleCategoryMapper.selectAll());
+	}
 }
