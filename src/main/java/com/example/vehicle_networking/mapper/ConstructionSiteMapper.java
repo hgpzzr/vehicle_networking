@@ -15,6 +15,8 @@ public interface ConstructionSiteMapper {
 
     List<ConstructionSite> selectByUserId(Integer userId);
 
+    List<ConstructionSite> selectByUserIdAndConstructionId(Integer userId,Integer constructionSiteId);
+
     List<ConstructionSite> selectAll();
 
     int updateByPrimaryKey(ConstructionSite record);
