@@ -42,7 +42,7 @@ public class AlarmServiceImpl implements AlarmService {
 	private UserService userService;
 
 	@Override
-	@Scheduled(cron = "* */1 * * * ?")
+	@Scheduled(cron = "0 */1 * * * ?")
 	public ResultVO alarm() {
 		List<Vehicle> vehicleList = vehicleMapper.selectAll();
 		List<AlarmRecord> alarmRecordList = new ArrayList<>();
