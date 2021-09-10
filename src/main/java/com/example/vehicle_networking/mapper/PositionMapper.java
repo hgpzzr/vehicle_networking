@@ -31,4 +31,6 @@ public interface PositionMapper {
      * @return
      */
     Position getLatestPosition(Integer vehicleId);
+
+    Position getSecondPosition(Integer vehicleId);
 }

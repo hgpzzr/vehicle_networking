@@ -8,6 +8,7 @@ import com.example.vehicle_networking.entity.Vehicle;
 import com.example.vehicle_networking.enums.OperatingStatusEnum;
 import com.example.vehicle_networking.enums.ResultEnum;
 import com.example.vehicle_networking.form.AddVehicleForm;
+import com.example.vehicle_networking.form.ChangeLockedState;
 import com.example.vehicle_networking.form.ChangeRunningState;
 import com.example.vehicle_networking.form.HistoricalPositionFrom;
 import com.example.vehicle_networking.form.UpdateVehicleForm;
@@ -91,33 +92,21 @@ public class VehicleServiceImpl implements VehicleService {
 		vehicle.setRunningState(form.getRunningState());
 		if (form.getRunningState().equals(OperatingStatusEnum.NOT_RUNNING.getValue())
 				|| form.getRunningState().equals(OperatingStatusEnum.FLAMEOUT.getValue())){
-			OilConsumptionRecord latestConsumption = oilConsumptionRecordMapper.getLatestConsumption(form.getVehicleId());
-
-			// 停止收集线程
 			ReadDataThread.stopTask();
-			Vehicle latestVehicle = vehicleMapper.selectByPrimaryKey(vehicle.getVehicleId());
-
-			Double meal =  latestVehicle.getMileage() - vehicle.getMileage();
-			// 每公里耗油 10
-			Double oilConsume = meal * baseConfig.getPerMealOilConsume();
-
-			latestConsumption.setOilConsumption(oilConsume);
-			long l = (System.currentTimeMillis() - latestConsumption.getCreateTime().getTime())/ 1000 * 60 * 60;
-			latestConsumption.setWorkTime(Double.valueOf(l));
-			oilConsumptionRecordMapper.updateByPrimaryKey(latestConsumption);
 		}
-
-		// 如果是启动车辆，需要添加油耗的初始记录
-		if (form.getRunningState().equals(OperatingStatusEnum.RUNNING.getValue())){
-			OilConsumptionRecord oilConsumptionRecord = new OilConsumptionRecord();
-			oilConsumptionRecord.setVehicleId(form.getVehicleId());
-			oilConsumptionRecord.setDate(new Date());
-			oilConsumptionRecord.setOilConsumption(0.0);
-			oilConsumptionRecord.setWorkTime(0.0);
-			oilConsumptionRecord.setCreateTime(new Date());
-			oilConsumptionRecordMapper.insert(oilConsumptionRecord);
+		int update = vehicleMapper.updateByPrimaryKey(vehicle);
+		if(update != 1){
+			return ResultVOUtil.error(ResultEnum.DATABASE_OPTION_ERROR);
 		}
-
+		return ResultVOUtil.success("更新成功");
+	}
+	@Override
+	public ResultVO getVehicleHisOilUsed(HistoricalPositionFrom historicalFrom) {
+		List<OilConsumptionRecord> historicalOilConsumptionRecord = oilConsumptionRecordMapper.getHistoricalOilConsumptionRecord(historicalFrom);
+		return ResultVOUtil.success(historicalOilConsumptionRecord);
+	public ResultVO updateLockedState(ChangeLockedState form) {
+		Vehicle vehicle = vehicleMapper.selectByPrimaryKey(form.getVehicleId());
+		vehicle.setLockedState(form.getLockedState());
 		int update = vehicleMapper.updateByPrimaryKey(vehicle);
 		if(update != 1){
 			return ResultVOUtil.error(ResultEnum.DATABASE_OPTION_ERROR);
@@ -126,8 +115,14 @@ public class VehicleServiceImpl implements VehicleService {
 	}
 
 	@Override
-	public ResultVO getVehicleHisOilUsed(HistoricalPositionFrom historicalFrom) {
-		List<OilConsumptionRecord> historicalOilConsumptionRecord = oilConsumptionRecordMapper.getHistoricalOilConsumptionRecord(historicalFrom);
-		return ResultVOUtil.success(historicalOilConsumptionRecord);
+	public ResultVO selectVehicles(Integer categoryId,String licenseNumber) {
+		User currentUser = userService.getCurrentUser();
+		if(currentUser.getRole() == 0){
+			List<Vehicle> vehicleList = vehicleMapper.fuzzyQuery(categoryId,licenseNumber,currentUser.getUserId());
+			return ResultVOUtil.success(vehicleList);
+		}
+		else {
+			return ResultVOUtil.success(vehicleMapper.fuzzyQuery(categoryId,licenseNumber,null));
+		}
 	}
 }
