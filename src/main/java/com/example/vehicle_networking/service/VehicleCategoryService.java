@@ -14,4 +14,11 @@ public interface VehicleCategoryService {
 	 * @return
 	 */
 	ResultVO insert(String categoryName);
+
+	/**
+	 * 删除分类
+	 * @param categoryId
+	 * @return
+	 */
+	ResultVO delete(Integer categoryId);
 }
