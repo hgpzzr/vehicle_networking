@@ -46,7 +46,7 @@ base-config:
   collect-interval: 3000
 alarm:
   reason:
-    spped: "车速过快"
+    speed: "车速过快"
     temperature: "发动机温度过高"
     inclination: "车辆过于倾斜"
     out: "出电子围栏"
