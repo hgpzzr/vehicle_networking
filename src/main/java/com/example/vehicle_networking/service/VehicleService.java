@@ -33,7 +33,17 @@ public interface VehicleService {
 
 	ResultVO updateRunningState(ChangeRunningState form);
 
-	ResultVO getVehicleHisOilUsed(HistoricalPositionFrom historicalPositionFrom);
+	/**
+	 * 改变车辆锁机状态
+	 * @param form
+	 * @return
+	 */
+	ResultVO updateLockedState(ChangeLockedState form);
 
+	/**
+	 * 根据权限查询车辆，普通用户查询自己的车辆，管理员查询所有车辆
+	 * @return
+	 */
 	ResultVO selectVehicles(Integer categoryId,String licenseNumber);
+	ResultVO getVehicleHisOilUsed(HistoricalPositionFrom historicalPositionFrom);
 }

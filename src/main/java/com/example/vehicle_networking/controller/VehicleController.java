@@ -69,4 +69,10 @@ public class VehicleController {
 	}
 
 
+	@PutMapping("/update_lockedState")
+	@ApiOperation("改变车辆锁机状态")
+	public ResultVO updateLockedState(@Valid ChangeLockedState form){
+		return vehicleService.updateLockedState(form);
+	}
+
 }
