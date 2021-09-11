@@ -1,12 +1,16 @@
 package com.example.vehicle_networking.service.impl;
 
 import com.example.vehicle_networking.entity.AccidentRecord;
+import com.example.vehicle_networking.entity.User;
+import com.example.vehicle_networking.entity.Vehicle;
 import com.example.vehicle_networking.enums.ResultEnum;
 import com.example.vehicle_networking.form.AccidentRecordForm;
 import com.example.vehicle_networking.form.UpdateAccidentRecordForm;
 import com.example.vehicle_networking.mapper.AccidentRecordMapper;
 import com.example.vehicle_networking.mapper.MaintenanceRecordMapper;
+import com.example.vehicle_networking.mapper.VehicleMapper;
 import com.example.vehicle_networking.service.AccidentRecordService;
+import com.example.vehicle_networking.service.UserService;
 import com.example.vehicle_networking.utils.ResultVOUtil;
 import com.example.vehicle_networking.vo.AccidentRecordVo;
 import com.example.vehicle_networking.vo.ResultVO;
@@ -34,6 +38,12 @@ public class AccidentRecordServiceImpl implements AccidentRecordService {
 
     @Autowired
     private AccidentRecordMapper accidentRecordMapper;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private VehicleMapper vehicleMapper;
 
 
     @Override
@@ -74,14 +84,17 @@ public class AccidentRecordServiceImpl implements AccidentRecordService {
 
     @Override
     public ResultVO getOneRecord(Integer accidentId) {
+        List<Integer> currentUserVehicleIds = getCurrentUserVehicleIds();
         AccidentRecord accidentRecord = accidentRecordMapper.selectByPrimaryKey(accidentId);
-        AccidentRecordVo recordVo = new AccidentRecordVo();
-        BeanUtils.copyProperties(accidentRecord,recordVo);
-        recordVo.setCreateTime(dateFormat(accidentRecord.getCreateTime()));
-        if(accidentRecord == null){
-            return ResultVOUtil.error(ResultEnum.ACCIDENT_RECORD_IS_EMPTY);
+        AccidentRecordVo recordVo = null;
+        if (currentUserVehicleIds.contains(accidentRecord.getVehicleId())) {
+            recordVo = new AccidentRecordVo();
+            BeanUtils.copyProperties(accidentRecord,recordVo);
+            recordVo.setCreateTime(dateFormat(accidentRecord.getCreateTime()));
+            return ResultVOUtil.success(recordVo);
         }
-        return ResultVOUtil.success(recordVo);
+        return ResultVOUtil.error(ResultEnum.ACCIDENT_RECORD_IS_EMPTY);
+
     }
 
 
@@ -89,13 +102,18 @@ public class AccidentRecordServiceImpl implements AccidentRecordService {
     public ResultVO getAllRecords() {
         List<AccidentRecord> records = accidentRecordMapper.selectAll();
         List<AccidentRecordVo> recordVoList = new ArrayList<>();
+        List<Integer> currentUserVehicleIds = getCurrentUserVehicleIds();
         if(!records.isEmpty()){
             for(AccidentRecord record : records){
-                AccidentRecordVo vo = new AccidentRecordVo();
-                BeanUtils.copyProperties(record,vo);
-                vo.setCreateTime(dateFormat(record.getCreateTime()));
-                recordVoList.add(vo);
+                if (currentUserVehicleIds.contains(record.getVehicleId())) {
+                    AccidentRecordVo vo = new AccidentRecordVo();
+                    BeanUtils.copyProperties(record,vo);
+                    vo.setCreateTime(dateFormat(record.getCreateTime()));
+                    recordVoList.add(vo);
+                }
             }
+        }
+        if(!recordVoList.isEmpty()){
             return ResultVOUtil.success(recordVoList);
         }
         return ResultVOUtil.error(ResultEnum.ACCIDENT_RECORD_IS_EMPTY);
@@ -105,19 +123,22 @@ public class AccidentRecordServiceImpl implements AccidentRecordService {
     @Override
     public ResultVO getRecordsByVehicleId(Integer vehicleId) {
         List<AccidentRecord> accidentRecords = accidentRecordMapper.selectAll();
-        if(accidentRecords.isEmpty()){
-            return ResultVOUtil.error(ResultEnum.ACCIDENT_RECORD_IS_EMPTY);
-        }
+        List<Integer> currentUserVehicleIds = getCurrentUserVehicleIds();
         List<AccidentRecordVo> voList = new ArrayList<>();
-        for(AccidentRecord record : accidentRecords){
-            if(record.getVehicleId().equals(vehicleId)){
-                AccidentRecordVo vo = new AccidentRecordVo();
-                BeanUtils.copyProperties(record,vo);
-                vo.setCreateTime(dateFormat(record.getCreateTime()));
-                voList.add(vo);
+        if (currentUserVehicleIds.contains(vehicleId)) {
+            for(AccidentRecord record : accidentRecords){
+                if(record.getVehicleId().equals(vehicleId)){
+                    AccidentRecordVo vo = new AccidentRecordVo();
+                    BeanUtils.copyProperties(record,vo);
+                    vo.setCreateTime(dateFormat(record.getCreateTime()));
+                    voList.add(vo);
+                }
             }
         }
-        return ResultVOUtil.success(voList);
+        if(!voList.isEmpty()){
+            return ResultVOUtil.success(voList);
+        }
+        return ResultVOUtil.error(ResultEnum.ACCIDENT_RECORD_IS_EMPTY);
     }
 
 
@@ -139,5 +160,18 @@ public class AccidentRecordServiceImpl implements AccidentRecordService {
         SimpleDateFormat sdf =   new SimpleDateFormat( " yyyy-MM-dd HH:mm:ss " );
         String time = sdf.format(date);
         return time;
+    }
+
+
+    private List<Integer> getCurrentUserVehicleIds(){
+        User user = userService.getCurrentUser();
+        List<Vehicle> vehicles = vehicleMapper.selectAll();
+        List<Integer> currentUserVehicleIds = new ArrayList<>();
+        for(Vehicle vehicle : vehicles){
+            if(vehicle.getUserId().equals(user.getUserId())){
+                currentUserVehicleIds.add(vehicle.getVehicleId());
+            }
+        }
+        return currentUserVehicleIds;
     }
 }

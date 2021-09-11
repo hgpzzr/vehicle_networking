@@ -26,6 +26,7 @@ public enum  ResultEnum {
     DATA_READ_OPENED(2000,"读取实时数据线程已开启"),
     DATA_READ_SHUT_DOWNED(2001,"读取实时数据线程已关闭"),
     LOCKED_NOT_RUNNING(2002,"车辆锁定或未运行"),
+
     ACCIDENT_RECORD_IS_EMPTY(3000,"车辆事故记录为空"),
     ACCIDENT_RECORD_ADD_ERROR(3001,"车辆事故记录添加失败"),
     ACCIDENT_RECORD_DELETE_ERROR(3002,"车辆事故记录删除失败"),
