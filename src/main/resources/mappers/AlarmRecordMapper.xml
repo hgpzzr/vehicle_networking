@@ -24,7 +24,7 @@
       create_time, `type`,numerical_value)
     values
     <foreach collection="list" item="item" separator=",">
-    (#{item.alarmId}, #{itemvehicleId}, #{item.alarmReason},
+    (#{item.alarmId}, #{item.vehicleId}, #{item.alarmReason},
       #{item.createTime}, #{item.type},#{item.numericalValue})
     </foreach>
   </insert>
@@ -45,5 +45,14 @@
   <select id="selectAll" resultMap="BaseResultMap" >
     select alarm_id, vehicle_id, alarm_reason, create_time, `type`,numerical_value
     from alarm_record
+  </select>
+  <select id="selectByVehicleId" resultMap="BaseResultMap" >
+    select alarm_id, vehicle_id, alarm_reason, create_time, `type`,numerical_value
+    from alarm_record
+    <where>
+        1 =1
+      <if test="vehicleId != null"> and vehicle_id = #{vehicleId,jdbcType=INTEGER}</if>
+    </where>
+    order by create_time desc
   </select>
 </mapper>

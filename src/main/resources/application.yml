@@ -42,5 +42,18 @@ jwt:
 
 server:
   port: 8888
-base-config:
+basic:
   collect-interval: 3000
+  per-meal-oil-consume: 1
+alarm:
+  threshold:
+    speed-max: 95
+    temperature-max: 100
+    inclination-max: 15
+  reason:
+    speed: "车速过快"
+    temperature: "发动机温度过高"
+    inclination: "车辆过于倾斜"
+    out: "出电子围栏"
+    in: "进电子围栏"
+

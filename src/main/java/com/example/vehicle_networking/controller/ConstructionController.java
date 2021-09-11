@@ -44,10 +44,10 @@ public class ConstructionController {
 		return constructionService.updateConstruction(form);
 	}
 
-	//git
-	@GetMapping("/test111111231231232131312312312")
-	public ResultVO test(){
-		return ResultVOUtil.success();
+	@ApiOperation("根据工地编号查询（可不传），自动根据权限返回数据")
+	@GetMapping("/select")
+	public ResultVO selectConstructions(Integer constructionId){
+		return constructionService.selectConstructions(constructionId);
 	}
 
 }

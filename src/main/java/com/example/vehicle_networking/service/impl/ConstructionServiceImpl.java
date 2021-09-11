@@ -10,12 +10,16 @@ import com.example.vehicle_networking.mapper.ConstructionSiteMapper;
 import com.example.vehicle_networking.service.ConstructionService;
 import com.example.vehicle_networking.service.UserService;
 import com.example.vehicle_networking.utils.ResultVOUtil;
+import com.example.vehicle_networking.vo.ConstructionVO;
 import com.example.vehicle_networking.vo.ResultVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author hgp
@@ -38,6 +42,7 @@ public class ConstructionServiceImpl implements ConstructionService {
 		constructionSite.setUpdateTime(new Date());
 		constructionSite.setLatitude(String.valueOf(form.getLatitude()));
 		constructionSite.setLongitude(String.valueOf(form.getLongitude()));
+		constructionSite.setConstructionSiteName(form.getConstructionSiteName());
 		int insert = constructionSiteMapper.insert(constructionSite);
 		if (insert != 1) {
 			return ResultVOUtil.error(ResultEnum.DATABASE_OPTION_ERROR);
@@ -61,16 +66,47 @@ public class ConstructionServiceImpl implements ConstructionService {
 	public ResultVO updateConstruction(UpdateConstructionForm form) {
 		ConstructionSite constructionSite = constructionSiteMapper.selectByPrimaryKey(form.getConstructionId());
 		User currentUser = userService.getCurrentUser();
-		if(constructionSite.getUserId() != currentUser.getUserId() && currentUser.getRole() == 0){
+		if (constructionSite.getUserId() != currentUser.getUserId() && currentUser.getRole() == 0) {
 			return ResultVOUtil.error(ResultEnum.NOT_SELF_OPTION_ERROR);
 		}
 		constructionSite.setConstructionSiteName(form.getConstructionSiteName());
 		constructionSite.setLongitude(String.valueOf(form.getLongitude()));
 		constructionSite.setLatitude(String.valueOf(form.getLatitude()));
 		int update = constructionSiteMapper.updateByPrimaryKey(constructionSite);
-		if(update != 1){
+		if (update != 1) {
 			return ResultVOUtil.error(ResultEnum.DATABASE_OPTION_ERROR);
 		}
 		return ResultVOUtil.success("更新成功");
+	}
+
+	@Override
+	public ResultVO selectConstructions(Integer constructionId) {
+		User currentUser = userService.getCurrentUser();
+		List<ConstructionVO> constructionVOList = new ArrayList<>();
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		if (currentUser.getRole() == 0) {
+			List<ConstructionSite> constructionSiteList = constructionSiteMapper.selectByUserIdAndConstructionId(currentUser.getUserId(), constructionId);
+			for (ConstructionSite constructionSite : constructionSiteList) {
+				ConstructionVO constructionVO = new ConstructionVO();
+				BeanUtils.copyProperties(constructionSite,constructionVO);
+				constructionVO.setCreateTime(simpleDateFormat.format(constructionSite.getCreateTime()));
+				constructionVO.setUpdateTime(simpleDateFormat.format(constructionSite.getUpdateTime()));
+				constructionVO.setLatitude(Double.valueOf(constructionSite.getLatitude()));
+				constructionVO.setLongitude(Double.valueOf(constructionSite.getLongitude()));
+				constructionVOList.add(constructionVO);
+			}
+		}else {
+			List<ConstructionSite> constructionSiteList = constructionSiteMapper.selectByUserIdAndConstructionId(null, constructionId);
+			for (ConstructionSite constructionSite : constructionSiteList) {
+				ConstructionVO constructionVO = new ConstructionVO();
+				BeanUtils.copyProperties(constructionSite,constructionVO);
+				constructionVO.setCreateTime(simpleDateFormat.format(constructionSite.getCreateTime()));
+				constructionVO.setUpdateTime(simpleDateFormat.format(constructionSite.getUpdateTime()));
+				constructionVO.setLatitude(Double.valueOf(constructionSite.getLatitude()));
+				constructionVO.setLongitude(Double.valueOf(constructionSite.getLongitude()));
+				constructionVOList.add(constructionVO);
+			}
+		}
+		return ResultVOUtil.success(constructionVOList);
 	}
 }

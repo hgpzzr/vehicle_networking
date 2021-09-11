@@ -23,5 +23,10 @@ public interface RealTimeDataMapper {
      */
     RealTimeData getRealTimeDataOneByVehicleId(Integer vehicleId);
 
-
+    /**
+     * 第二新数据
+     * @param vehicleId
+     * @return
+     */
+    RealTimeData getSecondRealTimeDataByVehicleId(Integer vehicleId);
 }
