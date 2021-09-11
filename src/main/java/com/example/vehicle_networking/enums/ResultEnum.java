@@ -34,7 +34,6 @@ public enum  ResultEnum {
     ACCIDENT_RECORD_UPDATE_ERROR(3003,"车辆事故记录编辑失败"),
 
 
-
     MAINTENANCE_RECORD_IS_EMPTY(3100,"车辆维修记录为空"),
     MAINTENANCE_RECORD_ADD_ERROR(3101,"车辆维修记录添加失败"),
     MAINTENANCE_RECORD_DELETE_ERROR(3102,"车辆维修记录删除失败"),
