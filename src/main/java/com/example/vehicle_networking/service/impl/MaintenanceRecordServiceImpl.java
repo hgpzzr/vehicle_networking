@@ -2,6 +2,8 @@ package com.example.vehicle_networking.service.impl;
 
 import com.example.vehicle_networking.entity.MaintenanceInfo;
 import com.example.vehicle_networking.entity.MaintenanceRecord;
+import com.example.vehicle_networking.entity.User;
+import com.example.vehicle_networking.entity.Vehicle;
 import com.example.vehicle_networking.enums.ResultEnum;
 import com.example.vehicle_networking.form.MaintenanceInfoForm;
 import com.example.vehicle_networking.form.MaintenanceRecordForm;
@@ -9,7 +11,9 @@ import com.example.vehicle_networking.form.UpdateMaintenanceInfoForm;
 import com.example.vehicle_networking.form.UpdateMaintenanceRecordForm;
 import com.example.vehicle_networking.mapper.MaintenanceInfoMapper;
 import com.example.vehicle_networking.mapper.MaintenanceRecordMapper;
+import com.example.vehicle_networking.mapper.VehicleMapper;
 import com.example.vehicle_networking.service.MaintenanceRecordService;
+import com.example.vehicle_networking.service.UserService;
 import com.example.vehicle_networking.utils.ResultVOUtil;
 import com.example.vehicle_networking.vo.MaintenanceInfoVo;
 import com.example.vehicle_networking.vo.MaintenanceRecordVo;
@@ -42,6 +46,13 @@ public class MaintenanceRecordServiceImpl implements MaintenanceRecordService {
 
     @Autowired
     private MaintenanceInfoMapper maintenanceInfoMapper;
+
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private VehicleMapper vehicleMapper;
 
     @Override
     public ResultVO addRecord(MaintenanceRecordForm maintenanceRecordForm) {
@@ -82,50 +93,58 @@ public class MaintenanceRecordServiceImpl implements MaintenanceRecordService {
 
     @Override
     public ResultVO getOneRecord(Integer maintenanceId) {
-        MaintenanceRecordVo maintenanceRecordVo = new MaintenanceRecordVo();
+        List<Integer> currentUserVehicleIds = getCurrentUserVehicleIds();
         MaintenanceRecord maintenanceRecord = maintenanceRecordMapper.selectByPrimaryKey(maintenanceId);
-        if(maintenanceRecord == null){
-            ResultVOUtil.error(ResultEnum.MAINTENANCE_RECORD_IS_EMPTY);
+        if (currentUserVehicleIds.contains(maintenanceRecord.getVehicleId())) {
+            MaintenanceRecordVo maintenanceRecordVo = new MaintenanceRecordVo();
+            BeanUtils.copyProperties(maintenanceRecord,maintenanceRecordVo);
+            maintenanceRecordVo.setCreatTime(dateFormat(maintenanceRecord.getCreateTime()));
+            return ResultVOUtil.success(maintenanceRecordVo);
         }
-        BeanUtils.copyProperties(maintenanceRecord,maintenanceRecordVo);
-        maintenanceRecordVo.setCreatTime(dateFormat(maintenanceRecord.getCreateTime()));
-        return ResultVOUtil.success(maintenanceRecordVo);
+
+           return  ResultVOUtil.error(ResultEnum.MAINTENANCE_RECORD_IS_EMPTY);
     }
 
 
     @Override
     public ResultVO getAllRecords() {
         List<MaintenanceRecordVo> voList = new ArrayList<>();
+        List<Integer> currentUserVehicleIds = getCurrentUserVehicleIds();
         List<MaintenanceRecord> maintenanceRecords = maintenanceRecordMapper.selectAll();
-        if(maintenanceRecords.isEmpty()){
-            return ResultVOUtil.error(ResultEnum.MAINTENANCE_RECORD_IS_EMPTY);
-        }
         for (MaintenanceRecord MR : maintenanceRecords){
-            MaintenanceRecordVo vo = new MaintenanceRecordVo();
-            BeanUtils.copyProperties(MR,vo);
-            vo.setCreatTime(dateFormat(MR.getCreateTime()));
-            voList.add(vo);
+            if (currentUserVehicleIds.contains(MR.getVehicleId())) {
+                MaintenanceRecordVo vo = new MaintenanceRecordVo();
+                BeanUtils.copyProperties(MR,vo);
+                vo.setCreatTime(dateFormat(MR.getCreateTime()));
+                voList.add(vo);
+            }
         }
-        return ResultVOUtil.success(voList);
+        if(!voList.isEmpty()){
+            return ResultVOUtil.success(voList);
+        }
+        return ResultVOUtil.error(ResultEnum.MAINTENANCE_RECORD_IS_EMPTY);
     }
 
 
     @Override
     public ResultVO getRecordsByVehicleId(Integer vehicleId) {
+        List<Integer> currentUserVehicleIds = getCurrentUserVehicleIds();
         List<MaintenanceRecordVo> voList = new ArrayList<>();
         List<MaintenanceRecord> maintenanceRecords = maintenanceRecordMapper.selectAll();
-        if(maintenanceRecords.isEmpty()){
-            return ResultVOUtil.error(ResultEnum.MAINTENANCE_RECORD_IS_EMPTY);
-        }
-        for (MaintenanceRecord record : maintenanceRecords){
-            if(record.getVehicleId().equals(vehicleId)){
-                MaintenanceRecordVo vo = new MaintenanceRecordVo();
-                BeanUtils.copyProperties(record,vo);
-                vo.setCreatTime(dateFormat(record.getCreateTime()));
-                voList.add(vo);
+        if (currentUserVehicleIds.contains(vehicleId)) {
+            for (MaintenanceRecord record : maintenanceRecords){
+                if(record.getVehicleId().equals(vehicleId)){
+                    MaintenanceRecordVo vo = new MaintenanceRecordVo();
+                    BeanUtils.copyProperties(record,vo);
+                    vo.setCreatTime(dateFormat(record.getCreateTime()));
+                    voList.add(vo);
+                }
             }
         }
-        return ResultVOUtil.success(voList);
+        if(!voList.isEmpty()){
+            return ResultVOUtil.success(voList);
+        }
+        return ResultVOUtil.error(ResultEnum.MAINTENANCE_RECORD_IS_EMPTY);
     }
 
 
@@ -205,5 +224,18 @@ public class MaintenanceRecordServiceImpl implements MaintenanceRecordService {
         SimpleDateFormat sdf =   new SimpleDateFormat( " yyyy-MM-dd HH:mm:ss " );
         String time = sdf.format(date);
         return time;
+    }
+
+
+    private List<Integer> getCurrentUserVehicleIds(){
+        User user = userService.getCurrentUser();
+        List<Vehicle> vehicles = vehicleMapper.selectAll();
+        List<Integer> currentUserVehicleIds = new ArrayList<>();
+        for(Vehicle vehicle : vehicles){
+            if(vehicle.getUserId().equals(user.getUserId())){
+                currentUserVehicleIds.add(vehicle.getVehicleId());
+            }
+        }
+        return currentUserVehicleIds;
     }
 }
