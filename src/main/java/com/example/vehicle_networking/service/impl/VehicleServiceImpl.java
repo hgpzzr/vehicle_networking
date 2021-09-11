@@ -1,6 +1,7 @@
 package com.example.vehicle_networking.service.impl;
 
 import com.example.vehicle_networking.config.BaseConfig;
+import com.example.vehicle_networking.config.CollectDataThreadConfig;
 import com.example.vehicle_networking.entity.OilConsumptionRecord;
 import com.example.vehicle_networking.entity.User;
 import com.example.vehicle_networking.entity.Vehicle;
@@ -24,6 +25,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author hgp
@@ -40,6 +42,8 @@ public class VehicleServiceImpl implements VehicleService {
 	private OilConsumptionRecordMapper oilConsumptionRecordMapper;
 	@Autowired
 	private BaseConfig baseConfig;
+	@Autowired
+	private CollectDataThreadConfig collectDataThreadConfig;
 
 
 	@Override
@@ -91,7 +95,9 @@ public class VehicleServiceImpl implements VehicleService {
 			OilConsumptionRecord latestConsumption = oilConsumptionRecordMapper.getLatestConsumption(form.getVehicleId());
 
 			// 停止收集线程
-			ReadDataThread.stopTask();
+			Map<Integer, ReadDataThread> readDataThreadMap = collectDataThreadConfig.getReadDataThreadMap();
+			ReadDataThread readDataThread = readDataThreadMap.get(vehicle.getVehicleId());
+			readDataThread.setFlag(false);
 			Vehicle latestVehicle = vehicleMapper.selectByPrimaryKey(vehicle.getVehicleId());
 
 			Double meal =  latestVehicle.getMileage() - vehicle.getMileage();

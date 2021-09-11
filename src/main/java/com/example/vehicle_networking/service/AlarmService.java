@@ -1,5 +1,6 @@
 package com.example.vehicle_networking.service;
 
+import com.example.vehicle_networking.entity.Position;
 import com.example.vehicle_networking.entity.RealTimeData;
 import com.example.vehicle_networking.vo.ResultVO;
 import org.springframework.stereotype.Service;
@@ -31,4 +32,11 @@ public interface AlarmService {
 
 
 	void alarmInfo(RealTimeData realTimeData);
+
+	/**
+	 * 判断是否进出电子围栏
+	 * @param latestPosition
+	 * @param secondPosition
+	 */
+	void accessRecordInfo(Position latestPosition, Position secondPosition);
 }

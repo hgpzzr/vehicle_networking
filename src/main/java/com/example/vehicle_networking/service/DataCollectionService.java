@@ -22,7 +22,7 @@ public interface DataCollectionService {
      * 获取读取数据的状态
      * @return
      */
-    ResultVO getStatusDataRead();
+    ResultVO getStatusDataRead(long vehicleId);
 
     /**
      * 开启或关闭实时数据读取

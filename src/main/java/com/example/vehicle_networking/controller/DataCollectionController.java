@@ -32,8 +32,8 @@ public class DataCollectionController {
     }
     @GetMapping("/getStatusDataRead")
     @ApiOperation("获取读取数据状态（关闭或开启）")
-    public ResultVO getStatusDataRead(){
-        return dataCollectionService.getStatusDataRead();
+    public ResultVO getStatusDataRead(@RequestParam("vehicleId") long vehicleId){
+        return dataCollectionService.getStatusDataRead(vehicleId);
     }
 
     /**

@@ -2,6 +2,7 @@ package com.example.vehicle_networking.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.example.vehicle_networking.config.BaseConfig;
+import com.example.vehicle_networking.config.CollectDataThreadConfig;
 import com.example.vehicle_networking.entity.OilConsumptionRecord;
 import com.example.vehicle_networking.entity.Position;
 import com.example.vehicle_networking.entity.RealTimeData;
@@ -19,6 +20,7 @@ import com.example.vehicle_networking.service.DataCollectionService;
 import com.example.vehicle_networking.service.VehicleService;
 import com.example.vehicle_networking.thread.ReadDataThread;
 import com.example.vehicle_networking.utils.GetDistanceUtil;
+import com.example.vehicle_networking.utils.ReadDataAPI;
 import com.example.vehicle_networking.utils.ResultVOUtil;
 import com.example.vehicle_networking.vo.ResultVO;
 import com.example.vehicle_networking.vo.readData.DataInfoDetail;
@@ -28,6 +30,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.*;
 import java.util.concurrent.locks.Lock;
@@ -41,8 +44,6 @@ import java.util.concurrent.locks.Lock;
 @Slf4j
 public class DataCollectionServiceImpl implements DataCollectionService {
 
-//    private volatile ReadDataThread collectDataThread;
-
     @Autowired
     private RestTemplateTo restTemplateTo;
     @Autowired
@@ -50,15 +51,11 @@ public class DataCollectionServiceImpl implements DataCollectionService {
     @Autowired
     private PositionMapper positionMapper;
     @Autowired
-    private VehicleService vehicleService;
-    @Autowired
     private VehicleMapper vehicleMapper;
     @Autowired
-    private BaseConfig baseConfig;
-    @Autowired
-    private ReadDataThread collectDataThread;
-    @Autowired
     private AlarmService alarmService;
+    @Autowired
+    private CollectDataThreadConfig collectDataThreadConfig;
 
     @Override
     public ResultVO getSpeedFromURL(String url, String cookie, Integer vehicleId) {
@@ -121,12 +118,17 @@ public class DataCollectionServiceImpl implements DataCollectionService {
         // 报警
         alarmService.alarmInfo(realTimeData);
 
+        // 是否进入电子围栏
+        alarmService.accessRecordInfo(latestPosition, position);
+
         return ResultVOUtil.success();
     }
 
     @Override
-    public ResultVO getStatusDataRead() {
-        return ResultVOUtil.success(collectDataThread == null ? false : collectDataThread.getStatus());
+    public ResultVO getStatusDataRead(long vehicleId) {
+        ReadDataThread readDataThread = collectDataThreadConfig.getReadDataThreadMap().get(Integer.valueOf((int) vehicleId));
+        log.info(" 车辆 数据采集线程 {} ",readDataThread);
+        return ResultVOUtil.success(readDataThread == null ? false : readDataThread.getStatus());
     }
 
     @Override
@@ -142,30 +144,29 @@ public class DataCollectionServiceImpl implements DataCollectionService {
 
     @Override
     public ResultVO openOrDownRealDataCollect(ReadDataParaForm readDataParaForm) {
+
+        // 首先检查状态，是否在运行或被锁
         if (!checkDataThreadStatus(readDataParaForm.getVehicleId())) {
             return ResultVOUtil.error(ResultEnum.LOCKED_NOT_RUNNING);
         }
-        if (collectDataThread == null){
-            synchronized (this){
-                if (collectDataThread == null){
-                    collectDataThread = new ReadDataThread("collectDataThread", readDataParaForm);
-                }
-            }
-        }
 
-        log.info(" 创建线程 {}",collectDataThread.getName());
-        collectDataThread.setReadDataParaForm(readDataParaForm);
-        boolean collectDataThreadStatus = collectDataThread.getStatus();
-        if (collectDataThreadStatus){
-            ReadDataThread.stopTask();
-            log.info("关闭线程：{}",collectDataThread.getName());
-            collectDataThread = null;
+        ExecutorService threadPool = collectDataThreadConfig.getThreadPool();
+
+        Vehicle vehicle = vehicleMapper.selectByPrimaryKey(readDataParaForm.getVehicleId());
+        Map<Integer, ReadDataThread> readDataThreadMap = collectDataThreadConfig.getReadDataThreadMap();
+        ReadDataThread collectDataThread = readDataThreadMap.get(vehicle.getVehicleId());
+        if (collectDataThread == null){
+            collectDataThread = new ReadDataThread("collectDataThread = carID -> " + vehicle.getVehicleId(), readDataParaForm);
+            collectDataThread.setFlag(true);
+            threadPool.execute(collectDataThread);
+            readDataThreadMap.put(vehicle.getVehicleId(), collectDataThread);
+            return ResultVOUtil.success(ResultEnum.DATA_READ_OPENED);
+        }else{
+            collectDataThread.interrupt();
+            collectDataThread.setFlag(false);
+            readDataThreadMap.remove(vehicle.getVehicleId());
             return ResultVOUtil.success(ResultEnum.DATA_READ_SHUT_DOWNED);
         }
-        collectDataThread.startTask();
-        collectDataThread.start();
-        log.info("开启线程：{}",collectDataThread.getName());
-        return ResultVOUtil.success(ResultEnum.DATA_READ_OPENED);
     }
 
     @Override

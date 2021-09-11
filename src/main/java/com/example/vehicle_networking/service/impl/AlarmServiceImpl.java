@@ -167,21 +167,27 @@ public class AlarmServiceImpl implements AlarmService {
 		return ResultVOUtil.success(alarmRecordVOList);
 	}
 
-	@Scheduled(cron = "0 */1 * * * ?")
+//	@Scheduled(cron = "0 */1 * * * ?")
 	@Override
 	public ResultVO accessRecord() {
+		accessRecordInfo(null,null);
+		return ResultVOUtil.success();
+	}
+
+	@Override
+	public void accessRecordInfo(Position latestPosition, Position secondPosition){
 		// 查出所有车辆
 		List<Vehicle> vehicleList = vehicleMapper.selectAll();
 		List<AlarmRecord> alarmRecordList = new ArrayList<>();
 		for (Vehicle vehicle : vehicleList) {
 			// 查出最新数据
-			Position latestPosition = positionMapper.getLatestPosition(vehicle.getVehicleId());
+			latestPosition = latestPosition == null ? positionMapper.getLatestPosition(vehicle.getVehicleId()) : latestPosition;
 			// 判断车辆运行状态
 			if (vehicle.getRunningState() != 2 || vehicle.getLockedState() == 1) {
 				continue;
 			}
 			// 查出第二新数据
-			Position secondPosition = positionMapper.getSecondPosition(vehicle.getVehicleId());
+			secondPosition = secondPosition == null ? positionMapper.getSecondPosition(vehicle.getVehicleId()) : secondPosition;
 			// 查出工地
 			List<ConstructionSite> constructionSiteList = constructionSiteMapper.selectByUserId(vehicle.getUserId());
 			// 查出对应用户的所有电子围栏
@@ -217,7 +223,5 @@ public class AlarmServiceImpl implements AlarmService {
 		if(alarmRecordList.size() != 0){
 			alarmRecordMapper.batchInsert(alarmRecordList);
 		}
-		return ResultVOUtil.success();
 	}
-
 }

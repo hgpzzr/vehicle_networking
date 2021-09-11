@@ -1,8 +1,10 @@
 package com.example.vehicle_networking.thread;
 
 import com.example.vehicle_networking.form.ReadDataParaForm;
+import com.example.vehicle_networking.mapper.VehicleMapper;
 import com.example.vehicle_networking.service.DataCollectionService;
 import com.example.vehicle_networking.utils.GetBeanUtil;
+import com.example.vehicle_networking.utils.ReadDataAPI;
 import lombok.extern.slf4j.Slf4j;
 /**
  * @author ：GO FOR IT
@@ -12,11 +14,12 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ReadDataThread extends Thread{
 
-    private static volatile boolean flag = false;
+    private volatile boolean flag = true;
 
-    public static void stopTask() {
+    public void stopTask() {
         flag = false;
     }
+
     public void startTask() {
         flag = true;
     }
@@ -30,8 +33,8 @@ public class ReadDataThread extends Thread{
         super(name);
     }
 
-    public static void setFlag(boolean flag) {
-        ReadDataThread.flag = flag;
+    public void setFlag(boolean flag) {
+        this.flag = flag;
     }
 
     public void setReadDataParaForm(ReadDataParaForm readDataParaForm) {
@@ -50,11 +53,11 @@ public class ReadDataThread extends Thread{
                 while (flag) {
                     DataCollectionService dataCollectionService = (DataCollectionService) GetBeanUtil.getBean("dataCollectionServiceImpl");
                     dataCollectionService.getSpeedFromURL(readDataParaForm.getUrl(), readDataParaForm.getCookie(), readDataParaForm.getVehicleId());
-                    log.info(" 线程 {} 保存数据成功", Thread.currentThread().getName());
+                    log.info(" 线程 {} 保存数据成功", getName());
                     int interval = readDataParaForm.getInterval();
                     Thread.sleep( interval > 0 ? interval * 1000 : 3000);
                 }
-                log.info("线程 {} 停止", Thread.currentThread().getName());
+                log.info("线程 {} 停止采集数据", getName());
             }catch (InterruptedException ie) {
                 System.out.println(Thread.currentThread().getName() +" ("+this.getState()+") catch InterruptedException.");
             }
