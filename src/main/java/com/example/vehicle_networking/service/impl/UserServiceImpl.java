@@ -98,8 +98,8 @@ public class UserServiceImpl implements UserService {
 		if (isHave) {
 			return ResultVOUtil.error(ResultEnum.USER_EXIST_ERROR);
 		}
-		// 判断密码长度
-		if (form.getUserName().length() < 6 || form.getUserName().length() > 18) {
+		// 判断用户名长度
+		if (form.getUserName().length() < 2 || form.getUserName().length() > 18) {
 			return ResultVOUtil.error(ResultEnum.USER_NAME_LENGTH_ERROR);
 		}
 		// 判断密码长度
