@@ -1,5 +1,6 @@
 package com.example.vehicle_networking.service.impl;
 
+import com.alibaba.excel.EasyExcel;
 import com.example.vehicle_networking.config.BaseConfig;
 import com.example.vehicle_networking.config.CollectDataThreadConfig;
 import com.example.vehicle_networking.entity.OilConsumptionRecord;
@@ -18,11 +19,16 @@ import com.example.vehicle_networking.service.UserService;
 import com.example.vehicle_networking.service.VehicleService;
 import com.example.vehicle_networking.thread.ReadDataThread;
 import com.example.vehicle_networking.utils.ResultVOUtil;
+import com.example.vehicle_networking.vo.OilConsumptionVO;
 import com.example.vehicle_networking.vo.ResultVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletResponse;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -44,6 +50,8 @@ public class VehicleServiceImpl implements VehicleService {
 	private BaseConfig baseConfig;
 	@Autowired
 	private CollectDataThreadConfig collectDataThreadConfig;
+	@Value("${excel.filePath}")
+	private String excelFilePath;
 
 
 	@Override
@@ -156,6 +164,24 @@ public class VehicleServiceImpl implements VehicleService {
 		else {
 			return ResultVOUtil.success(vehicleMapper.fuzzyQuery(categoryId,licenseNumber,null));
 		}
+	}
+
+	@Override
+	public ResultVO oilConsumptionExport(HttpServletResponse response,Integer vehicleId) {
+		Date date = new Date();
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		String format = simpleDateFormat.format(date);
+		String filename = excelFilePath + format + ".xlsx";
+		List<OilConsumptionVO> oilConsumptionVOList = new ArrayList<>();
+		List<OilConsumptionRecord> oilConsumptionRecordList = oilConsumptionRecordMapper.selectByVehicleId(vehicleId);
+		for (OilConsumptionRecord oilConsumptionRecord : oilConsumptionRecordList){
+			OilConsumptionVO oilConsumptionVO = new OilConsumptionVO();
+			BeanUtils.copyProperties(oilConsumptionRecord,oilConsumptionVO);
+			oilConsumptionVO.setDate(simpleDateFormat.format(oilConsumptionRecord.getDate()));
+			oilConsumptionVOList.add(oilConsumptionVO);
+		}
+		EasyExcel.write(filename, OilConsumptionVO.class).sheet("库存列表").doWrite(oilConsumptionVOList);
+		return null;
 	}
 
 }

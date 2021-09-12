@@ -15,6 +15,7 @@ import org.apache.ibatis.annotations.Update;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 /**
@@ -71,6 +72,12 @@ public class VehicleController {
 	@ApiOperation("根据分类编号和车牌号的模糊查询进行车辆查询，不传值则查询全部，并根据权限查询车辆，普通用户查询自己的车辆，管理员查询所有车辆")
 	public ResultVO selectVehicles(Integer categoryId,String licenseNumber){
 		return vehicleService.selectVehicles(categoryId,licenseNumber);
+	}
+
+	@GetMapping("/export_oilRecord")
+	@ApiOperation("导出油耗记录")
+	public ResultVO exportOilRecord(HttpServletResponse response,Integer vehicleId){
+		return vehicleService.oilConsumptionExport(response,vehicleId);
 	}
 
 }

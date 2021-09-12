@@ -9,6 +9,8 @@ import com.example.vehicle_networking.entity.Vehicle;
 import com.example.vehicle_networking.form.*;
 import com.example.vehicle_networking.vo.ResultVO;
 
+import javax.servlet.http.HttpServletResponse;
+
 /**
  * @author hgp
  * @version 1.0
@@ -62,4 +64,11 @@ public interface VehicleService {
 	 * @return
 	 */
 	ResultVO selectVehicles(Integer categoryId,String licenseNumber);
+
+	/**
+	 * 导出油耗记录
+	 * @param response
+	 * @return
+	 */
+	ResultVO oilConsumptionExport(HttpServletResponse response,Integer vehicleId);
 }
