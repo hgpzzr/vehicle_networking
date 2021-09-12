@@ -18,6 +18,7 @@ import com.example.vehicle_networking.mapper.VehicleMapper;
 import com.example.vehicle_networking.service.UserService;
 import com.example.vehicle_networking.service.VehicleService;
 import com.example.vehicle_networking.thread.ReadDataThread;
+import com.example.vehicle_networking.utils.FileUtil;
 import com.example.vehicle_networking.utils.ResultVOUtil;
 import com.example.vehicle_networking.vo.OilConsumptionVO;
 import com.example.vehicle_networking.vo.ResultVO;
@@ -171,7 +172,7 @@ public class VehicleServiceImpl implements VehicleService {
 		Date date = new Date();
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		String format = simpleDateFormat.format(date);
-		String filename = excelFilePath + format + ".xlsx";
+		String filepath = excelFilePath + format + ".xlsx";
 		List<OilConsumptionVO> oilConsumptionVOList = new ArrayList<>();
 		List<OilConsumptionRecord> oilConsumptionRecordList = oilConsumptionRecordMapper.selectByVehicleId(vehicleId);
 		for (OilConsumptionRecord oilConsumptionRecord : oilConsumptionRecordList){
@@ -180,7 +181,8 @@ public class VehicleServiceImpl implements VehicleService {
 			oilConsumptionVO.setDate(simpleDateFormat.format(oilConsumptionRecord.getDate()));
 			oilConsumptionVOList.add(oilConsumptionVO);
 		}
-		EasyExcel.write(filename, OilConsumptionVO.class).sheet("库存列表").doWrite(oilConsumptionVOList);
+		EasyExcel.write(filepath, OilConsumptionVO.class).sheet("库存列表").doWrite(oilConsumptionVOList);
+		FileUtil.downloadFile(response,filepath);
 		return null;
 	}
 
