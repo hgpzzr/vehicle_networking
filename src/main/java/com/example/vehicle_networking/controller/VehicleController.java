@@ -76,8 +76,8 @@ public class VehicleController {
 
 	@GetMapping("/export_oilRecord")
 	@ApiOperation("导出油耗记录")
-	public ResultVO exportOilRecord(HttpServletResponse response,Integer vehicleId){
-		return vehicleService.oilConsumptionExport(response,vehicleId);
+	public void exportOilRecord(HttpServletResponse response,Integer vehicleId){
+		vehicleService.oilConsumptionExport(response,vehicleId);
 	}
 
 }

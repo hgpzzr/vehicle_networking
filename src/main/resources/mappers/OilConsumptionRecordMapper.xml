@@ -45,6 +45,7 @@
     <where>
       <if test="vehicleId != null">vehicle_id = #{vehicleId,jdbcType=INTEGER}</if>
     </where>
+    order by create_time desc
   </select>
   <select id="getLatestConsumption" resultMap="BaseResultMap">
     select oil_consumption_id, vehicle_id, `date`, oil_consumption, work_time, create_time

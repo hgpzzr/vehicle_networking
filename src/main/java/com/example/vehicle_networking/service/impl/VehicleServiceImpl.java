@@ -168,22 +168,22 @@ public class VehicleServiceImpl implements VehicleService {
 	}
 
 	@Override
-	public ResultVO oilConsumptionExport(HttpServletResponse response,Integer vehicleId) {
+	public void oilConsumptionExport(HttpServletResponse response,Integer vehicleId) {
 		Date date = new Date();
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		String format = simpleDateFormat.format(date);
-		String filepath = excelFilePath + format + ".xlsx";
+		String filepath = excelFilePath + format + "油耗记录" + ".xlsx";
 		List<OilConsumptionVO> oilConsumptionVOList = new ArrayList<>();
 		List<OilConsumptionRecord> oilConsumptionRecordList = oilConsumptionRecordMapper.selectByVehicleId(vehicleId);
 		for (OilConsumptionRecord oilConsumptionRecord : oilConsumptionRecordList){
 			OilConsumptionVO oilConsumptionVO = new OilConsumptionVO();
 			BeanUtils.copyProperties(oilConsumptionRecord,oilConsumptionVO);
 			oilConsumptionVO.setDate(simpleDateFormat.format(oilConsumptionRecord.getDate()));
+			oilConsumptionVO.setLicenseNumber(vehicleMapper.selectByPrimaryKey(oilConsumptionRecord.getVehicleId()).getLicensePlateNumber());
 			oilConsumptionVOList.add(oilConsumptionVO);
 		}
 		EasyExcel.write(filepath, OilConsumptionVO.class).sheet("库存列表").doWrite(oilConsumptionVOList);
 		FileUtil.downloadFile(response,filepath);
-		return null;
 	}
 
 }

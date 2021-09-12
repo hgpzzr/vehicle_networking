@@ -8,12 +8,12 @@ import java.util.Date;
 /**
  * @author hgp
  * @version 1.0
- * @date 2021/9/12 14:09
+ * @date 2021/9/12 15:07
  */
 @Data
-public class OilConsumptionVO {
-	@ExcelProperty("油耗编号")
-	private Integer oilConsumptionId;
+public class AlarmExcelVO {
+	@ExcelProperty("报警编号")
+	private Integer alarmId;
 
 	@ExcelProperty("汽车编号")
 	private Integer vehicleId;
@@ -21,12 +21,13 @@ public class OilConsumptionVO {
 	@ExcelProperty("车牌号")
 	private String licenseNumber;
 
-	@ExcelProperty("油耗（L）")
-	private Double oilConsumption;
+	@ExcelProperty("报警原因")
+	private String alarmReason;
 
-	@ExcelProperty("工作时长（h）")
-	private Double workTime;
+	@ExcelProperty("异常数值")
+	private Double numericalValue;
 
-	@ExcelProperty("日期")
-	private String date;
+	@ExcelProperty("报警时间")
+	private Date createTime;
+
 }

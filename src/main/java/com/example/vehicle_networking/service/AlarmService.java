@@ -5,6 +5,8 @@ import com.example.vehicle_networking.entity.RealTimeData;
 import com.example.vehicle_networking.vo.ResultVO;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletResponse;
+
 /**
  * @author hgp
  * @version 1.0
@@ -39,4 +41,6 @@ public interface AlarmService {
 	 * @param secondPosition
 	 */
 	void accessRecordInfo(Position latestPosition, Position secondPosition);
+
+	void exportAlarm(HttpServletResponse response,Integer vehicleId);
 }

@@ -70,5 +70,5 @@ public interface VehicleService {
 	 * @param response
 	 * @return
 	 */
-	ResultVO oilConsumptionExport(HttpServletResponse response,Integer vehicleId);
+	void oilConsumptionExport(HttpServletResponse response,Integer vehicleId);
 }
