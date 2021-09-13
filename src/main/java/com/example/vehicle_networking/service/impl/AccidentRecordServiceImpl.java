@@ -99,6 +99,7 @@ public class AccidentRecordServiceImpl implements AccidentRecordService {
 			recordVo = new AccidentRecordVo();
 			BeanUtils.copyProperties(accidentRecord, recordVo);
 			recordVo.setCreateTime(dateFormat(accidentRecord.getCreateTime()));
+			recordVo.setLicenseNumber(vehicleMapper.selectByPrimaryKey(accidentRecord.getVehicleId()).getLicensePlateNumber());
 			return ResultVOUtil.success(recordVo);
 		}
 		return ResultVOUtil.error(ResultEnum.ACCIDENT_RECORD_IS_EMPTY);
@@ -117,6 +118,7 @@ public class AccidentRecordServiceImpl implements AccidentRecordService {
 					AccidentRecordVo vo = new AccidentRecordVo();
 					BeanUtils.copyProperties(record, vo);
 					vo.setCreateTime(dateFormat(record.getCreateTime()));
+					vo.setLicenseNumber(vehicleMapper.selectByPrimaryKey(record.getVehicleId()).getLicensePlateNumber());
 					recordVoList.add(vo);
 				}
 			}

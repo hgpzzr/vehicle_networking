@@ -20,6 +20,9 @@ public class ReadDataParaForm {
     @ApiModelProperty("请求携带的地址")
     private String cookie;
 
+    @ApiModelProperty("车辆名称")
+    private String vehicleName;
+
     @ApiModelProperty("车辆ID")
     @NotNull
     private List<Integer> vehicleIdList;

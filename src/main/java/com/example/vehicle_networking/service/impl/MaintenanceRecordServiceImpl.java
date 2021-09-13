@@ -74,8 +74,11 @@ public class MaintenanceRecordServiceImpl implements MaintenanceRecordService {
 
     @Override
     public ResultVO deleteRecord(Integer maintenanceId) {
-        int result = maintenanceRecordMapper.deleteByPrimaryKey(maintenanceId);
-        if(result == 0){
+        try {
+            maintenanceInfoMapper.deleteByMaintenanceRecordId(maintenanceId);
+            maintenanceRecordMapper.deleteByPrimaryKey(maintenanceId);
+        } catch (Exception e) {
+            e.printStackTrace();
             return ResultVOUtil.error(ResultEnum.MAINTENANCE_RECORD_DELETE_ERROR);
         }
         return ResultVOUtil.success();

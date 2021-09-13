@@ -58,7 +58,7 @@ public class DataCollectionServiceImpl implements DataCollectionService {
     private CollectDataThreadConfig collectDataThreadConfig;
 
     @Override
-    public ResultVO getSpeedFromURL(String url, String cookie, Integer vehicleId) {
+    public ResultVO getSpeedFromURL(String url, String cookie, Integer vehicleId, String vehicleName) {
         Vehicle vehicle = vehicleMapper.selectByPrimaryKey(vehicleId);
         if (!checkDataThreadStatus(vehicleId)) {
             return ResultVOUtil.error(ResultEnum.LOCKED_NOT_RUNNING);
@@ -66,11 +66,11 @@ public class DataCollectionServiceImpl implements DataCollectionService {
         // 保存速度信息
         JSONObject jsonObject = restTemplateTo.doGetWith(url, cookie);
         JSONObject data = jsonObject.getJSONObject("data");
-        DataInfoDetail engineSpeed = data.getObject("cars@转速-" + vehicleId, DataInfoDetail.class);
-        DataInfoDetail fuelMargin = data.getObject("cars@燃油余量-" + vehicleId, DataInfoDetail.class);
-        DataInfoDetail temp = data.getObject("cars@温度-" + vehicleId, DataInfoDetail.class);
-        DataInfoDetail speed = data.getObject("cars@速度-" + vehicleId, DataInfoDetail.class);
-        DataInfoDetail inclination = data.getObject("cars@倾斜度-" + vehicleId, DataInfoDetail.class);
+        DataInfoDetail engineSpeed = data.getObject(vehicleName + "@转速-" + vehicleId, DataInfoDetail.class);
+        DataInfoDetail fuelMargin = data.getObject(vehicleName + "@燃油余量-" + vehicleId, DataInfoDetail.class);
+        DataInfoDetail temp = data.getObject(vehicleName + "@温度-" + vehicleId, DataInfoDetail.class);
+        DataInfoDetail speed = data.getObject(vehicleName + "@速度-" + vehicleId, DataInfoDetail.class);
+        DataInfoDetail inclination = data.getObject(vehicleName + "@倾斜度-" + vehicleId, DataInfoDetail.class);
 
         RealTimeData realTimeData = new RealTimeData();
         try {
@@ -95,8 +95,8 @@ public class DataCollectionServiceImpl implements DataCollectionService {
 
 
         // 采集位置信息
-        DataInfoDetail longitude = data.getObject("cars@经度-" + vehicleId, DataInfoDetail.class);
-        DataInfoDetail latitude = data.getObject("cars@纬度-" + vehicleId, DataInfoDetail.class);
+        DataInfoDetail longitude = data.getObject(vehicleName + "@经度-" + vehicleId, DataInfoDetail.class);
+        DataInfoDetail latitude = data.getObject(vehicleName + "@纬度-" + vehicleId, DataInfoDetail.class);
 
         Position position = new Position();
         position.setLatitude(String.valueOf(latitude.getValue()));

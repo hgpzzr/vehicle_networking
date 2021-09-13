@@ -38,4 +38,7 @@
       <if test="maintenanceId != null">maintenance_id = #{maintenanceId,jdbcType=INTEGER}</if>
     </where>
   </select>
+  <delete id="deleteByMaintenanceRecordId" >
+    delete from maintenance_info where maintenance_id = #{recordId,jdbcType=INTEGER}
+  </delete>
 </mapper>

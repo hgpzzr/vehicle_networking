@@ -59,7 +59,7 @@ public class ReadDataThread extends Thread{
                     CollectDataThreadConfig collectDataThreadConfig = (CollectDataThreadConfig) GetBeanUtil.getBean("collectDataThreadConfig");
                     Set<Integer> vehicleIds = collectDataThreadConfig.getReadDataThreadMap().keySet();
                     for (Integer vehicleId : vehicleIds) {
-                        dataCollectionService.getSpeedFromURL(readDataParaForm.getUrl(), readDataParaForm.getCookie(), vehicleId);
+                        dataCollectionService.getSpeedFromURL(readDataParaForm.getUrl(), readDataParaForm.getCookie(), vehicleId,readDataParaForm.getVehicleName());
                         log.info(" 线程 {} 保存数据成功", getName());
                     }
                     int interval = readDataParaForm.getInterval();

@@ -32,4 +32,7 @@ public class AccidentRecordVo {
 
     @ApiModelProperty("车辆事故记录创建时间")
     private String createTime;
+
+    @ApiModelProperty("车牌号")
+    private String licenseNumber;
 }

@@ -28,7 +28,7 @@ import javax.validation.constraints.NotNull;
  * @create: 2021-09-08 13:14
  **/
 @RestController
-@RequestMapping("/api/maintenanceRecord")
+@RequestMapping("/maintenanceRecord")
 @CrossOrigin
 @Api(tags = "汽车维修记录")
 @Slf4j
@@ -52,11 +52,10 @@ public class MaintenanceRecordController {
 
 
 
-
-    @PostMapping("/deleteRecord")
+    @GetMapping("/deleteRecord")
     @ApiOperation("删除车辆维修记录")
     @RoleControl(role = RoleEnum.USER)
-    public ResultVO deleteMaintenanceRecord(@NotNull Integer maintenanceId,BindingResult bindingResult){
+    public ResultVO deleteMaintenanceRecord(@RequestParam("maintenanceId") Integer maintenanceId,BindingResult bindingResult){
         if(bindingResult.hasErrors()){
             log.info("必填项未填！");
             return ResultVOUtil.error(ResultEnum.BIND_ERROR);
@@ -128,16 +127,16 @@ public class MaintenanceRecordController {
 
 
 
-    @PostMapping("/deleteInfo")
-    @ApiOperation("删除车辆维修详情")
-    @RoleControl(role = RoleEnum.USER)
-    public ResultVO deleteMaintenanceInfo(@NotNull Integer maintenanceInfoId,BindingResult bindingResult){
-        if(bindingResult.hasErrors()){
-            log.info("必填项未填！");
-            return ResultVOUtil.error(ResultEnum.BIND_ERROR);
-        }
-        return maintenanceRecordService.deleteInfo(maintenanceInfoId);
-    }
+//    @GetMapping("/deleteInfo")
+//    @ApiOperation("删除车辆维修详情")
+//    @RoleControl(role = RoleEnum.USER)
+//    public ResultVO deleteMaintenanceInfo(@NotNull @RequestParam("maintenanceInfoId") Integer maintenanceInfoId,BindingResult bindingResult){
+//        if(bindingResult.hasErrors()){
+//            log.info("必填项未填！");
+//            return ResultVOUtil.error(ResultEnum.BIND_ERROR);
+//        }
+//        return maintenanceRecordService.deleteInfo(maintenanceInfoId);
+//    }
 
 
     @PostMapping("/updateInfo")

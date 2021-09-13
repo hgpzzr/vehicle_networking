@@ -16,7 +16,7 @@ public interface DataCollectionService {
      * 通过URL和Cookie获取所动态信息
      * @return
      */
-    ResultVO getSpeedFromURL(String url, String cookie, Integer vehicleId);
+    ResultVO getSpeedFromURL(String url, String cookie, Integer vehicleId, String vehicleName);
 
     /**
      * 获取读取数据的状态
