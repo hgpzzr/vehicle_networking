@@ -4,6 +4,8 @@ import com.example.vehicle_networking.form.AccidentRecordForm;
 import com.example.vehicle_networking.form.UpdateAccidentRecordForm;
 import com.example.vehicle_networking.vo.ResultVO;
 
+import javax.servlet.http.HttpServletResponse;
+
 /**
  * @program: vehicle_networking
  * @description
@@ -57,6 +59,8 @@ public interface AccidentRecordService {
      * @return ResultVO
      */
     ResultVO getRecordsByVehicleId(Integer vehicleId);
+
+    void exportAccidentRecords(HttpServletResponse response,Integer vehicleId);
 
 
 }

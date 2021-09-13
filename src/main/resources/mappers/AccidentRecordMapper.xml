@@ -41,4 +41,12 @@
     create_time
     from accident_record
   </select>
+  <select id="selectByVehicleId" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+    select accident_id, vehicle_id, accident_reason, occurrence_site, damage_condition,
+    create_time
+    from accident_record
+    <where>
+      <if test="vehicleId != null">vehicle_id = #{vehicleId,jdbcType=INTEGER}</if>
+    </where>
+  </select>
 </mapper>

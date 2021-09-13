@@ -15,5 +15,7 @@ public interface AccidentRecordMapper {
 
     List<AccidentRecord> selectAll();
 
+    List<AccidentRecord> selectByVehicleId(Integer vehicleId);
+
     int updateByPrimaryKey(AccidentRecord record);
 }

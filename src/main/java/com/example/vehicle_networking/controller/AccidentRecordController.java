@@ -17,6 +17,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.management.relation.Role;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
@@ -108,6 +109,10 @@ public class AccidentRecordController {
         return accidentRecordService.getRecordsByVehicleId(vehicleId);
     }
 
-
+    @GetMapping("/export")
+    @ApiOperation("根据汽车编号导出（可不传）")
+    public void export(HttpServletResponse response,Integer vehicleId){
+        accidentRecordService.exportAccidentRecords(response,vehicleId);
+    }
 
 }
