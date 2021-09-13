@@ -16,6 +16,8 @@ public interface OilConsumptionRecordMapper {
 
     List<OilConsumptionRecord> selectAll();
 
+    List<OilConsumptionRecord> selectByVehicleId(Integer vehicleId);
+
     int updateByPrimaryKey(OilConsumptionRecord record);
 
     OilConsumptionRecord getLatestConsumption(Integer vehicleId);

@@ -39,6 +39,14 @@
     select oil_consumption_id, vehicle_id, `date`, oil_consumption, work_time, create_time
     from oil_consumption_record
   </select>
+  <select id="selectByVehicleId" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+    select oil_consumption_id, vehicle_id, `date`, oil_consumption, work_time, create_time
+    from oil_consumption_record
+    <where>
+      <if test="vehicleId != null">vehicle_id = #{vehicleId,jdbcType=INTEGER}</if>
+    </where>
+    order by create_time desc
+  </select>
   <select id="getLatestConsumption" resultMap="BaseResultMap">
     select oil_consumption_id, vehicle_id, `date`, oil_consumption, work_time, create_time
     from oil_consumption_record

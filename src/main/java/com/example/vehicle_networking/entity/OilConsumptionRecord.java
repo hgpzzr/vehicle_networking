@@ -1,5 +1,7 @@
 package com.example.vehicle_networking.entity;
 
+import com.alibaba.excel.annotation.ExcelProperty;
+
 import java.io.Serializable;
 import java.util.Date;
 

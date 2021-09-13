@@ -1,5 +1,6 @@
 package com.example.vehicle_networking.service.impl;
 
+import com.alibaba.excel.EasyExcel;
 import com.example.vehicle_networking.config.AlarmConfig;
 import com.example.vehicle_networking.entity.*;
 import com.example.vehicle_networking.enums.LockStatusEnum;
@@ -7,8 +8,10 @@ import com.example.vehicle_networking.enums.OperatingStatusEnum;
 import com.example.vehicle_networking.mapper.*;
 import com.example.vehicle_networking.service.AlarmService;
 import com.example.vehicle_networking.service.UserService;
+import com.example.vehicle_networking.utils.FileUtil;
 import com.example.vehicle_networking.utils.GetDistanceUtil;
 import com.example.vehicle_networking.utils.ResultVOUtil;
+import com.example.vehicle_networking.vo.AlarmExcelVO;
 import com.example.vehicle_networking.vo.AlarmRecordVO;
 import com.example.vehicle_networking.vo.ResultVO;
 import io.swagger.annotations.ApiOperation;
@@ -19,7 +22,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import sun.java2d.pipe.AAShapePipe;
 
+import javax.servlet.http.HttpServletResponse;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -57,6 +62,8 @@ public class AlarmServiceImpl implements AlarmService {
 	private String outFence;
 	@Value("${alarm.reason.in}")
 	private String inFence;
+	@Value("${excel.filePath}")
+	private String excelFilePath;
 	@Autowired
 	private AlarmConfig alarmConfig;
 
@@ -223,5 +230,23 @@ public class AlarmServiceImpl implements AlarmService {
 		if(alarmRecordList.size() != 0){
 			alarmRecordMapper.batchInsert(alarmRecordList);
 		}
+	}
+
+	@Override
+	public void exportAlarm(HttpServletResponse response, Integer vehicleId) {
+		Date date = new Date();
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		String format = simpleDateFormat.format(date);
+		String filepath = excelFilePath + format + "报警记录" + ".xlsx";
+		List<AlarmRecord> alarmRecordList = alarmRecordMapper.selectByVehicleId(vehicleId);
+		List<AlarmExcelVO> alarmExcelVOList = new ArrayList<>();
+		for (AlarmRecord alarmRecord : alarmRecordList){
+			AlarmExcelVO alarmExcelVO = new AlarmExcelVO();
+			BeanUtils.copyProperties(alarmRecord,alarmExcelVO);
+			alarmExcelVO.setLicenseNumber(vehicleMapper.selectByPrimaryKey(alarmRecord.getVehicleId()).getLicensePlateNumber());
+			alarmExcelVOList.add(alarmExcelVO);
+		}
+		EasyExcel.write(filepath,AlarmExcelVO.class).sheet("报警记录").doWrite(alarmExcelVOList);
+		FileUtil.downloadFile(response,filepath);
 	}
 }

@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletResponse;
+
 /**
  * @author hgp
  * @version 1.0
@@ -27,5 +29,11 @@ public class AlarmController {
 	@ApiOperation("根据vehicleId查询（可不传），自动根据用户权限查询")
 	public ResultVO selectAlarmRecords(Integer vehicleId){
 		return alarmService.selectAlarmRecords(vehicleId);
+	}
+
+	@GetMapping("export")
+	@ApiOperation("导出报警记录excel")
+	public void exportAlarmRecord(HttpServletResponse response,Integer vehicleId){
+		alarmService.exportAlarm(response,vehicleId);
 	}
 }
