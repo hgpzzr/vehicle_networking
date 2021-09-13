@@ -1,11 +1,15 @@
 package com.example.vehicle_networking.thread;
 
+import com.example.vehicle_networking.config.CollectDataThreadConfig;
 import com.example.vehicle_networking.form.ReadDataParaForm;
 import com.example.vehicle_networking.mapper.VehicleMapper;
 import com.example.vehicle_networking.service.DataCollectionService;
 import com.example.vehicle_networking.utils.GetBeanUtil;
 import com.example.vehicle_networking.utils.ReadDataAPI;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.Set;
+
 /**
  * @author ：GO FOR IT
  * @description：
@@ -52,8 +56,12 @@ public class ReadDataThread extends Thread{
             try {
                 while (flag) {
                     DataCollectionService dataCollectionService = (DataCollectionService) GetBeanUtil.getBean("dataCollectionServiceImpl");
-                    dataCollectionService.getSpeedFromURL(readDataParaForm.getUrl(), readDataParaForm.getCookie(), readDataParaForm.getVehicleId());
-                    log.info(" 线程 {} 保存数据成功", getName());
+                    CollectDataThreadConfig collectDataThreadConfig = (CollectDataThreadConfig) GetBeanUtil.getBean("collectDataThreadConfig");
+                    Set<Integer> vehicleIds = collectDataThreadConfig.getReadDataThreadMap().keySet();
+                    for (Integer vehicleId : vehicleIds) {
+                        dataCollectionService.getSpeedFromURL(readDataParaForm.getUrl(), readDataParaForm.getCookie(), vehicleId);
+                        log.info(" 线程 {} 保存数据成功", getName());
+                    }
                     int interval = readDataParaForm.getInterval();
                     Thread.sleep( interval > 0 ? interval * 1000 : 3000);
                 }
