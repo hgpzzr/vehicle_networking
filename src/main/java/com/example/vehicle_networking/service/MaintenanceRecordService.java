@@ -6,6 +6,8 @@ import com.example.vehicle_networking.form.UpdateMaintenanceInfoForm;
 import com.example.vehicle_networking.form.UpdateMaintenanceRecordForm;
 import com.example.vehicle_networking.vo.ResultVO;
 
+import javax.servlet.http.HttpServletResponse;
+
 /**
  * @program: vehicle_networking
  * @description
@@ -92,4 +94,6 @@ public interface MaintenanceRecordService {
      * @return ResultVO
      */
     ResultVO getInfoByMaintenanceId(Integer maintenanceId);
+
+    void exportMaintenanceRecords(HttpServletResponse response,Integer vehicleId);
 }

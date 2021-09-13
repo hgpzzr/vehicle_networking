@@ -47,4 +47,12 @@
     maintenance_end_time, create_time, update_time
     from maintenance_record
   </select>
+  <select id="selectByVehicleId" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+    select maintenance_id, vehicle_id, `describe`, maintenance_costs, maintenance_begin_time,
+    maintenance_end_time, create_time, update_time
+    from maintenance_record
+    <where>
+      <if test="vehicleId != null"> </if>
+    </where>
+  </select>
 </mapper>

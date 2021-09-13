@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
@@ -41,7 +42,7 @@ public class MaintenanceRecordController {
     @PostMapping("/addRecord")
     @ApiOperation("添加车辆维修记录")
     @RoleControl(role = RoleEnum.USER)
-    public ResultVO addMaintenanceRecord(@Valid @RequestParam MaintenanceRecordForm maintenanceRecordForm, BindingResult bindingResult){
+    public ResultVO addMaintenanceRecord(@Valid MaintenanceRecordForm maintenanceRecordForm, BindingResult bindingResult){
         if(bindingResult.hasErrors()){
             log.info("必填项未填！");
             return ResultVOUtil.error(ResultEnum.BIND_ERROR);
@@ -55,7 +56,7 @@ public class MaintenanceRecordController {
     @PostMapping("/deleteRecord")
     @ApiOperation("删除车辆维修记录")
     @RoleControl(role = RoleEnum.USER)
-    public ResultVO deleteMaintenanceRecord(@NotNull @RequestParam("maintenanceId") Integer maintenanceId,BindingResult bindingResult){
+    public ResultVO deleteMaintenanceRecord(@NotNull Integer maintenanceId,BindingResult bindingResult){
         if(bindingResult.hasErrors()){
             log.info("必填项未填！");
             return ResultVOUtil.error(ResultEnum.BIND_ERROR);
@@ -68,7 +69,7 @@ public class MaintenanceRecordController {
     @PostMapping("/updateRecord")
     @ApiOperation("编辑修改车辆维修记录")
     @RoleControl(role = RoleEnum.USER)
-    public ResultVO updateMaintenanceRecord(@Valid @RequestParam UpdateMaintenanceRecordForm updateMaintenanceRecordForm, BindingResult bindingResult){
+    public ResultVO updateMaintenanceRecord(@Valid UpdateMaintenanceRecordForm updateMaintenanceRecordForm, BindingResult bindingResult){
         if(bindingResult.hasErrors()){
             log.info("必填项未填！");
             return ResultVOUtil.error(ResultEnum.BIND_ERROR);
@@ -82,7 +83,7 @@ public class MaintenanceRecordController {
     @GetMapping("/getOneRecord")
     @ApiOperation("获取单条车辆维修记录")
     @RoleControl(role = RoleEnum.USER)
-    public ResultVO getOneRecord(@NotNull @RequestParam("maintenanceId") Integer maintenanceId,BindingResult bindingResult) {
+    public ResultVO getOneRecord(@NotNull Integer maintenanceId,BindingResult bindingResult) {
         if(bindingResult.hasErrors()){
             log.info("必填项未填！");
             return ResultVOUtil.error(ResultEnum.BIND_ERROR);
@@ -104,7 +105,7 @@ public class MaintenanceRecordController {
     @GetMapping("/getRecordByVehicleId")
     @ApiOperation("根据车辆编号获得车辆维修记录")
     @RoleControl(role = RoleEnum.USER)
-    public ResultVO getMaintenanceRecordByVehicleId(@NotNull @RequestParam("vehicleId") Integer vehicleId,BindingResult bindingResult){
+    public ResultVO getMaintenanceRecordByVehicleId(@NotNull Integer vehicleId,BindingResult bindingResult){
         if(bindingResult.hasErrors()){
             log.info("必填项未填！");
             return ResultVOUtil.error(ResultEnum.BIND_ERROR);
@@ -117,7 +118,7 @@ public class MaintenanceRecordController {
     @PostMapping("/addInfo")
     @ApiOperation("添加维修详情，具体维修部分")
     @RoleControl(role = RoleEnum.USER)
-    public ResultVO addMaintenanceInfo(@Valid @RequestParam MaintenanceInfoForm maintenanceInfoForm, BindingResult bindingResult){
+    public ResultVO addMaintenanceInfo(@Valid MaintenanceInfoForm maintenanceInfoForm, BindingResult bindingResult){
         if(bindingResult.hasErrors()){
             log.info("必填项未填！");
             return ResultVOUtil.error(ResultEnum.BIND_ERROR);
@@ -130,7 +131,7 @@ public class MaintenanceRecordController {
     @PostMapping("/deleteInfo")
     @ApiOperation("删除车辆维修详情")
     @RoleControl(role = RoleEnum.USER)
-    public ResultVO deleteMaintenanceInfo(@NotNull @RequestParam("maintenanceInfoId") Integer maintenanceInfoId,BindingResult bindingResult){
+    public ResultVO deleteMaintenanceInfo(@NotNull Integer maintenanceInfoId,BindingResult bindingResult){
         if(bindingResult.hasErrors()){
             log.info("必填项未填！");
             return ResultVOUtil.error(ResultEnum.BIND_ERROR);
@@ -142,7 +143,7 @@ public class MaintenanceRecordController {
     @PostMapping("/updateInfo")
     @ApiOperation("编辑修改车辆维修详情")
     @RoleControl(role = RoleEnum.USER)
-    public ResultVO updateMaintenanceInfo(@Valid @RequestParam UpdateMaintenanceInfoForm updateMaintenanceInfoForm, BindingResult bindingResult){
+    public ResultVO updateMaintenanceInfo(@Valid UpdateMaintenanceInfoForm updateMaintenanceInfoForm, BindingResult bindingResult){
         if(bindingResult.hasErrors()){
             log.info("必填项未填！");
             return ResultVOUtil.error(ResultEnum.BIND_ERROR);
@@ -154,7 +155,7 @@ public class MaintenanceRecordController {
     @GetMapping("getInfoByMaintenanceId")
     @ApiOperation("根据车辆维修记录编号获取维修详情")
     @RoleControl(role = RoleEnum.USER)
-    public ResultVO getMaintenanceInfoByMaintenanceId(@NotNull @RequestParam("maintenanceId") Integer maintenanceId,BindingResult bindingResult){
+    public ResultVO getMaintenanceInfoByMaintenanceId(@NotNull  Integer maintenanceId,BindingResult bindingResult){
         if(bindingResult.hasErrors()){
             log.info("必填项未填！");
             return ResultVOUtil.error(ResultEnum.BIND_ERROR);
@@ -162,6 +163,10 @@ public class MaintenanceRecordController {
         return maintenanceRecordService.getInfoByMaintenanceId(maintenanceId);
     }
 
-
+    @GetMapping("export")
+    @ApiOperation("导出维修记录")
+    public void exportMaintenanceRecords(HttpServletResponse response,Integer vehicleId){
+        maintenanceRecordService.exportMaintenanceRecords(response,vehicleId);
+    }
 
 }

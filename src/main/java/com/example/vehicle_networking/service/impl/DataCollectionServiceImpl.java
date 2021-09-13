@@ -66,21 +66,26 @@ public class DataCollectionServiceImpl implements DataCollectionService {
         // 保存速度信息
         JSONObject jsonObject = restTemplateTo.doGetWith(url, cookie);
         JSONObject data = jsonObject.getJSONObject("data");
-        DataInfoDetail engineSpeed = data.getObject("car@转速-" + vehicleId, DataInfoDetail.class);
-        DataInfoDetail fuelMargin = data.getObject("car@燃油余量-" + vehicleId, DataInfoDetail.class);
-        DataInfoDetail temp = data.getObject("car@温度-" + vehicleId, DataInfoDetail.class);
-        DataInfoDetail speed = data.getObject("car@速度-" + vehicleId, DataInfoDetail.class);
-        DataInfoDetail inclination = data.getObject("car@倾斜度-" + vehicleId, DataInfoDetail.class);
-
+        DataInfoDetail engineSpeed = data.getObject("cars@转速-" + vehicleId, DataInfoDetail.class);
+        DataInfoDetail fuelMargin = data.getObject("cars@燃油余量-" + vehicleId, DataInfoDetail.class);
+        DataInfoDetail temp = data.getObject("cars@温度-" + vehicleId, DataInfoDetail.class);
+        DataInfoDetail speed = data.getObject("cars@速度-" + vehicleId, DataInfoDetail.class);
+        DataInfoDetail inclination = data.getObject("cars@倾斜度-" + vehicleId, DataInfoDetail.class);
 
         RealTimeData realTimeData = new RealTimeData();
-        realTimeData.setEngineSpeed(Double.valueOf(engineSpeed.getValue()));
-        realTimeData.setFuelMargin(Double.valueOf(fuelMargin.getValue()));
-        realTimeData.setEngineTemperature(Double.valueOf(temp.getValue()));
-        realTimeData.setSpeed(Double.valueOf(speed.getValue()));
-        realTimeData.setCreateTime(engineSpeed.getTimestamp());
-        realTimeData.setVehicleId(vehicleId);
-        realTimeData.setInclination(Double.valueOf(inclination.getValue()));
+        try {
+            realTimeData.setEngineSpeed(Double.valueOf(engineSpeed.getValue()));
+            realTimeData.setFuelMargin(Double.valueOf(fuelMargin.getValue()));
+            realTimeData.setEngineTemperature(Double.valueOf(temp.getValue()));
+            realTimeData.setSpeed(Double.valueOf(speed.getValue()));
+            realTimeData.setCreateTime(engineSpeed.getTimestamp());
+            realTimeData.setVehicleId(vehicleId);
+            realTimeData.setInclination(Double.valueOf(inclination.getValue()));
+        }catch (NullPointerException exception){
+            log.info(" h获取数据失败 {}", exception);
+            return ResultVOUtil.error(ResultEnum.OPEN_THREAD_FAIL);
+        }
+
 
 
         int insert = realTimeDataMapper.insert(realTimeData);
@@ -90,8 +95,8 @@ public class DataCollectionServiceImpl implements DataCollectionService {
 
 
         // 采集位置信息
-        DataInfoDetail longitude = data.getObject("car@经度-" + vehicleId, DataInfoDetail.class);
-        DataInfoDetail latitude = data.getObject("car@纬度-" + vehicleId, DataInfoDetail.class);
+        DataInfoDetail longitude = data.getObject("cars@经度-" + vehicleId, DataInfoDetail.class);
+        DataInfoDetail latitude = data.getObject("cars@纬度-" + vehicleId, DataInfoDetail.class);
 
         Position position = new Position();
         position.setLatitude(String.valueOf(latitude.getValue()));

@@ -15,5 +15,7 @@ public interface MaintenanceInfoMapper {
 
     List<MaintenanceInfo> selectAll();
 
+    List<MaintenanceInfo> selectByMaintenanceId(Integer maintenanceId);
+
     int updateByPrimaryKey(MaintenanceInfo record);
 }

@@ -15,5 +15,7 @@ public interface MaintenanceRecordMapper {
 
     List<MaintenanceRecord> selectAll();
 
+    List<MaintenanceRecord> selectByVehicleId(Integer vehicleId);
+
     int updateByPrimaryKey(MaintenanceRecord record);
 }

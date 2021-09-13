@@ -1,5 +1,6 @@
 package com.example.vehicle_networking.service.impl;
 
+import com.alibaba.excel.EasyExcel;
 import com.example.vehicle_networking.entity.MaintenanceInfo;
 import com.example.vehicle_networking.entity.MaintenanceRecord;
 import com.example.vehicle_networking.entity.User;
@@ -14,15 +15,16 @@ import com.example.vehicle_networking.mapper.MaintenanceRecordMapper;
 import com.example.vehicle_networking.mapper.VehicleMapper;
 import com.example.vehicle_networking.service.MaintenanceRecordService;
 import com.example.vehicle_networking.service.UserService;
+import com.example.vehicle_networking.utils.FileUtil;
 import com.example.vehicle_networking.utils.ResultVOUtil;
-import com.example.vehicle_networking.vo.MaintenanceInfoVo;
-import com.example.vehicle_networking.vo.MaintenanceRecordVo;
-import com.example.vehicle_networking.vo.ResultVO;
+import com.example.vehicle_networking.vo.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletResponse;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -53,6 +55,8 @@ public class MaintenanceRecordServiceImpl implements MaintenanceRecordService {
 
     @Autowired
     private VehicleMapper vehicleMapper;
+    @Value("${excel.filePath}")
+    private String excelFilePath;
 
     @Override
     public ResultVO addRecord(MaintenanceRecordForm maintenanceRecordForm) {
@@ -204,6 +208,33 @@ public class MaintenanceRecordServiceImpl implements MaintenanceRecordService {
             }
         }
         return ResultVOUtil.error(ResultEnum.MAINTENANCE_INFO_IS_EMPTY);
+    }
+
+    @Override
+    public void exportMaintenanceRecords(HttpServletResponse response, Integer vehicleId) {
+        Date date = new Date();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String format = simpleDateFormat.format(date);
+        String filepath = excelFilePath + format + " 维修记录记录" + ".xlsx";
+        List<MaintenanceExcelVO> maintenanceExcelVOList = new ArrayList<>();
+        List<MaintenanceRecord> maintenanceRecordList = maintenanceRecordMapper.selectByVehicleId(vehicleId);
+        for (MaintenanceRecord maintenanceRecord:maintenanceRecordList){
+            MaintenanceExcelVO maintenanceExcelVO = new MaintenanceExcelVO();
+            BeanUtils.copyProperties(maintenanceRecord,maintenanceExcelVO);
+            maintenanceExcelVO.setCreateTime(simpleDateFormat.format(maintenanceRecord.getCreateTime()));
+            maintenanceExcelVO.setMaintenanceBeginTime(simpleDateFormat.format(maintenanceExcelVO.getMaintenanceBeginTime()));
+            maintenanceExcelVO.setMaintenanceEndTime(simpleDateFormat.format(maintenanceExcelVO.getMaintenanceEndTime()));
+            maintenanceExcelVO.setLicenseNumber(vehicleMapper.selectByPrimaryKey(maintenanceRecord.getVehicleId()).getLicensePlateNumber());
+            List<MaintenanceInfo> maintenanceInfoList = maintenanceInfoMapper.selectByMaintenanceId(maintenanceRecord.getMaintenanceId());
+            StringBuilder maintenancePart = new StringBuilder();
+            for (MaintenanceInfo maintenanceInfo:maintenanceInfoList){
+                maintenancePart.append(maintenanceInfo.getMaintenancePart()+";");
+            }
+            maintenanceExcelVO.setMaintenancePart(maintenancePart.toString());
+            maintenanceExcelVOList.add(maintenanceExcelVO);
+        }
+        EasyExcel.write(filepath, MaintenanceExcelVO.class).sheet("维修记录").doWrite(maintenanceExcelVOList);
+        FileUtil.downloadFile(response,filepath);
     }
 
     private Date getCurrentTime()  {

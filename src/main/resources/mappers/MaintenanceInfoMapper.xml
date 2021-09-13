@@ -31,4 +31,11 @@
     select maintenance_info_id, maintenance_id, maintenance_part
     from maintenance_info
   </select>
+  <select id="selectByMaintenanceId" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+    select maintenance_info_id, maintenance_id, maintenance_part
+    from maintenance_info
+    <where>
+      <if test="maintenanceId != null">maintenance_id = #{maintenanceId,jdbcType=INTEGER}</if>
+    </where>
+  </select>
 </mapper>

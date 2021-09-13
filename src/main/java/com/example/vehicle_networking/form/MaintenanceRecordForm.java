@@ -1,6 +1,7 @@
 package com.example.vehicle_networking.form;
 
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
@@ -13,6 +14,7 @@ import java.util.Date;
  * @author: 不会编程的派大星
  * @create: 2021-09-08 13:22
  **/
+@Data
 public class MaintenanceRecordForm {
 
     @ApiModelProperty("汽车编号")
