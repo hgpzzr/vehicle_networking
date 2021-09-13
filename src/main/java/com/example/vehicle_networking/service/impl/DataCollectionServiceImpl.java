@@ -37,7 +37,7 @@ import java.util.concurrent.locks.Lock;
 
 /**
  * @author ：GO FOR IT
- * @description：
+ * @description：cddc
  * @date ：2021/9/8 8:23
  */
 @Service
@@ -66,11 +66,11 @@ public class DataCollectionServiceImpl implements DataCollectionService {
         // 保存速度信息
         JSONObject jsonObject = restTemplateTo.doGetWith(url, cookie);
         JSONObject data = jsonObject.getJSONObject("data");
-        DataInfoDetail engineSpeed = data.getObject("car@转速", DataInfoDetail.class);
-        DataInfoDetail fuelMargin = data.getObject("car@燃油余量", DataInfoDetail.class);
-        DataInfoDetail temp = data.getObject("car@温度", DataInfoDetail.class);
-        DataInfoDetail speed = data.getObject("car@速度", DataInfoDetail.class);
-        DataInfoDetail inclination = data.getObject("car@倾斜度", DataInfoDetail.class);
+        DataInfoDetail engineSpeed = data.getObject("car@转速-" + vehicleId, DataInfoDetail.class);
+        DataInfoDetail fuelMargin = data.getObject("car@燃油余量-" + vehicleId, DataInfoDetail.class);
+        DataInfoDetail temp = data.getObject("car@温度-" + vehicleId, DataInfoDetail.class);
+        DataInfoDetail speed = data.getObject("car@速度-" + vehicleId, DataInfoDetail.class);
+        DataInfoDetail inclination = data.getObject("car@倾斜度-" + vehicleId, DataInfoDetail.class);
 
 
         RealTimeData realTimeData = new RealTimeData();
@@ -90,8 +90,8 @@ public class DataCollectionServiceImpl implements DataCollectionService {
 
 
         // 采集位置信息
-        DataInfoDetail longitude = data.getObject("car@经度", DataInfoDetail.class);
-        DataInfoDetail latitude = data.getObject("car@纬度", DataInfoDetail.class);
+        DataInfoDetail longitude = data.getObject("car@经度-" + vehicleId, DataInfoDetail.class);
+        DataInfoDetail latitude = data.getObject("car@纬度-" + vehicleId, DataInfoDetail.class);
 
         Position position = new Position();
         position.setLatitude(String.valueOf(latitude.getValue()));
@@ -146,25 +146,33 @@ public class DataCollectionServiceImpl implements DataCollectionService {
     public ResultVO openOrDownRealDataCollect(ReadDataParaForm readDataParaForm) {
 
         // 首先检查状态，是否在运行或被锁
-        if (!checkDataThreadStatus(readDataParaForm.getVehicleId())) {
+        if (!checkDataThreadStatus(readDataParaForm.getVehicleIdList())) {
             return ResultVOUtil.error(ResultEnum.LOCKED_NOT_RUNNING);
         }
 
         ExecutorService threadPool = collectDataThreadConfig.getThreadPool();
+        List<Integer> vehicleIdList = readDataParaForm.getVehicleIdList();
 
-        Vehicle vehicle = vehicleMapper.selectByPrimaryKey(readDataParaForm.getVehicleId());
+//        Vehicle vehicle = vehicleMapper.selectByPrimaryKey(readDataParaForm.getVehicleId());
         Map<Integer, ReadDataThread> readDataThreadMap = collectDataThreadConfig.getReadDataThreadMap();
-        ReadDataThread collectDataThread = readDataThreadMap.get(vehicle.getVehicleId());
+        ReadDataThread collectDataThread = readDataThreadMap.get(vehicleIdList.get(0));
         if (collectDataThread == null){
-            collectDataThread = new ReadDataThread("collectDataThread = carID -> " + vehicle.getVehicleId(), readDataParaForm);
+            collectDataThread = new ReadDataThread("collectDataThread = carID -> " + vehicleIdList, readDataParaForm);
             collectDataThread.setFlag(true);
             threadPool.execute(collectDataThread);
-            readDataThreadMap.put(vehicle.getVehicleId(), collectDataThread);
+            for (Integer vehicleId : vehicleIdList) {
+                readDataThreadMap.put(vehicleId, collectDataThread);
+            }
             return ResultVOUtil.success(ResultEnum.DATA_READ_OPENED);
         }else{
-            collectDataThread.interrupt();
-            collectDataThread.setFlag(false);
-            readDataThreadMap.remove(vehicle.getVehicleId());
+            if (collectDataThreadConfig.getReadDataThreadMap().size() == 0){
+                collectDataThread.interrupt();
+                collectDataThread.setFlag(false);
+            }else {
+                for (Integer vehicleId : vehicleIdList) {
+                    readDataThreadMap.remove(vehicleId);
+                }
+            }
             return ResultVOUtil.success(ResultEnum.DATA_READ_SHUT_DOWNED);
         }
     }
@@ -178,11 +186,25 @@ public class DataCollectionServiceImpl implements DataCollectionService {
         return ResultVOUtil.success(latestPosition);
     }
 
+    public boolean checkDataThreadStatus(List<Integer> vehicleIdList){
+        boolean flag = true;
+        for (Integer vehicleId : vehicleIdList) {
+            Vehicle vehicle = vehicleMapper.selectByPrimaryKey(vehicleId);
+            if (vehicle.getRunningState().equals(OperatingStatusEnum.NOT_RUNNING.getValue())
+                    || vehicle.getLockedState().equals(LockStatusEnum.LOCKED.getRole())
+            ){
+                log.info("车辆 {} 启动失败", vehicle);
+                flag = false;break;
+            }
+        }
+        return flag;
+    }
     public boolean checkDataThreadStatus(Integer vehicleId){
         Vehicle vehicle = vehicleMapper.selectByPrimaryKey(vehicleId);
         if (vehicle.getRunningState().equals(OperatingStatusEnum.NOT_RUNNING.getValue())
                 || vehicle.getLockedState().equals(LockStatusEnum.LOCKED.getRole())
         ){
+            log.info("车辆 {} 启动失败", vehicle);
             return false;
         }
         return true;

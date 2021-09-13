@@ -60,7 +60,7 @@ public class DataCollectionController {
      * @param vehicleId
      * @return
      */
-    @GetMapping("getLatestPosition")
+    @GetMapping("/getLatestPosition")
     @ApiOperation("获取最新位置信息")
     public ResultVO getLatestPosition(@Param("vehicleId") Integer vehicleId){
         return dataCollectionService.getLatestPosition(vehicleId);

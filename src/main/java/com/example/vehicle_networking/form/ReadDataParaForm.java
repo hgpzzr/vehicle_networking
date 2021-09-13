@@ -5,6 +5,7 @@ import lombok.Data;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 /**
  * @author ：GO FOR IT
@@ -21,7 +22,7 @@ public class ReadDataParaForm {
 
     @ApiModelProperty("车辆ID")
     @NotNull
-    private Integer vehicleId;
+    private List<Integer> vehicleIdList;
 
     @ApiModelProperty("读取间隔（s）")
     private Integer interval;
