@@ -20,6 +20,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
@@ -47,6 +48,8 @@ public class UserServiceImpl implements UserService {
 	private JwtTokenUtil jwtTokenUtil;
 	@Autowired
 	private JwtProperties jwtProperties;
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 
 
 	@Override
@@ -111,6 +114,7 @@ public class UserServiceImpl implements UserService {
 		BeanUtils.copyProperties(form,user);
 		user.setRole(0);
 		user.setCreateTime(new Date());
+		user.setPassword(passwordEncoder.encode(form.getPassword()));
 		// 存入数据库
 		int insert = userMapper.insert(user);
 		if(insert != 1){

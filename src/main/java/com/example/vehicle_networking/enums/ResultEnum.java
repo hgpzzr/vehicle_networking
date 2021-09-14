@@ -21,6 +21,7 @@ public enum  ResultEnum {
     PARAM_NULL_ERROR(1003,"参数不能为空"),
     NOT_SELF_OPTION_ERROR(1004,"不是本人操作"),
     RUNNING_CAR_LOCK_ERROR(1005,"运行中得车辆不能锁机"),
+    LOCKED_CAR_RUN_ERROR(1005,"锁机状态不能进行操作"),
 
 
     DATA_READ_OPENED(2000,"读取实时数据线程已开启"),

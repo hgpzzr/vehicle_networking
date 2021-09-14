@@ -70,8 +70,8 @@ public class VehicleController {
 
 	@GetMapping("/select")
 	@ApiOperation("根据分类编号和车牌号的模糊查询进行车辆查询，不传值则查询全部，并根据权限查询车辆，普通用户查询自己的车辆，管理员查询所有车辆")
-	public ResultVO selectVehicles(Integer categoryId,String licenseNumber){
-		return vehicleService.selectVehicles(categoryId,licenseNumber);
+	public ResultVO selectVehicles(Integer categoryId,String licenseNumber,Integer vehicleId){
+		return vehicleService.selectVehicles(categoryId,licenseNumber,vehicleId);
 	}
 
 	@GetMapping("/export_oilRecord")

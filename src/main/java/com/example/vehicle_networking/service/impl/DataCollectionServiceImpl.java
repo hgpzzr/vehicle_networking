@@ -82,7 +82,7 @@ public class DataCollectionServiceImpl implements DataCollectionService {
             realTimeData.setVehicleId(vehicleId);
             realTimeData.setInclination(Double.valueOf(inclination.getValue()));
         }catch (NullPointerException exception){
-            log.info(" h获取数据失败 {}", exception);
+            log.info(" 获取数据失败 {}", exception);
             return ResultVOUtil.error(ResultEnum.OPEN_THREAD_FAIL);
         }
 

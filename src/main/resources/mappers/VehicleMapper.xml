@@ -59,6 +59,7 @@
     <where>
       <if test="categoryId != null"> and category_id = #{categoryId,jdbcType=INTEGER}</if>
       <if test="userId != null"> and user_id = #{userId,jdbcType=INTEGER}</if>
+      <if test="vehicleId != null"> and vehicle_id = #{vehicleId,jdbcType=INTEGER}</if>
       <if test="licenseNumber != null"> and license_plate_number like ('%' #{licenseNumber,jdbcType=VARCHAR} '%')</if>
     </where>
   </select>

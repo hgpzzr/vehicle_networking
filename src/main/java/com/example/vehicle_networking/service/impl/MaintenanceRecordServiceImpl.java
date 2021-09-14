@@ -105,6 +105,8 @@ public class MaintenanceRecordServiceImpl implements MaintenanceRecordService {
         if (currentUserVehicleIds.contains(maintenanceRecord.getVehicleId())) {
             MaintenanceRecordVo maintenanceRecordVo = new MaintenanceRecordVo();
             BeanUtils.copyProperties(maintenanceRecord,maintenanceRecordVo);
+            maintenanceRecordVo.setMaintenanceBeginTime(dateFormat(maintenanceRecord.getMaintenanceBeginTime()));
+            maintenanceRecordVo.setMaintenanceEndTime(dateFormat(maintenanceRecord.getMaintenanceEndTime()));
             maintenanceRecordVo.setCreatTime(dateFormat(maintenanceRecord.getCreateTime()));
             return ResultVOUtil.success(maintenanceRecordVo);
         }
@@ -122,6 +124,8 @@ public class MaintenanceRecordServiceImpl implements MaintenanceRecordService {
             if (currentUserVehicleIds.contains(MR.getVehicleId())) {
                 MaintenanceRecordVo vo = new MaintenanceRecordVo();
                 BeanUtils.copyProperties(MR,vo);
+                vo.setMaintenanceBeginTime(dateFormat(MR.getMaintenanceBeginTime()));
+                vo.setMaintenanceEndTime(dateFormat(MR.getMaintenanceEndTime()));
                 vo.setCreatTime(dateFormat(MR.getCreateTime()));
                 voList.add(vo);
             }
@@ -199,18 +203,17 @@ public class MaintenanceRecordServiceImpl implements MaintenanceRecordService {
 
     @Override
     public ResultVO getInfoByMaintenanceId(Integer maintenanceId) {
-        List<MaintenanceInfo> maintenanceInfos = maintenanceInfoMapper.selectAll();
+        List<MaintenanceInfo> maintenanceInfos = maintenanceInfoMapper.selectByMaintenanceId(maintenanceId);
         if(maintenanceInfos.isEmpty()){
             return ResultVOUtil.error(ResultEnum.MAINTENANCE_INFO_IS_EMPTY);
         }
+        List<MaintenanceInfoVo> maintenanceInfoVoList = new ArrayList<>();
         for(MaintenanceInfo info : maintenanceInfos){
-            if(info.getMaintenanceId().equals(maintenanceId)){
-                MaintenanceInfoVo infoVo = new MaintenanceInfoVo();
-                BeanUtils.copyProperties(info,infoVo);
-                return ResultVOUtil.success(infoVo);
-            }
+            MaintenanceInfoVo infoVo = new MaintenanceInfoVo();
+            BeanUtils.copyProperties(info,infoVo);
+            maintenanceInfoVoList.add(infoVo);
         }
-        return ResultVOUtil.error(ResultEnum.MAINTENANCE_INFO_IS_EMPTY);
+        return ResultVOUtil.success(maintenanceInfoVoList);
     }
 
     @Override
@@ -255,7 +258,7 @@ public class MaintenanceRecordServiceImpl implements MaintenanceRecordService {
 
 
     private String dateFormat(Date date){
-        SimpleDateFormat sdf =   new SimpleDateFormat( " yyyy-MM-dd HH:mm:ss " );
+        SimpleDateFormat sdf =   new SimpleDateFormat( " yyyy-MM-dd" );
         String time = sdf.format(date);
         return time;
     }

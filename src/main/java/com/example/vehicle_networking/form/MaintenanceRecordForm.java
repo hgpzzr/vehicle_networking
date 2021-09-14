@@ -1,5 +1,6 @@
 package com.example.vehicle_networking.form;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 

@@ -63,7 +63,7 @@ public interface VehicleService {
 	 * 根据权限查询车辆，普通用户查询自己的车辆，管理员查询所有车辆
 	 * @return
 	 */
-	ResultVO selectVehicles(Integer categoryId,String licenseNumber);
+	ResultVO selectVehicles(Integer categoryId,String licenseNumber,Integer vehicleId);
 
 	/**
 	 * 导出油耗记录

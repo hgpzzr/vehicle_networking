@@ -43,11 +43,7 @@ public class AccidentRecordController {
     @PostMapping("/addRecord")
     @ApiOperation("添加车辆事故记录")
     @RoleControl(role = RoleEnum.USER)
-    public ResultVO addAccidentRecord(@Valid  AccidentRecordForm accidentRecordForm, BindingResult bindingResult){
-        if(bindingResult.hasErrors()){
-            log.info("必填项未填！");
-            return ResultVOUtil.error(ResultEnum.BIND_ERROR);
-        }
+    public ResultVO addAccidentRecord(@Valid  AccidentRecordForm accidentRecordForm){
         return accidentRecordService.addRecord(accidentRecordForm);
     }
 
@@ -56,11 +52,7 @@ public class AccidentRecordController {
     @GetMapping ("/deleteRecord")
     @ApiOperation("删除车辆事故记录")
     @RoleControl(role = RoleEnum.USER)
-    public ResultVO deleteAccidentRecord( @NotNull @RequestParam("accidentId") Integer accidentId, BindingResult bindingResult){
-        if(bindingResult.hasErrors()){
-            log.info("必填项未填！");
-            return ResultVOUtil.error(ResultEnum.BIND_ERROR);
-        }
+    public ResultVO deleteAccidentRecord(@RequestParam("accidentId") Integer accidentId){
         return accidentRecordService.deleteRecord(accidentId);
     }
 
@@ -69,11 +61,7 @@ public class AccidentRecordController {
     @PostMapping("/updateRecord")
     @ApiOperation("编辑修改车辆事故记录")
     @RoleControl(role = RoleEnum.USER)
-    public ResultVO updateAccidentRecord(@Valid UpdateAccidentRecordForm updateAccidentRecordForm,BindingResult bindingResult){
-        if(bindingResult.hasErrors()){
-            log.info("必填项未填！");
-            return ResultVOUtil.error(ResultEnum.BIND_ERROR);
-        }
+    public ResultVO updateAccidentRecord(@Valid UpdateAccidentRecordForm updateAccidentRecordForm){
         return accidentRecordService.updateRecord(updateAccidentRecordForm);
     }
 
@@ -97,11 +85,7 @@ public class AccidentRecordController {
     @GetMapping("/getRecordByVehicleId")
     @ApiOperation("根据汽车编号获取事故记录")
     @RoleControl(role = RoleEnum.USER)
-    public ResultVO getAccidentRecordsByVehicleId(@NotNull  Integer vehicleId,BindingResult bindingResult){
-        if(bindingResult.hasErrors()){
-            log.info("必填项未填！");
-            return ResultVOUtil.error(ResultEnum.BIND_ERROR);
-        }
+    public ResultVO getAccidentRecordsByVehicleId(@RequestParam("vehicleId") Integer vehicleId){
         return accidentRecordService.getRecordsByVehicleId(vehicleId);
     }
 

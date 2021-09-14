@@ -27,10 +27,10 @@ public class MaintenanceRecordVo {
     private Double maintenanceCosts;
 
     @ApiModelProperty("开始维修时间")
-    private Date maintenanceBeginTime;
+    private String maintenanceBeginTime;
 
     @ApiModelProperty("结束维修时间")
-    private Date maintenanceEndTime;
+    private String maintenanceEndTime;
 
     @ApiModelProperty("车辆维修记录创建时间")
     private String creatTime;

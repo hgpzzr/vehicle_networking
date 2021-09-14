@@ -22,10 +22,13 @@ import com.example.vehicle_networking.utils.FileUtil;
 import com.example.vehicle_networking.utils.ResultVOUtil;
 import com.example.vehicle_networking.vo.OilConsumptionVO;
 import com.example.vehicle_networking.vo.ResultVO;
+import com.sun.media.jfxmedia.logging.Logger;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import sun.rmi.runtime.Log;
 
 import javax.servlet.http.HttpServletResponse;
 import java.text.SimpleDateFormat;
@@ -40,6 +43,7 @@ import java.util.Map;
  * @date 2021/9/8 20:59
  */
 @Service
+@Slf4j
 public class VehicleServiceImpl implements VehicleService {
 	@Autowired
 	private VehicleMapper vehicleMapper;
@@ -97,25 +101,36 @@ public class VehicleServiceImpl implements VehicleService {
 	@Override
 	public ResultVO updateRunningState(ChangeRunningState form) {
 		Vehicle vehicle = vehicleMapper.selectByPrimaryKey(form.getVehicleId());
+		if(vehicle.getLockedState() == 1){
+			return ResultVOUtil.error(ResultEnum.LOCKED_CAR_RUN_ERROR);
+		}
 		vehicle.setRunningState(form.getRunningState());
 
 		if (form.getRunningState().equals(OperatingStatusEnum.NOT_RUNNING.getValue())
 				|| form.getRunningState().equals(OperatingStatusEnum.FLAMEOUT.getValue())){
 			OilConsumptionRecord latestConsumption = oilConsumptionRecordMapper.getLatestConsumption(form.getVehicleId());
+			log.info(" ----->>>>>>>>>{} ", latestConsumption);
+
 
 			// 停止收集线程
 			Map<Integer, ReadDataThread> readDataThreadMap = collectDataThreadConfig.getReadDataThreadMap();
 			ReadDataThread readDataThread = readDataThreadMap.get(vehicle.getVehicleId());
-			readDataThread.setFlag(false);
+			if (readDataThread != null){
+				readDataThread.setFlag(false);
+			}
 			Vehicle latestVehicle = vehicleMapper.selectByPrimaryKey(vehicle.getVehicleId());
 
-			Double meal =  latestVehicle.getMileage() - vehicle.getMileage();
+			Double meal =  latestVehicle.getMileage() - latestConsumption.getOilConsumption();
 			// 每公里耗油
 			Double oilConsume = meal * baseConfig.getPerMealOilConsume();
 
 			latestConsumption.setOilConsumption(oilConsume);
-			long l = (System.currentTimeMillis() - latestConsumption.getCreateTime().getTime())/ ( 1000 * 60 * 60 );
-			latestConsumption.setWorkTime(Double.valueOf(l));
+			double l = (System.currentTimeMillis() - latestConsumption.getCreateTime().getTime())/ ( 1000.0 * 60 * 60 );
+
+			log.info(" 结束时间： {}",System.currentTimeMillis() );
+			log.info(" 耗时 ： {}",l );
+			log.info(" 初始时间 ： {}",latestConsumption.getCreateTime().getTime() );
+			latestConsumption.setWorkTime(l);
 			oilConsumptionRecordMapper.updateByPrimaryKey(latestConsumption);
 		}
 
@@ -124,11 +139,10 @@ public class VehicleServiceImpl implements VehicleService {
 			OilConsumptionRecord oilConsumptionRecord = new OilConsumptionRecord();
 			oilConsumptionRecord.setVehicleId(form.getVehicleId());
 			oilConsumptionRecord.setDate(new Date());
-			oilConsumptionRecord.setOilConsumption(0.0);
+			oilConsumptionRecord.setOilConsumption(vehicle.getMileage());
 			oilConsumptionRecord.setWorkTime(0.0);
 			oilConsumptionRecord.setCreateTime(new Date());
 			oilConsumptionRecordMapper.insert(oilConsumptionRecord);
-
 		}
 		int update = vehicleMapper.updateByPrimaryKey(vehicle);
 		if(update != 1){
@@ -156,14 +170,14 @@ public class VehicleServiceImpl implements VehicleService {
 	}
 
 	@Override
-	public ResultVO selectVehicles(Integer categoryId,String licenseNumber) {
+	public ResultVO selectVehicles(Integer categoryId,String licenseNumber,Integer vehicleId) {
 		User currentUser = userService.getCurrentUser();
 		if(currentUser.getRole() == 0){
-			List<Vehicle> vehicleList = vehicleMapper.fuzzyQuery(categoryId,licenseNumber,currentUser.getUserId());
+			List<Vehicle> vehicleList = vehicleMapper.fuzzyQuery(categoryId,licenseNumber,currentUser.getUserId(),vehicleId);
 			return ResultVOUtil.success(vehicleList);
 		}
 		else {
-			return ResultVOUtil.success(vehicleMapper.fuzzyQuery(categoryId,licenseNumber,null));
+			return ResultVOUtil.success(vehicleMapper.fuzzyQuery(categoryId,licenseNumber,null,vehicleId));
 		}
 	}
 
